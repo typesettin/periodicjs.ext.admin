@@ -7,6 +7,8 @@ module.exports = function(periodic){
 		tagRouter = periodic.express.Router(),
 		contenttypeRouter = periodic.express.Router(),
 		categoryRouter = periodic.express.Router(),
+		extensionRouter = periodic.express.Router(),
+		extController = require('../../../../app/controller/extension')(periodic),
 		postController = require('../../../../app/controller/post')(periodic),
 		tagController = require('../../../../app/controller/tag')(periodic),
 		categoryController = require('../../../../app/controller/category')(periodic),
@@ -14,16 +16,21 @@ module.exports = function(periodic){
 		adminController = require('./controller/admin')(periodic),
 		authController = require('../periodicjs.ext.login/controller/auth')(periodic);
 
+	/**
+	 * admin routes
+	 */
 	adminRouter.get('/',authController.ensureAuthenticated,adminController.index);
-	// adminRouter.get('/test',multer(),function(req,res,next){
-	// 	res.send(req.query);
-	// });
-	// adminRouter.post('/test',function(req,res,next){
-	// 	res.send({query:req.query,body:req.body});
-	// });
 	adminRouter.get('/posts',authController.ensureAuthenticated,postController.loadPosts,adminController.posts_index);
 	adminRouter.get('/post/new',authController.ensureAuthenticated,adminController.post_new);
 	adminRouter.get('/post/edit/:id',authController.ensureAuthenticated,postController.loadFullPost,adminController.post_edit);
+	adminRouter.get('/extensions',authController.ensureAuthenticated,adminController.loadExtensions,adminController.extensions_index);
+	/**
+	 * admin/extension manager routes
+	 */
+	extensionRouter.get('/install',authController.ensureAuthenticated,extController.install);
+	extensionRouter.get('/install/log/:extension/:date',authController.ensureAuthenticated,extController.install_getOutputLog);
+	// http://local.getperiodic.com:8080/p-admin/extension/install
+	
 
 	postRouter.post('/new',postController.loadPost,authController.ensureAuthenticated,postController.create);
 	postRouter.post('/edit',authController.ensureAuthenticated,postController.update);
@@ -37,6 +44,7 @@ module.exports = function(periodic){
 	contenttypeRouter.post('/new/:id',multer({ dest: process.cwd() + '/public/uploads/files'}),contenttypeController.loadContenttype,contenttypeController.create);
 	contenttypeRouter.post('/new',multer({ dest: process.cwd() + '/public/uploads/files'}),contenttypeController.loadContenttype,contenttypeController.create);
 
+	adminRouter.use('/extension',extensionRouter);
 	periodic.app.use('/p-admin',adminRouter);
 	periodic.app.use('/post',postRouter);
 	periodic.app.use('/tag',tagRouter);
