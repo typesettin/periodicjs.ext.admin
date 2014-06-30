@@ -3,7 +3,7 @@
 	<div class="_pea-container">
 		<div class="_pea_row">
 			<div class="_pea-col-span12">
-				<h1><%= extension.name %>
+				<h2><%= extension.name %>
 					<small class="_pea-form">
 						<%if(extension.enabled){%>
 							<a href="/p-admin/extension/<%= extension.name %>/disable" class="_pea-button _pea-color-warn enable-ext-button">disable</a>
@@ -12,13 +12,13 @@
 							<a href="/p-admin/extension/<%= extension.name %>/enable" class="_pea-button enable-ext-button">enable</a>
 						<%}%>
 					</small>
-				</h1>
+				</h2>
 			</div>
 		</div>
 		<div class="_pea-row">
 			<div class="_pea-col-span12">
 				<div class="_pea-row _pea-container-forminput _pea-text-left _pea-form">
-					<h2>package.json </h2>
+					<h3>package.json </h3>
 				</div>
 				<div class="_pea-document">
 					<pre class="code-output">
@@ -30,7 +30,7 @@
 		<div class="_pea-row">
 			<div class="_pea-col-span12">
 				<div class="_pea-row _pea-container-forminput _pea-text-left _pea-form">
-					<h2>periodicjs.ext.json </h2>
+					<h3>periodicjs.ext.json </h3>
 				</div>
 				<div class="_pea-document">
 					<pre class="code-output">
@@ -42,7 +42,7 @@
 	</div>
 	<div style="display:none">
 		<div id="view-ext-info-modal">
-			<h1 class="title" style="word-wrap: break-word;">Extension name</h1>
+			<h2 class="title" style="word-wrap: break-word;">Extension name</h2>
 			<p class="desc">description</p>
 			<p>
 				<ul class="versions">
