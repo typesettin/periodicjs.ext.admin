@@ -120,7 +120,7 @@ var post_edit = function(req, res, next) {
             renderView:templatepath,
             responseData:{
                 pagedata:{
-                    title:'Edit Post',
+                    title:req.controllerData.post.title+' - Edit Post',
                     headerjs: ["/extensions/periodicjs.ext.admin/javascripts/post.js"],
                     extensions:getAdminMenu()
                 },
@@ -128,6 +128,177 @@ var post_edit = function(req, res, next) {
                     version: appSettings.version
                 },
                 post: req.controllerData.post,
+                user:req.user
+            }
+        });
+    }});
+};
+
+var contenttypes_index = function(req, res, next) {
+    applicationController.getPluginViewTemplate({
+    res:res,
+    req:req,
+    viewname:'p-admin/contenttypes/index',
+    pluginname:'periodicjs.ext.admin',
+    themepath:appSettings.themepath,
+    themefileext:appSettings.templatefileextension,
+    callback:function(templatepath){
+        applicationController.handleDocumentQueryRender({
+            res:res,
+            req:req,
+            renderView:templatepath,
+            responseData:{
+                pagedata:{
+                    title:'post admin',
+                    extensions:getAdminMenu()
+                },
+                periodic:{
+                    version: appSettings.version
+                },
+                contenttypes: req.controllerData.contenttypes,
+                user:req.user
+            }
+        });
+    }});
+};
+
+var contenttype_show = function(req, res, next) {
+    applicationController.getPluginViewTemplate({
+    res:res,
+    req:req,
+    viewname:'p-admin/contenttypes/show',
+    pluginname:'periodicjs.ext.admin',
+    themepath:appSettings.themepath,
+    themefileext:appSettings.templatefileextension,
+    callback:function(templatepath){
+        applicationController.handleDocumentQueryRender({
+            res:res,
+            req:req,
+            renderView:templatepath,
+            responseData:{
+                pagedata:{
+                    title:req.controllerData.contenttype.title+' - Edit Content Types',
+                    headerjs: ["/extensions/periodicjs.ext.admin/javascripts/contenttype.js"],
+                    extensions:getAdminMenu()
+                },
+                periodic:{
+                    version: appSettings.version
+                },
+                contenttype: req.controllerData.contenttype,
+                user:req.user
+            }
+        });
+    }});
+};
+
+var tags_index = function(req, res, next) {
+    applicationController.getPluginViewTemplate({
+    res:res,
+    req:req,
+    viewname:'p-admin/tags/index',
+    pluginname:'periodicjs.ext.admin',
+    themepath:appSettings.themepath,
+    themefileext:appSettings.templatefileextension,
+    callback:function(templatepath){
+        applicationController.handleDocumentQueryRender({
+            res:res,
+            req:req,
+            renderView:templatepath,
+            responseData:{
+                pagedata:{
+                    title:'tag admin',
+                    extensions:getAdminMenu()
+                },
+                periodic:{
+                    version: appSettings.version
+                },
+                tags: req.controllerData.tags,
+                user:req.user
+            }
+        });
+    }});
+};
+
+var tag_show = function(req, res, next) {
+    applicationController.getPluginViewTemplate({
+    res:res,
+    req:req,
+    viewname:'p-admin/tags/show',
+    pluginname:'periodicjs.ext.admin',
+    themepath:appSettings.themepath,
+    themefileext:appSettings.templatefileextension,
+    callback:function(templatepath){
+        applicationController.handleDocumentQueryRender({
+            res:res,
+            req:req,
+            renderView:templatepath,
+            responseData:{
+                pagedata:{
+                    title:req.controllerData.tag.title+' - Edit Tag',
+                    headerjs: ["/extensions/periodicjs.ext.admin/javascripts/tag.js"],
+                    extensions:getAdminMenu()
+                },
+                periodic:{
+                    version: appSettings.version
+                },
+                tag: req.controllerData.tag,
+                user:req.user
+            }
+        });
+    }});
+};
+
+var categories_index = function(req, res, next) {
+    applicationController.getPluginViewTemplate({
+    res:res,
+    req:req,
+    viewname:'p-admin/categories/index',
+    pluginname:'periodicjs.ext.admin',
+    themepath:appSettings.themepath,
+    themefileext:appSettings.templatefileextension,
+    callback:function(templatepath){
+        applicationController.handleDocumentQueryRender({
+            res:res,
+            req:req,
+            renderView:templatepath,
+            responseData:{
+                pagedata:{
+                    title:'Category admin',
+                    extensions:getAdminMenu()
+                },
+                periodic:{
+                    version: appSettings.version
+                },
+                categories: req.controllerData.categories,
+                user:req.user
+            }
+        });
+    }});
+};
+
+var category_show = function(req, res, next) {
+    applicationController.getPluginViewTemplate({
+    res:res,
+    req:req,
+    viewname:'p-admin/categories/show',
+    pluginname:'periodicjs.ext.admin',
+    themepath:appSettings.themepath,
+    themefileext:appSettings.templatefileextension,
+    callback:function(templatepath){
+        applicationController.handleDocumentQueryRender({
+            res:res,
+            req:req,
+            renderView:templatepath,
+            responseData:{
+                pagedata:{
+                    title:req.controllerData.category.title+' - Edit Tag',
+                    headerjs: ["/extensions/periodicjs.ext.admin/javascripts/category.js"],
+                    extensions:getAdminMenu()
+                },
+                periodic:{
+                    version: appSettings.version
+                },
+                category: req.controllerData.category,
                 user:req.user
             }
         });
@@ -191,7 +362,7 @@ var extensions_index = function(req, res, next) {
             renderView:templatepath,
             responseData:{
                 pagedata:{
-                    title:'post admin',
+                    title:'Extensions',
                     headerjs: ["/extensions/periodicjs.ext.admin/javascripts/ext.js"],
                     extensions:getAdminMenu()
                 },
@@ -246,7 +417,7 @@ var extension_show = function(req, res, next){
                         renderView:templatepath,
                         responseData:{
                             pagedata:{
-                                title:'post admin',
+                                title:req.controllerData.extension.name+' - Extension',
                                 // headerjs: ["/extensions/periodicjs.ext.admin/javascripts/extshow.js"],
                                 extensions:getAdminMenu()
                             },
@@ -305,7 +476,7 @@ var themes_index = function(req, res, next) {
             renderView:templatepath,
             responseData:{
                 pagedata:{
-                    title:'post admin',
+                    title:'Themes',
                     headerjs: ["/extensions/periodicjs.ext.admin/javascripts/theme.js"],
                     extensions:getAdminMenu()
                 },
@@ -360,7 +531,7 @@ var theme_show = function(req, res, next){
                         renderView:templatepath,
                         responseData:{
                             pagedata:{
-                                title:'post admin',
+                                title:req.controllerData.theme.name+' - Theme',
                                 // headerjs: ["/extensions/periodicjs.ext.admin/javascripts/theme.js"],
                                 extensions:getAdminMenu()
                             },
@@ -391,6 +562,7 @@ var loadTheme = function(req, res, next){
         next(new Error("no theme selected"));
     }
 };
+
 var controller = function(resources){
 	logger = resources.logger;
 	mongoose = resources.mongoose;
@@ -409,7 +581,13 @@ var controller = function(resources){
         themes_index:themes_index,
         loadThemes:loadThemes,
         loadTheme:loadTheme,
-        theme_show:theme_show
+        theme_show:theme_show,
+        contenttypes_index:contenttypes_index,
+        contenttype_show:contenttype_show,
+        tags_index:tags_index,
+        tag_show:tag_show,
+        categories_index:categories_index,
+        category_show:category_show,
 	};
 };
 
