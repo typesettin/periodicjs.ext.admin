@@ -73,7 +73,10 @@ var request = require('superagent'),
 		createTagFunc:function(id,val,callback){			
 			createPeriodicTag(id,val,callback,'/contenttype/new/'+makeNiceName(document.querySelector('#padmin-contenttypes').value)+'/?format=json&limit=200',"contenttype");
 		}
-	});
+	}),
+	searchDocButton,
+	searchDocInputText,
+	searchDocResults;
 
 window.addEventListener("load",function(e){
 	tag_lp.init();
@@ -98,6 +101,10 @@ window.addEventListener("load",function(e){
 		toolbar:      "wysihtml5-toolbar", // id of toolbar element
 		parserRules:  wysihtml5ParserRules // defined in parser rules set 
 	});
+	searchDocButton = document.getElementById("searchdocumentsbutton");
+	searchDocInputText = document.getElementById("searchdocumentstext");
+	searchDocResults = document.getElementById("collection-item-searchresult");
+	searchDocButton.addEventListener("click",searchDocs,false);
 });
 
 window.updateContentTypes = function(AjaxDataResponse){
@@ -126,5 +133,48 @@ window.updateContentTypes = function(AjaxDataResponse){
 	}
 	contenttypeContainer.innerHTML = contentTypeHtml;
 };
+
+var searchDocs = function(e){
+	var etarget = e.target;
+	request
+		.get('/post/search')
+		.set('Accept', 'application/json')
+		.query({ format: 'json',
+			search: searchDocInputText.value })
+		.end(function(error, res){
+			if(res.error){
+				error = res.error;
+			}
+			if(error){
+				ribbonNotification.showRibbon( error.message,4000,'error');
+			}
+			else{
+				if(res.body.result==='error'){
+					ribbonNotification.showRibbon( res.body.data.error,4000,'error');
+				}
+				else{
+					generateSearchResult(res.body.searchdata.posts);
+				}
+			}
+		});
+};
+
+var generateSearchResult = function(documents){
+	var docresulthtml='<table class="_pea-table _pea-form">';
+	for(var x in documents){
+		var docresult = documents[x];
+		docresulthtml+='<tr>';
+		docresulthtml+='<td><a data-docid="'+docresult._id+'" class="_pea-button _pea-color-success">+</a></td>';
+		docresulthtml+='<td>'+docresult.title+'</td>';
+		docresulthtml+='<td> tags:'+docresult.tags+',  categories:'+docresult.categories+', contenttypes:'+docresult.contenttypes+', authors:'+docresult.authors+',</td>';
+		docresulthtml+='</tr>';
+	}
+	docresulthtml+='</table>';
+	searchDocResults.innerHTML=docresulthtml;
+};
+
+/*
+<div id="contenttypes-cbc" class="_ltr-cbc"><input id="lp-cbx_53b36eca5e922b7a6296bc4b" name="contenttypes" type="checkbox" value="53b36eca5e922b7a6296bc4b" checked="checked"></input></div>
+ */
 
 window.cnt_lp = cnt_lp;
