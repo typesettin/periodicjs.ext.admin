@@ -3,7 +3,7 @@
 	<div class="_pea-container">
 		<div class="_pea-row _pea-form">
 			<div class="_pea-col-span6">
-				<a href="/p-admin/post/new" class="_pea-button _pea-color-info">New Document</a>
+				<a href="/p-admin/collection/new" class="_pea-button _pea-color-info">New Collection</a>
 			</div>
 			<div class="_pea-col-span6 _pea-text-right">
 				<form class="_pea-form" method="get">
@@ -27,34 +27,34 @@
 							</tr>
 						</thead>
 						<tbody>
-							<% if(posts.length>0){
-									posts.forEach(function(post){ %>
+							<% if(collections.length>0){
+									collections.forEach(function(collection){ %>
 										<tr>
-											<td> <a href="/p-admin/post/edit/<%= post.name %>"> <%= post.title %> </a></td>
-											<td><%= post.primaryauthor.username %></td>
+											<td> <a href="/p-admin/collection/edit/<%= collection.name %>"> <%= collection.title %> </a></td>
+											<td><%= collection.primaryauthor.username %></td>
 											<td>
-												<%if(post.categories && post.categories.length>0){
-													post.categories.forEach(function(category){%>
-														<a href="/p-admin/posts/categories/<%= category.name %>"><%= category.title %></a>,
+												<%if(collection.categories && collection.categories.length>0){
+													collection.categories.forEach(function(category){%>
+														<a href="/p-admin/collections/categories/<%= category.name %>"><%= category.title %></a>,
 													<%});
 												}%>
 											</td>
 											<td>
-												<%if(post.tags && post.tags.length>0){
-													post.tags.forEach(function(tag){%>
-														<a href="/p-admin/posts/tags/<%= tag.name %>"><%= tag.title %></a>,
+												<%if(collection.tags && collection.tags.length>0){
+													collection.tags.forEach(function(tag){%>
+														<a href="/p-admin/collections/tags/<%= tag.name %>"><%= tag.title %></a>,
 													<%});
 												}%>
 											</td>
 											<td>
-												<%if(post.contenttypes && post.contenttypes.length>0){
-													post.contenttypes.forEach(function(contenttype){%>
-														<a href="/p-admin/posts/contenttype/<%= contenttype.name %>"><%= contenttype.title %></a>,
+												<%if(collection.contenttypes && collection.contenttypes.length>0){
+													collection.contenttypes.forEach(function(contenttype){%>
+														<a href="/p-admin/collections/contenttype/<%= contenttype.name %>"><%= contenttype.title %></a>,
 													<%});
 												}%>
 											</td>
 											<td>
-												<% var disDate = new Date(post.createdat) %>
+												<% var disDate = new Date(collection.createdat) %>
 												<%= (disDate.getFullYear()) %>/
 												<%= (disDate.getMonth()+1) %>/
 												<%= (disDate.getDate()) %>
@@ -64,7 +64,7 @@
 									});
 								}
 								else{ %>
-									<tr><td colspan="6" class="_pea-text-center">No Posts!</td></tr>
+									<tr><td colspan="6" class="_pea-text-center">No Collections!</td></tr>
 								<%} %>
 						</tbody>
 						<tfoot>
