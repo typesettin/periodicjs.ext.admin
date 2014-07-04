@@ -46,17 +46,27 @@ updatemedia.handleMediaButtonClick = function(e){
 	}
 };
 
-updatemedia.uploadFile = function(mediafilesresult,file){
-	var reader = new FileReader();
-	var client = new XMLHttpRequest();
-	var formData = new FormData();
+updatemedia.uploadFile = function(mediafilesresult,file,options){
+	var reader = new FileReader(),
+			client = new XMLHttpRequest(),
+			formData = new FormData();
+			if(options){
+				var posturl = options.posturl,
+						callback = options.callback;
+			}
+			else{
+				var posturl = "/mediaasset/new?format=json",
+					callback=function(data){
+						updatemedia(mediafilesresult,data);
+					};
+			}
 
 	reader.onload = function(e) {
 		// console.log(e);
 		// console.log(file);
 		formData.append("mediafile",file,file.name);
 
-		client.open("post", "/mediaasset/new?format=json", true);
+		client.open("post", posturl, true);
 		client.setRequestHeader("x-csrf-token", document.querySelector('input[name=_csrf]').value );
 		client.send(formData);  /* Send to server */ 
 	}
@@ -73,10 +83,11 @@ updatemedia.uploadFile = function(mediafilesresult,file){
 				}
 				else{
 					ribbonNotification.showRibbon("saved",4000,'success');
-					updatemedia(mediafilesresult,res.data.doc);
+					callback(res.data.doc);
 				}
 			}
 			catch(e){
+				ribbonNotification.showRibbon( e.message,4000,'error');
 				console.log(e);
 			}
 		}
