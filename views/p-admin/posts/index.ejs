@@ -31,7 +31,11 @@
 									posts.forEach(function(post){ %>
 										<tr>
 											<td> <a href="/p-admin/post/edit/<%= post.name %>"> <%= post.title %> </a></td>
-											<td><%= post.primaryauthor.username %></td>
+											<td>
+													<%if(post.primaryauthor){%>
+														<%= post.primaryauthor.username %>
+													<%}%>
+											</td>
 											<td>
 												<%if(post.categories && post.categories.length>0){
 													post.categories.forEach(function(category){%>
