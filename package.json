@@ -29,15 +29,5 @@
     "util-extend": "~1.0.1",
     "codemirror": "~4.2.0",
     "async": "~0.9.0"
-  },
-  "readme": "periodicjs.ext.admin\n====================\n\ncontent management administration for a periodicjs based cms\n",
-  "readmeFilename": "README.md",
-  "bugs": {
-    "url": "https://github.com/typesettin/periodicjs.ext.admin/issues"
-  },
-  "homepage": "https://github.com/typesettin/periodicjs.ext.admin",
-  "_id": "periodicjs.ext.admin@0.0.2",
-  "_shasum": "3da6c1cf34c8716173396b15ae610d7307a75992",
-  "_from": "https://github.com/typesettin/periodicjs.ext.admin/archive/master.tar.gz",
-  "_resolved": "https://github.com/typesettin/periodicjs.ext.admin/archive/master.tar.gz"
+  }
 }
