@@ -47,10 +47,10 @@ module.exports = function(periodic){
 	extensionRouter.get('/upload/log/:extension/:date',authController.ensureAuthenticated,extController.upload_getOutputLog);
 	extensionRouter.get('/remove/log/:extension/:date',authController.ensureAuthenticated,extController.remove_getOutputLog);
 	extensionRouter.get('/cleanup/log/:extension/:date',authController.ensureAuthenticated,extController.cleanup_log);
-	extensionRouter.get('/:id/disable',authController.ensureAuthenticated,extController.disable);
-	extensionRouter.get('/:id/enable',authController.ensureAuthenticated,extController.enable);
+	extensionRouter.get('/:id/disable',authController.ensureAuthenticated,adminController.loadExtension,extController.disable);
+	extensionRouter.get('/:id/enable',authController.ensureAuthenticated,adminController.loadExtension,extController.enable);
 	extensionRouter.post('/upload',authController.ensureAuthenticated,mediaassetController.upload,extController.upload_install);
-	extensionRouter.post('/:id/delete',authController.ensureAuthenticated,extController.remove);
+	extensionRouter.post('/:id/delete',authController.ensureAuthenticated,adminController.loadExtension,extController.remove);
 	extensionRouter.get('/:id',authController.ensureAuthenticated,adminController.loadExtension,adminController.extension_show);
 	/**
 	 * admin/theme manager routes
