@@ -28,7 +28,11 @@
 									contenttypes.forEach(function(contenttype){ %>
 										<tr>
 											<td> <a href="/p-admin/contenttype/<%= contenttype.name %>"> <%= contenttype.title %> </a></td>
-											<td><a href="/p-admin/user/<%= contenttype.author.username %>/edit"><%= contenttype.author.username %></a></td>
+											<td>
+												<% if(contenttype.author){%>
+													<a href="/p-admin/user/<%= contenttype.author.username %>/edit"><%= contenttype.author.username %></a>
+												<%} %>
+											</td>
 											<td>
 												<%if(contenttype.attributes && contenttype.attributes.length>0){
 													contenttype.attributes.forEach(function(attribute){%>
