@@ -29,7 +29,10 @@ module.exports = function(periodic){
 	/**
 	 * admin routes
 	 */
-	adminRouter.get('/',authController.ensureAuthenticated,adminController.index);
+	// adminRouter.get('/',authController.ensureAuthenticated,adminController.index);
+	adminRouter.get('/',function(req,res,next){
+		res.redirect('/p-admin/posts');
+	});
 	adminRouter.get('/extensions',authController.ensureAuthenticated,adminController.loadExtensions,adminController.extensions_index);
 	adminRouter.get('/themes',authController.ensureAuthenticated,adminController.loadThemes,adminController.themes_index);
 	adminRouter.get('/posts',authController.ensureAuthenticated,postController.loadPosts,adminController.posts_index);
@@ -47,8 +50,8 @@ module.exports = function(periodic){
 	extensionRouter.get('/upload/log/:extension/:date',authController.ensureAuthenticated,extController.upload_getOutputLog);
 	extensionRouter.get('/remove/log/:extension/:date',authController.ensureAuthenticated,extController.remove_getOutputLog);
 	extensionRouter.get('/cleanup/log/:extension/:date',authController.ensureAuthenticated,extController.cleanup_log);
-	extensionRouter.get('/:id/disable',authController.ensureAuthenticated,adminController.loadExtension,extController.disable);
-	extensionRouter.get('/:id/enable',authController.ensureAuthenticated,adminController.loadExtension,extController.enable);
+	extensionRouter.get('/:id/disable',authController.ensureAuthenticated,adminController.loadExtensions,adminController.loadExtension,extController.disable);
+	extensionRouter.get('/:id/enable',authController.ensureAuthenticated,adminController.loadExtensions,adminController.loadExtension,extController.enable);
 	extensionRouter.post('/upload',authController.ensureAuthenticated,mediaassetController.upload,extController.upload_install);
 	extensionRouter.post('/:id/delete',authController.ensureAuthenticated,adminController.loadExtension,extController.remove);
 	extensionRouter.get('/:id',authController.ensureAuthenticated,adminController.loadExtension,adminController.extension_show);
