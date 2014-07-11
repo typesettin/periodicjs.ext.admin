@@ -472,22 +472,33 @@ var category_show = function(req, res, next) {
 
 var loadExtension = function(req, res, next){
     var extname = req.params.id,
-        currentExtensions = appSettings.extconf.extensions,
+        extFilePath = path.resolve(process.cwd(),'content/extensions/extensions.json'),
         z=false,
-        selectedExt;
+        selectedExt,
+        currentExtensions;
 
-    for (var x in currentExtensions){
-        if(currentExtensions[x].name===extname){
-            z=x;
+    fs.readJson(extFilePath,function(err,currentExtensionsJson){
+        // console.log("currentExtensionsJson",currentExtensionsJson);
+        if(err){
+            next(err);
         }
-    }
+        else{
+            currentExtensions = currentExtensionsJson.extensions;
+            for (var x in currentExtensions){
+                if(currentExtensions[x].name===extname){
+                    z=x;
+                }
+            }
 
-    if(z!==false){
-        selectedExt = currentExtensions[z];
-    }
-    req.controllerData = (req.controllerData)?req.controllerData:{};
-    req.controllerData.extension = selectedExt;
-    next();
+            if(z!==false){
+                selectedExt = currentExtensions[z];
+            }
+            req.controllerData = (req.controllerData)?req.controllerData:{};
+            req.controllerData.extension = selectedExt;
+            req.controllerData.extensionx = z;
+            next();
+        }
+    });
 };
 
 var loadExtensions = function(req, res, next){
