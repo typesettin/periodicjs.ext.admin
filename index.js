@@ -12,15 +12,16 @@ module.exports = function(periodic){
 		categoryRouter = periodic.express.Router(),
 		categoryAdminRouter = periodic.express.Router(),
 		collectionRouter = periodic.express.Router(),
-		// collectionAdminRouter = periodic.express.Router(),
 		extensionRouter = periodic.express.Router(),
 		themeRouter = periodic.express.Router(),
+		periodicRouter = periodic.express.Router(),
 		themeController = require('../../../../app/controller/theme')(periodic),
 		extController = require('../../../../app/controller/extension')(periodic),
 		postController = require('../../../../app/controller/post')(periodic),
 		tagController = require('../../../../app/controller/tag')(periodic),
 		mediaassetController = require('../../../../app/controller/asset')(periodic),
 		categoryController = require('../../../../app/controller/category')(periodic),
+		userController = require('../../../../app/controller/user')(periodic),
 		contenttypeController = require('../../../../app/controller/contenttype')(periodic),
 		collectionController = require('../../../../app/controller/collection')(periodic),
 		adminController = require('./controller/admin')(periodic),
@@ -110,6 +111,18 @@ module.exports = function(periodic){
 	mediaRouter.post('/new',authController.ensureAuthenticated,mediaassetController.upload,mediaassetController.createassetfile);
 	mediaRouter.post('/:id/delete',authController.ensureAuthenticated,mediaassetController.loadAsset,mediaassetController.remove);
 
+	/**
+	 * periodic routes
+	 */
+	periodicRouter.get('/user/search.:ext',userController.loadUsers,userController.searchResults);
+	periodicRouter.get('/user/search',userController.loadUsers,userController.searchResults);
+	periodicRouter.get('/category/search.:ext',categoryController.loadCategories,categoryController.searchResults);
+	periodicRouter.get('/category/search',categoryController.loadCategories,categoryController.searchResults);
+	periodicRouter.get('/contenttype/search.:ext',contenttypeController.loadContenttypes,contenttypeController.searchResults);
+	periodicRouter.get('/contenttype/search',contenttypeController.loadContenttypes,contenttypeController.searchResults);
+	periodicRouter.get('/tag/search.:ext',tagController.loadTags,tagController.searchResults);
+	periodicRouter.get('/tag/search',tagController.loadTags,tagController.searchResults);
+
 
 	adminRouter.use('/extension',extensionRouter);
 	adminRouter.use('/theme',themeRouter);
@@ -123,4 +136,5 @@ module.exports = function(periodic){
 	periodic.app.use('/category',categoryRouter);
 	periodic.app.use('/contenttype',contenttypeRouter);
 	periodic.app.use('/mediaasset',mediaRouter);
+	periodic.app.use(periodicRouter);
 };
