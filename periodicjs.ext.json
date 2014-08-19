@@ -8,9 +8,9 @@
         "version":"1.1.10"
 	},{
         "extname": "periodicjs.ext.schueduled_content",
-        "version":"1.0.0"
+        "version":"1.0.1"
     },{
         "extname": "periodicjs.ext.user_access_control",
-        "version":"1.0.1"
+        "version":"1.0.2"
   }]
 }
