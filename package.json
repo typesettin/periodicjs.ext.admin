@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.admin",
   "description": "Admin for periodicjs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
@@ -38,7 +38,7 @@
     "periodicjs.ext.mailer": "1.3.1",
     "periodicjs.ext.login": "~1.1.10",
     "periodicjs.ext.schueduled_content": "~1.0.1",
-    "periodicjs.ext.user_accesss_control": "~1.0.2"
+    "periodicjs.ext.user_access_control": "~1.0.2"
   },
   "devDependencies": {
     "browserify": "4.2.1",
