@@ -1,40 +1,43 @@
 'use strict';
 
 var path = require('path'),
-	appController = require(path.join(process.cwd(),'app/controller/application')),
-    extend = require('util-extend'),
     async = require('async'),
     fs = require('fs-extra'),
     moment = require('moment'),
-    CronJob = require('cron').CronJob,
-	applicationController,
+    Utilities = require('periodicjs.core.utilities'),
+    ControllerHelper = require('periodicjs.core.controllerhelper'),
+    Extensions = require('periodicjs.core.extensions'),
+    ExtensionCore = new Extensions({
+        extensionFilePath: path.resolve(process.cwd(),'./content/extensions/extensions.json' 
+    )}),
+    CoreUtilities,
+    CoreController,
 	appSettings,
 	mongoose,
     User,
     Collection,
-    Item,//Post
-    scheduled_itemid_array=[],
-    scheduled_collectionid_array=[],
+    Item,//Item
 	logger;
 
-var index = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var index = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/index',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
+                err:err,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:'admin',
-                        extensions:applicationController.getAdminMenu()
+                        extensions:CoreUtilities.getAdminMenu()
                     },
-                    posts: recentposts,
+                    items: null,
                     user:req.user
                 }
             });
@@ -42,23 +45,23 @@ var index = function(req, res, next) {
     );
 };
 
-var mail_index = function(req,res,next){
-    applicationController.getPluginViewDefaultTemplate(
+var mail_index = function(req,res){
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/mailer/index',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:'Mail Settings',
-                        headerjs: ["/extensions/periodicjs.ext.admin/javascripts/mailer.js"],
-                        extensions:applicationController.getAdminMenu()
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/mailer.min.js'],
+                        extensions:CoreUtilities.getAdminMenu()
                     },
                     user:req.user
                 }
@@ -67,24 +70,57 @@ var mail_index = function(req,res,next){
     );
 };
 
-var posts_index = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var items_index = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
-            viewname:'p-admin/posts/index',
+            viewname:'p-admin/items/index',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
+                res:res,
+                req:req,
+                err:err,
+                renderView:templatepath,
+                responseData:{
+                    pagedata:{
+                        title:'item admin',
+                        extensions:CoreUtilities.getAdminMenu()
+                    },
+                    items: req.controllerData.items,
+                    // privileges: req.controllerData.privileges,
+                    user:req.user
+                }
+            });
+        }
+    );
+};
+
+var item_new = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
+        {
+            viewname:'p-admin/items/new',
+            themefileext:appSettings.templatefileextension,
+            extname: 'periodicjs.ext.admin'
+        },
+        function(err,templatepath){
+            if(!err && !User.hasPrivilege(req.user,110)){
+                err = new Error('You don\'t have access to view content');
+            }
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
-                        title:'post admin',
-                        extensions:applicationController.getAdminMenu()
+                        title:'New Item',
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/item.min.js'],
+                        extensions:CoreUtilities.getAdminMenu()
                     },
-                    posts: req.controllerData.posts,
+                    item:null,
+                    serverdate:moment().format('YYYY-MM-DD'),
+                    servertime:moment().format('HH:mm'),
                     user:req.user
                 }
             });
@@ -92,27 +128,27 @@ var posts_index = function(req, res, next) {
     );
 };
 
-var post_new = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var item_edit = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
-            viewname:'p-admin/posts/new',
+            viewname:'p-admin/items/edit',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
-                        title:'New Post',
-                        headerjs: ["/extensions/periodicjs.ext.admin/javascripts/post.js"],
-                        extensions:applicationController.getAdminMenu()
+                        title:req.controllerData.item.title+' - Edit Item',
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/item.min.js'],
+                        extensions:CoreUtilities.getAdminMenu()
                     },
-                    post:null,
-                    serverdate:moment().format("YYYY-MM-DD"),
-                    servertime:moment().format("HH:mm"),
+                    item: req.controllerData.item,
+                    serverdate:moment(req.controllerData.item.publishat).format('YYYY-MM-DD'),
+                    servertime:moment(req.controllerData.item.publishat).format('HH:mm'),
                     user:req.user
                 }
             });
@@ -120,50 +156,22 @@ var post_new = function(req, res, next) {
     );
 };
 
-var post_edit = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
-        {
-            viewname:'p-admin/posts/edit',
-            themefileext:appSettings.templatefileextension,
-            extname: 'periodicjs.ext.admin'
-        },
-        function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
-                res:res,
-                req:req,
-                renderView:templatepath,
-                responseData:{
-                    pagedata:{
-                        title:req.controllerData.post.title+' - Edit Post',
-                        headerjs: ["/extensions/periodicjs.ext.admin/javascripts/post.js"],
-                        extensions:applicationController.getAdminMenu()
-                    },
-                    post: req.controllerData.post,
-                    serverdate:moment(req.controllerData.post.publishat).format("YYYY-MM-DD"),
-                    servertime:moment(req.controllerData.post.publishat).format("HH:mm"),
-                    user:req.user
-                }
-            });
-        }
-    );
-};
-
-var collections_index = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var collections_index = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/collections/index',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:'Collections',
-                        extensions:applicationController.getAdminMenu()
+                        extensions:CoreUtilities.getAdminMenu()
                     },
                     collections: req.controllerData.collections,
                     user:req.user
@@ -173,27 +181,27 @@ var collections_index = function(req, res, next) {
     );
 };
 
-var collection_new = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var collection_new = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/collections/new',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:'New Collection',
-                        headerjs: ["/extensions/periodicjs.ext.admin/javascripts/collection.js"],
-                        extensions:applicationController.getAdminMenu()
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/collection.min.js'],
+                        extensions:CoreUtilities.getAdminMenu()
                     },
                     collection:null,
-                    serverdate:moment().format("YYYY-MM-DD"),
-                    servertime:moment().format("HH:mm"),
+                    serverdate:moment().format('YYYY-MM-DD'),
+                    servertime:moment().format('HH:mm'),
                     user:req.user
                 }
             });
@@ -201,27 +209,27 @@ var collection_new = function(req, res, next) {
     );
 };
 
-var collection_edit = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var collection_edit = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/collections/edit',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:req.controllerData.collection.title+' - Edit Collection',
-                        headerjs: ["/extensions/periodicjs.ext.admin/javascripts/collection.js"],
-                        extensions:applicationController.getAdminMenu()
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/collection.min.js'],
+                        extensions:CoreUtilities.getAdminMenu()
                     },
                     collection: req.controllerData.collection,
-                    serverdate:moment(req.controllerData.collection.publishat).format("YYYY-MM-DD"),
-                    servertime:moment(req.controllerData.collection.publishat).format("HH:mm"),
+                    serverdate:moment(req.controllerData.collection.publishat).format('YYYY-MM-DD'),
+                    servertime:moment(req.controllerData.collection.publishat).format('HH:mm'),
                     user:req.user
                 }
             });
@@ -229,23 +237,23 @@ var collection_edit = function(req, res, next) {
     );
 };
 
-var assets_index = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var assets_index = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/assets/index',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:'Assets',
-                        headerjs: ["/extensions/periodicjs.ext.admin/javascripts/asset.js"],
-                        extensions:applicationController.getAdminMenu()
+                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/asset.js'],
+                        extensions:CoreUtilities.getAdminMenu()
                     },
                     assets: req.controllerData.assets,
                     user:req.user
@@ -255,23 +263,23 @@ var assets_index = function(req, res, next) {
     );
 };
 
-var assets_show = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var assets_show = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/assets/show',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:req.controllerData.asset.title+' - Edit Assets',
-                        headerjs: ["/extensions/periodicjs.ext.admin/javascripts/assets.js"],
-                        extensions:applicationController.getAdminMenu()
+                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/assets.js'],
+                        extensions:CoreUtilities.getAdminMenu()
                     },
                     asset: req.controllerData.asset,
                     user:req.user
@@ -281,22 +289,22 @@ var assets_show = function(req, res, next) {
     );
 };
 
-var contenttypes_index = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var contenttypes_index = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/contenttypes/index',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:'content type admin',
-                        extensions:applicationController.getAdminMenu()
+                        extensions:CoreUtilities.getAdminMenu()
                     },
                     contenttypes: req.controllerData.contenttypes,
                     user:req.user
@@ -306,23 +314,23 @@ var contenttypes_index = function(req, res, next) {
     );
 };
 
-var contenttype_show = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var contenttype_show = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/contenttypes/show',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:req.controllerData.contenttype.title+' - Edit Content Types',
-                        headerjs: ["/extensions/periodicjs.ext.admin/javascripts/contenttype.js"],
-                        extensions:applicationController.getAdminMenu()
+                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/contenttype.js'],
+                        extensions:CoreUtilities.getAdminMenu()
                     },
                     periodic:{
                         version: appSettings.version
@@ -335,22 +343,22 @@ var contenttype_show = function(req, res, next) {
     );
 };
 
-var tags_index = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var tags_index = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/tags/index',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:'tag admin',
-                        extensions:applicationController.getAdminMenu()
+                        extensions:CoreUtilities.getAdminMenu()
                     },
                     tags: req.controllerData.tags,
                     user:req.user
@@ -360,23 +368,23 @@ var tags_index = function(req, res, next) {
     );
 };
 
-var tag_show = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var tag_show = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/tags/show',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:req.controllerData.tag.title+' - Edit Tag',
-                        headerjs: ["/extensions/periodicjs.ext.admin/javascripts/tag.js"],
-                        extensions:applicationController.getAdminMenu()
+                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/tag.js'],
+                        extensions:CoreUtilities.getAdminMenu()
                     },
                     periodic:{
                         version: appSettings.version
@@ -389,22 +397,22 @@ var tag_show = function(req, res, next) {
     );
 };
 
-var categories_index = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var categories_index = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/categories/index',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:'Category admin',
-                        extensions:applicationController.getAdminMenu()
+                        extensions:CoreUtilities.getAdminMenu()
                     },
                     categories: req.controllerData.categories,
                     user:req.user
@@ -414,23 +422,23 @@ var categories_index = function(req, res, next) {
     );
 };
 
-var category_show = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var category_show = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/categories/show',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:req.controllerData.category.title+' - Edit Tag',
-                        headerjs: ["/extensions/periodicjs.ext.admin/javascripts/category.js"],
-                        extensions:applicationController.getAdminMenu()
+                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/category.js'],
+                        extensions:CoreUtilities.getAdminMenu()
                     },
                     periodic:{
                         version: appSettings.version
@@ -477,11 +485,11 @@ var loadExtension = function(req, res, next){
 var loadExtensions = function(req, res, next){
     req.controllerData = (req.controllerData)?req.controllerData:{};
 
-    applicationController.loadExtensions({
+    ExtensionCore.getExtensions({
         periodicsettings:appSettings,
         callback:function (err,extensions) {
             if(err){
-                applicationController.handleDocumentQueryErrorResponse({
+                CoreController.handleDocumentQueryErrorResponse({
                     err:err,
                     res:res,
                     req:req
@@ -492,28 +500,28 @@ var loadExtensions = function(req, res, next){
                 next();
             }
         }
-    })
+    });
 };
 
-var extensions_index = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var extensions_index = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/extensions/index',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:'Extensions',
-                        headerjs: ["/extensions/periodicjs.ext.admin/javascripts/ext.js"],
-                        extensions:applicationController.getAdminMenu()
+                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/ext.js'],
+                        extensions:CoreUtilities.getAdminMenu()
                     },
-                    posts: false,
+                    items: false,
                     extensions: req.controllerData.extensions,
                     user:req.user
                 }
@@ -522,7 +530,7 @@ var extensions_index = function(req, res, next) {
     );
 };
 
-var extension_show = function(req, res, next){
+var extension_show = function(req, res){
     var extname = req.params.id,
         Extensions = require(path.join(process.cwd(),'app/lib/extensions')),
         extPackageConf = Extensions.getExtensionPackageJsonFilePath(extname),
@@ -540,21 +548,21 @@ var extension_show = function(req, res, next){
     },
     function(err, results) {
         if(err){
-            applicationController.handleDocumentQueryErrorResponse({
+            CoreController.handleDocumentQueryErrorResponse({
                 err:err,
                 res:res,
                 req:req
             });
         }
         else{
-            applicationController.getPluginViewDefaultTemplate(
+            CoreController.getPluginViewDefaultTemplate(
                 {
                     viewname:'p-admin/extensions/show',
                     themefileext:appSettings.templatefileextension,
                     extname: 'periodicjs.ext.admin'
                 },
                 function(err,templatepath){
-                    applicationController.handleDocumentQueryRender({
+                    CoreController.handleDocumentQueryRender({
                         res:res,
                         req:req,
                         renderView:templatepath,
@@ -562,7 +570,7 @@ var extension_show = function(req, res, next){
                             pagedata:{
                                 title:req.controllerData.extension.name+' - Extension',
                                 // headerjs: ["/extensions/periodicjs.ext.admin/javascripts/extshow.js"],
-                                extensions:applicationController.getAdminMenu()
+                                extensions:CoreUtilities.getAdminMenu()
                             },
                             extdata:results,
                             extension: req.controllerData.extension,
@@ -588,7 +596,7 @@ var loadThemes = function(req, res, next){
             }
         }
         if(err){
-            applicationController.handleDocumentQueryErrorResponse({
+            CoreController.handleDocumentQueryErrorResponse({
                 err:err,
                 res:res,
                 req:req
@@ -601,25 +609,25 @@ var loadThemes = function(req, res, next){
     });
 };
 
-var themes_index = function(req, res, next) {
-    applicationController.getPluginViewDefaultTemplate(
+var themes_index = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/themes/index',
             themefileext:appSettings.templatefileextension,
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            applicationController.handleDocumentQueryRender({
+            CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
                         title:'Themes',
-                        headerjs: ["/extensions/periodicjs.ext.admin/javascripts/theme.js"],
-                        extensions:applicationController.getAdminMenu()
+                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/theme.js'],
+                        extensions:CoreUtilities.getAdminMenu()
                     },
-                    posts: false,
+                    items: false,
                     themes: req.controllerData.themes,
                     activetheme: appSettings.theme,
                     user:req.user
@@ -628,7 +636,7 @@ var themes_index = function(req, res, next) {
         }
     );
 };
-var theme_show = function(req, res, next){
+var theme_show = function(req, res){
     var themename = req.params.id,
         Themes = require(path.join(process.cwd(),'app/lib/themes')),
         themeRouteConf = Themes.getThemeRouteFilePath(themename),
@@ -645,22 +653,22 @@ var theme_show = function(req, res, next){
     },
     function(err, results) {
         if(err){
-            console.log("async callback err",themename,err);
-            applicationController.handleDocumentQueryErrorResponse({
+            console.log('async callback err',themename,err);
+            CoreController.handleDocumentQueryErrorResponse({
                 err:err,
                 res:res,
                 req:req
             });
         }
         else{
-            applicationController.getPluginViewDefaultTemplate(
+            CoreController.getPluginViewDefaultTemplate(
                 {
                     viewname:'p-admin/themes/show',
                     themefileext:appSettings.templatefileextension,
                     extname: 'periodicjs.ext.admin'
                 },
                 function(err,templatepath){
-                    applicationController.handleDocumentQueryRender({
+                    CoreController.handleDocumentQueryRender({
                         res:res,
                         req:req,
                         renderView:templatepath,
@@ -668,7 +676,7 @@ var theme_show = function(req, res, next){
                             pagedata:{
                                 title:req.controllerData.theme.name+' - Theme',
                                 // headerjs: ["/extensions/periodicjs.ext.admin/javascripts/theme.js"],
-                                extensions:applicationController.getAdminMenu()
+                                extensions:CoreUtilities.getAdminMenu()
                             },
                             themedata:results,
                             theme: req.controllerData.theme,
@@ -692,24 +700,171 @@ var loadTheme = function(req, res, next){
         next();
     }
     else{
-        next(new Error("no theme selected"));
+        next(new Error('no theme selected'));
     }
+};
+
+var users_index = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
+        {
+            viewname:'p-admin/users/index',
+            themefileext:appSettings.templatefileextension,
+            extname: 'periodicjs.ext.admin'
+        },
+        function(err,templatepath){
+            CoreController.handleDocumentQueryRender({
+                res:res,
+                req:req,
+                renderView:templatepath,
+                responseData:{
+                    pagedata:{
+                        title:'Manage Users',
+                        extensions:CoreUtilities.getAdminMenu()
+                    },
+                    users: req.controllerData.users,
+                    user:req.user
+                }
+            });
+        }
+    );
+};
+
+var users_show = function(req, res){
+    var allow_edit = false,
+        params = req.params;
+
+    if(params.id===req.user.username){
+        logger.silly('users_show: logged in user matches username');
+        allow_edit=true;
+    }
+    else if(req.user.usertype === 'admin'){
+        logger.silly('users_show: user is admin');
+        allow_edit=true;
+    }
+    else if(User.hasPrivilege(req.user,750)){
+        logger.silly('users_show: has edit user privilege');
+        allow_edit=true;
+    }
+    else{
+        logger.silly('users_show: no access');
+    }
+
+    CoreController.getPluginViewDefaultTemplate(
+        {
+            viewname:'p-admin/users/show',
+            themefileext:appSettings.templatefileextension,
+            extname: 'periodicjs.ext.admin'
+        },
+        function(err,templatepath){
+            CoreController.handleDocumentQueryRender({
+                res:res,
+                req:req,
+                renderView:templatepath,
+                responseData:{
+                    pagedata:{
+                        title:'Manage Users',
+                        extensions:CoreUtilities.getAdminMenu()
+                    },
+                    userprofile: req.controllerData.user,
+                    allow_edit:allow_edit,
+                    user:req.user
+                }
+            });
+        }
+    );
+};
+
+var users_new = function(req, res){
+    var allow_edit = false;
+
+    CoreController.getPluginViewDefaultTemplate(
+        {
+            viewname:'p-admin/users/new',
+            themefileext:appSettings.templatefileextension,
+            extname: 'periodicjs.ext.admin'
+        },
+        function(err,templatepath){
+            CoreController.handleDocumentQueryRender({
+                res:res,
+                req:req,
+                renderView:templatepath,
+                responseData:{
+                    pagedata:{
+                        title:'Create User Account',
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/userprofile.min.js'],
+                        extensions:CoreUtilities.getAdminMenu()
+                    },
+                    userprofile: null,
+                    allow_edit: allow_edit,
+                    user: req.user
+                }
+            });
+        }
+    );
+};
+
+var users_edit = function(req, res){
+    var allow_edit = false,
+        params = req.params;
+
+    if(params.id===req.user.username){
+        logger.silly('users_show: logged in user matches username');
+        allow_edit=true;
+    }
+    else if(req.user.usertype === 'admin'){
+        logger.silly('users_show: user is admin');
+        allow_edit=true;
+    }
+    else if(User.hasPrivilege(req.user,750)){
+        logger.silly('users_show: has edit user privilege');
+        allow_edit=true;
+    }
+    else{
+        logger.silly('users_show: no access');
+    }
+
+    CoreController.getPluginViewDefaultTemplate(
+        {
+            viewname:'p-admin/users/edit',
+            themefileext:appSettings.templatefileextension,
+            extname: 'periodicjs.ext.admin'
+        },
+        function(err,templatepath){
+            CoreController.handleDocumentQueryRender({
+                res:res,
+                req:req,
+                renderView:templatepath,
+                responseData:{
+                    pagedata:{
+                        title:'Edit '+req.controllerData.user.username,
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/userprofile.min.js'],
+                        extensions:CoreUtilities.getAdminMenu()
+                    },
+                    userprofile: req.controllerData.user,
+                    allow_edit:allow_edit,
+                    user:req.user
+                }
+            });
+        }
+    );
 };
 
 var controller = function(resources){
 	logger = resources.logger;
 	mongoose = resources.mongoose;
 	appSettings = resources.settings;
-	applicationController = new appController(resources);
-    Item = mongoose.model('Post');
+    CoreController = new ControllerHelper(resources);
+    CoreUtilities = new Utilities(resources);
+    Item = mongoose.model('Item');
     Collection = mongoose.model('Collection');
-	
+    User  = mongoose.model('User');
+
 	return{
 		index:index,
         mail_index:mail_index,
-        posts_index:posts_index,
-        post_new:post_new,
-        post_edit:post_edit,
+        items_index:items_index,
+        item_new:item_new,
+        item_edit:item_edit,
         collections_index:collections_index,
         collection_new:collection_new,
         collection_edit:collection_edit,
@@ -728,7 +883,11 @@ var controller = function(resources){
         categories_index:categories_index,
         category_show:category_show,
         assets_index:assets_index,
-        assets_show:assets_show
+        assets_show:assets_show,
+        users_index:users_index,
+        users_show:users_show,
+        users_edit:users_edit,
+        users_new:users_new
 	};
 };
 
