@@ -7,7 +7,7 @@
     	"extname":"periodicjs.ext.login",
         "version":"1.1.10"
 	},{
-        "extname": "periodicjs.ext.schueduled_content",
+        "extname": "periodicjs.ext.scheduled_content",
         "version":"1.0.1"
     },{
         "extname": "periodicjs.ext.user_access_control",
