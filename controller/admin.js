@@ -12,12 +12,12 @@ var path = require('path'),
     )}),
     CoreUtilities,
     CoreController,
-	appSettings,
-	mongoose,
+    appSettings,
+    mongoose,
     User,
     Collection,
     Item,//Item
-	logger;
+    logger;
 
 var index = function(req, res) {
     CoreController.getPluginViewDefaultTemplate(
@@ -486,8 +486,8 @@ var loadExtensions = function(req, res, next){
     req.controllerData = (req.controllerData)?req.controllerData:{};
 
     ExtensionCore.getExtensions({
-        periodicsettings:appSettings,
-        callback:function (err,extensions) {
+        periodicsettings:appSettings},
+        function (err,extensions) {
             if(err){
                 CoreController.handleDocumentQueryErrorResponse({
                     err:err,
@@ -499,8 +499,7 @@ var loadExtensions = function(req, res, next){
                 req.controllerData.extensions = extensions;
                 next();
             }
-        }
-    });
+        });
 };
 
 var extensions_index = function(req, res) {
@@ -518,7 +517,7 @@ var extensions_index = function(req, res) {
                 responseData:{
                     pagedata:{
                         title:'Extensions',
-                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/ext.js'],
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/ext.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     items: false,
@@ -584,17 +583,20 @@ var extension_show = function(req, res){
 };
 
 var loadThemes = function(req, res, next){
-    var themedir = path.resolve(__dirname,'../../../../../content/themes/'),
+    var themedir = path.resolve(process.cwd(),'content/themes/'),
     returnFiles =[];
 
     req.controllerData = (req.controllerData)?req.controllerData:{};
 
     fs.readdir(themedir,function(err,files){
-        for(var x =0; x< files.length; x++){
-            if(files[x].match('periodicjs.theme')){
-                returnFiles.push(files[x]);
+        if(files){            
+            for(var x =0; x< files.length; x++){
+                if(files[x].match('periodicjs.theme')){
+                    returnFiles.push(files[x]);
+                }
             }
         }
+
         if(err){
             CoreController.handleDocumentQueryErrorResponse({
                 err:err,
@@ -624,7 +626,7 @@ var themes_index = function(req, res) {
                 responseData:{
                     pagedata:{
                         title:'Themes',
-                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/theme.js'],
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/theme.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     items: false,
@@ -850,17 +852,17 @@ var users_edit = function(req, res){
 };
 
 var controller = function(resources){
-	logger = resources.logger;
-	mongoose = resources.mongoose;
-	appSettings = resources.settings;
+    logger = resources.logger;
+    mongoose = resources.mongoose;
+    appSettings = resources.settings;
     CoreController = new ControllerHelper(resources);
     CoreUtilities = new Utilities(resources);
     Item = mongoose.model('Item');
     Collection = mongoose.model('Collection');
     User  = mongoose.model('User');
 
-	return{
-		index:index,
+    return{
+        index:index,
         mail_index:mail_index,
         items_index:items_index,
         item_new:item_new,
@@ -888,7 +890,7 @@ var controller = function(resources){
         users_show:users_show,
         users_edit:users_edit,
         users_new:users_new
-	};
+    };
 };
 
 module.exports = controller;
