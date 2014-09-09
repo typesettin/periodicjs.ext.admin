@@ -252,7 +252,7 @@ var assets_index = function(req, res) {
                 responseData:{
                     pagedata:{
                         title:'Assets',
-                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/asset.js'],
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/asset.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     assets: req.controllerData.assets,
@@ -278,7 +278,7 @@ var assets_show = function(req, res) {
                 responseData:{
                     pagedata:{
                         title:req.controllerData.asset.title+' - Edit Assets',
-                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/assets.js'],
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/asset.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     asset: req.controllerData.asset,
@@ -329,7 +329,7 @@ var contenttype_show = function(req, res) {
                 responseData:{
                     pagedata:{
                         title:req.controllerData.contenttype.title+' - Edit Content Types',
-                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/contenttype.js'],
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/contenttype.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     periodic:{
@@ -383,7 +383,7 @@ var tag_show = function(req, res) {
                 responseData:{
                     pagedata:{
                         title:req.controllerData.tag.title+' - Edit Tag',
-                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/tag.js'],
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/tag.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     periodic:{
@@ -437,7 +437,7 @@ var category_show = function(req, res) {
                 responseData:{
                     pagedata:{
                         title:req.controllerData.category.title+' - Edit Tag',
-                        headerjs: ['/extensions/periodicjs.ext.admin/javascripts/category.js'],
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/category.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     periodic:{
