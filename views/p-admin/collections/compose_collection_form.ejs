@@ -22,7 +22,7 @@
 									<%= docresult.item.title %>
 									<div><small>
 										<%
-										if(docresult.item.tags){
+										if(docresult.item.tags && docresult.item.tags.length >0){
 											%>
 											<strong>tags:</strong> <%
 											for(var i in docresult.item.tags){
@@ -31,7 +31,7 @@
 												<%
 											}
 										}
-										if(docresult.item.categories){
+										if(docresult.item.categories && docresult.item.categories.length >0){
 											%>
 											<strong>categories:</strong> <%
 											for(var i in docresult.item.categories){
@@ -40,7 +40,7 @@
 												<%
 											}
 										}
-										if(docresult.item.contenttypes){
+										if(docresult.item.contenttypes && docresult.item.contenttypes.length >0){
 											%>
 											<strong>contenttypes:</strong> <%
 											for(var i in docresult.item.contenttypes){
