@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -58,10 +58,8 @@ EventEmitter.prototype.emit = function(type) {
       er = arguments[1];
       if (er instanceof Error) {
         throw er; // Unhandled 'error' event
-      } else {
-        throw TypeError('Uncaught, unspecified "error" event.');
       }
-      return false;
+      throw TypeError('Uncaught, unspecified "error" event.');
     }
   }
 
@@ -989,8 +987,8 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-}).call(this,require("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":4,"FWaASH":3,"inherits":2}],6:[function(require,module,exports){
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./support/isBuffer":4,"_process":3,"inherits":2}],6:[function(require,module,exports){
 /*
  * manuscript
  * http://github.com/typesettin/manuscript
@@ -1394,7 +1392,7 @@ module.exports = letterpress;
 if ( typeof window === "object" && typeof window.document === "object" ) {
 	window.letterpress = letterpress;
 }
-},{"classie":8,"domhelper":10,"events":1,"superagent":13,"util":5,"util-extend":12}],8:[function(require,module,exports){
+},{"classie":8,"domhelper":10,"events":1,"superagent":12,"util":5,"util-extend":17}],8:[function(require,module,exports){
 /*
  * classie
  * http://github.amexpub.com/modules/classie
@@ -1838,41 +1836,6 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
 	window.domhelper = domhelper;
 }
 },{"classie":8}],12:[function(require,module,exports){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-module.exports = extend;
-function extend(origin, add) {
-  // Don't do anything if add isn't an object
-  if (!add || typeof add !== 'object') return origin;
-
-  var keys = Object.keys(add);
-  var i = keys.length;
-  while (i--) {
-    origin[keys[i]] = add[keys[i]];
-  }
-  return origin;
-}
-
-},{}],13:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -2923,7 +2886,7 @@ request.put = function(url, data, fn){
 
 module.exports = request;
 
-},{"emitter":14,"reduce":15}],14:[function(require,module,exports){
+},{"emitter":13,"reduce":14}],13:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -3089,7 +3052,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 
 /**
  * Reduce `arr` with `fn`.
@@ -3114,7 +3077,7 @@ module.exports = function(arr, fn, initial){
   
   return curr;
 };
-},{}],16:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent'),
@@ -3131,7 +3094,7 @@ var request = require('superagent'),
 	hideConsoleOutput,
 	consoleOutput;
 
-window.addEventListener("load",function(e){
+window.addEventListener("load", function (e) {
 	searchExtInput = document.getElementById("search-ext_input");
 	searchExtButton = document.getElementById("search-ext_button");
 	searchGithubResultsTable = document.getElementById("ext-search-results");
@@ -3142,16 +3105,16 @@ window.addEventListener("load",function(e){
 	installedtable = document.getElementById("installed-ext-table");
 	hideConsoleOutput = document.getElementById("hide-ext-console");
 	uploadButton = document.getElementById("upload-ext_button");
-	searchExtInput.addEventListener("keypress",searchInputKeypress,false);
-	searchExtButton.addEventListener("click",searchExtFromGithub,false);
-	searchGithubResultsTable.addEventListener("click",searchTblClick,false);
-	extModal.addEventListener("click",extmodalClick,false);
-	installedtable.addEventListener("click",installedTableClick,false);
-	hideConsoleOutput.addEventListener("click",hideConsoleOutputClick,false);
-	uploadButton.addEventListener("change",uploadMediaFiles,false);
+	searchExtInput.addEventListener("keypress", searchInputKeypress, false);
+	searchExtButton.addEventListener("click", searchExtFromGithub, false);
+	searchGithubResultsTable.addEventListener("click", searchTblClick, false);
+	extModal.addEventListener("click", extmodalClick, false);
+	installedtable.addEventListener("click", installedTableClick, false);
+	hideConsoleOutput.addEventListener("click", hideConsoleOutputClick, false);
+	uploadButton.addEventListener("change", uploadMediaFiles, false);
 });
 
-var uploadMediaFiles = function(e){
+var uploadMediaFiles = function (e) {
 	// fetch FileList object
 	var files = e.target.files || e.dataTransfer.files;
 
@@ -3159,160 +3122,165 @@ var uploadMediaFiles = function(e){
 	for (var i = 0, f; f = files[i]; i++) {
 		// ParseFile(f);
 		// uploadFile(f);
-		updatemedia.uploadFile(null,f,{
-			posturl:'/p-admin/extension/upload?format=json',
-			callback:function(doc){
+		updatemedia.uploadFile(null, f, {
+			posturl: '/p-admin/extension/upload?format=json',
+			callback: function (doc) {
 				// console.log(doc);
 				var res = {
-					body:{
-						data:{
-							time:doc.time,
-							repo:doc.extname
+					body: {
+						data: {
+							time: doc.time,
+							repo: doc.extname
 						}
 					}
 				};
-				document.getElementById("ext-console").style.display="block";
-				getConsoleOutput(res.body,null,null,null,{
-					getRequest:'/p-admin/extension/upload/log/'+doc.extname+'/'+doc.time,
-					extname:doc.extname,
-					repo:doc.extname,
-					time:doc.time
+				document.getElementById("ext-console").style.display = "block";
+				getConsoleOutput(res.body, null, null, null, {
+					getRequest: '/p-admin/extension/upload/log/' + doc.extname + '/' + doc.time,
+					extname: doc.extname,
+					repo: doc.extname,
+					time: doc.time
 				});
 			}
 		});
 	}
 };
 
-var hideConsoleOutputClick = function(e){
-	document.getElementById("ext-console").style.display="none";
+var hideConsoleOutputClick = function (e) {
+	document.getElementById("ext-console").style.display = "none";
 };
 
-var installedTableClick = function(e){
+var installedTableClick = function (e) {
 	var eTarget = e.target;
 
-	console.log("eTarget",eTarget);
-	if(eTarget.getAttribute("class") && eTarget.getAttribute("class").match("enable-ext-button")){
+	console.log("eTarget", eTarget);
+	if (eTarget.getAttribute("class") && eTarget.getAttribute("class").match("enable-ext-button")) {
 		request
 			.get(eTarget.getAttribute("data-href"))
-			.query({format:"json"})
+			.query({
+				format: "json"
+			})
 			.set('Accept', 'application/json')
-			.end(function(error, res){
-				if(error){
-					ribbonNotification.showRibbon( error.message,4000,'error');
+			.end(function (error, res) {
+				if (error) {
+					ribbonNotification.showRibbon(error.message, 4000, 'error');
 				}
-				else if(res.body.result === "success"){
-					if(res.body.data.msg==="extension disabled"){
-						ribbonNotification.showRibbon( res.body.data.msg,4000,'warn');
-						eTarget.innerHTML='enable';
-						eTarget.setAttribute("data-href","/p-admin/extension/"+res.body.data.ext+"/enable");
-						eTarget.setAttribute("class","_pea-button  enable-ext-button");
+				else if (res.body.result === "success") {
+					if (res.body.data.msg === "extension disabled") {
+						ribbonNotification.showRibbon(res.body.data.msg, 4000, 'warn');
+						eTarget.innerHTML = 'enable';
+						eTarget.setAttribute("data-href", "/p-admin/extension/" + res.body.data.ext + "/enable");
+						eTarget.setAttribute("class", "_pea-button  enable-ext-button");
 						//<a data-href="/p-admin/extension/<%= extension.name %>/enable" class="_pea-button enable-ext-button">enable</a>		
 					}
-					else{
-						ribbonNotification.showRibbon( res.body.data.msg,4000,'success');
-						eTarget.innerHTML='disable';
-						eTarget.setAttribute("data-href","/p-admin/extension/"+res.body.data.ext+"/disable");
-						eTarget.setAttribute("class","_pea-button _pea-color-warn enable-ext-button");
+					else {
+						ribbonNotification.showRibbon(res.body.data.msg, 4000, 'success');
+						eTarget.innerHTML = 'disable';
+						eTarget.setAttribute("data-href", "/p-admin/extension/" + res.body.data.ext + "/disable");
+						eTarget.setAttribute("class", "_pea-button _pea-color-warn enable-ext-button");
 						//<a data-href="/p-admin/extension/<%= extension.name %>/disable" class="_pea-button _pea-color-warn enable-ext-button">disable</a>				
 					}
 				}
-				else{
-					ribbonNotification.showRibbon( res.body.data.error,4000,'error');
+				else {
+					ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
 				}
 			});
 	}
-	else if(eTarget.getAttribute("class") && eTarget.getAttribute("class").match("delete-ext-button")){
+	else if (eTarget.getAttribute("class") && eTarget.getAttribute("class").match("delete-ext-button")) {
 		request
 			.post(eTarget.getAttribute("data-href"))
 			.query({
-				format:"json",
-				_csrf:eTarget.getAttribute("data-token")
+				format: "json",
+				_csrf: eTarget.getAttribute("data-token")
 			})
 			.set('Accept', 'application/json')
-			.end(function(error, res){
-				if(res && res.error){
+			.end(function (error, res) {
+				if (res && res.error) {
 					error = res.error;
 				}
-				if(error){
-					ribbonNotification.showRibbon( error.message,4000,'error');
+				if (error) {
+					ribbonNotification.showRibbon(error.message, 4000, 'error');
 				}
-				else{
-					document.getElementById("ext-console").style.display="block";
-					getConsoleOutput(res.body,eTarget.getAttribute("data-extname"),res.body.data.extname,'remove');
+				else {
+					document.getElementById("ext-console").style.display = "block";
+					getConsoleOutput(res.body, eTarget.getAttribute("data-extname"), res.body.data.extname, 'remove');
 				}
 			});
 
 	}
 };
 
-var searchExtFromGithub = function(){
+var searchExtFromGithub = function () {
 	searchGithubResultsTableBody.innerHTML = '<tr><td class="_pea-text-center" colspan="3">searching github</td></tr>';
 
 	request
 		.get('https://api.github.com/search/repositories')
-		.query({q:'periodicjs.ext.'+document.getElementById("search-ext_input").value})
+		.query({
+			q: 'periodicjs.ext.' + document.getElementById("search-ext_input").value
+		})
 		.set('Accept', 'application/json')
-		.end(function(error, res){
-			if(error){
-				ribbonNotification.showRibbon( error.message,4000,'error');
+		.end(function (error, res) {
+			if (error) {
+				ribbonNotification.showRibbon(error.message, 4000, 'error');
 			}
-			else if(!res.body.items){
-				ribbonNotification.showRibbon( "could not search github",4000,'error');
+			else if (!res.body.items) {
+				ribbonNotification.showRibbon("could not search github", 4000, 'error');
 			}
-			else{
-				searchGithubResultsTable.style.display="table";
+			else {
+				searchGithubResultsTable.style.display = "table";
 				searchGithubResultsTableBody.innerHTML = buildSearchExtResultTable(res.body.items);
 			}
 		});
 };
 
-var searchInputKeypress = function(e){
-	if ( e.which === 13 || e.keyCode === 13  ) {
+var searchInputKeypress = function (e) {
+	if (e.which === 13 || e.keyCode === 13) {
 		searchExtFromGithub();
 	}
 };
 
-var buildSearchExtResultTable = function(data){
-	var returnhtml = '',repoinfo;
-	for(var x in data){
-		repoinfo=data[x];
-		returnhtml+='<tr><td>'+repoinfo.name+'</td><td>'+repoinfo.description+'</br> <small><a target="_blank" href="'+repoinfo.html_url+'">'+repoinfo.html_url+'</a></small></td><td class="_pea-text-right">';
-		returnhtml+='<a href="#view/'+repoinfo.full_name+'" class="view-ext _pea-button" data-gitname="'+repoinfo.full_name+'" data-exttitle="'+repoinfo.name+'" data-desc="'+repoinfo.description+'">install</a></td></tr>';
+var buildSearchExtResultTable = function (data) {
+	var returnhtml = '',
+		repoinfo;
+	for (var x in data) {
+		repoinfo = data[x];
+		returnhtml += '<tr><td>' + repoinfo.name + '</td><td>' + repoinfo.description + '</br> <small><a target="_blank" href="' + repoinfo.html_url + '">' + repoinfo.html_url + '</a></small></td><td class="_pea-text-right">';
+		returnhtml += '<a href="#view/' + repoinfo.full_name + '" class="view-ext _pea-button" data-gitname="' + repoinfo.full_name + '" data-exttitle="' + repoinfo.name + '" data-desc="' + repoinfo.description + '">install</a></td></tr>';
 	}
 	return returnhtml;
 };
 
-var searchTblClick = function(e){
+var searchTblClick = function (e) {
 	var eTarget = e.target,
 		fullreponame,
 		repoversionlist;
 
-		console.log("search table click");
+	console.log("search table click");
 
-	if(eTarget.getAttribute("class") && eTarget.getAttribute("class").match('view-ext')){
+	if (eTarget.getAttribute("class") && eTarget.getAttribute("class").match('view-ext')) {
 		console.log("pop modal");
-		extModal.querySelector('.title').innerHTML=eTarget.getAttribute("data-exttitle").replace('periodicjs.ext.','');
-		extModal.querySelector('.desc').innerHTML=eTarget.getAttribute("data-desc");
+		extModal.querySelector('.title').innerHTML = eTarget.getAttribute("data-exttitle").replace('periodicjs.ext.', '');
+		extModal.querySelector('.desc').innerHTML = eTarget.getAttribute("data-desc");
 		repoversionlist = extModal.querySelector('.versions');
-		repoversionlist.innerHTML='<li>loading versions...</li>';
-		fullreponame=eTarget.getAttribute("data-gitname");
+		repoversionlist.innerHTML = '<li>loading versions...</li>';
+		fullreponame = eTarget.getAttribute("data-gitname");
 
-		silkscreenModal.showSilkscreen('Install Extension',extModal,null,14);
+		silkscreenModal.showSilkscreen('Install Extension', extModal, null, 14);
 
 		request
-			.get('https://api.github.com/repos/'+fullreponame+'/tags')
+			.get('https://api.github.com/repos/' + fullreponame + '/tags')
 			.set('Accept', 'application/json')
-			.end(function(error, res){
-				if(error){
-					ribbonNotification.showRibbon( error.message,4000,'error');
+			.end(function (error, res) {
+				if (error) {
+					ribbonNotification.showRibbon(error.message, 4000, 'error');
 				}
-				else{
-					extModal.querySelector('.versions').innerHTML='';
-					repoversionlist.innerHTML='<li><a class="install-ext-link" data-repo="'+fullreponame+'" data-version="latest">latest</a></li>';
+				else {
+					extModal.querySelector('.versions').innerHTML = '';
+					repoversionlist.innerHTML = '<li><a class="install-ext-link" data-repo="' + fullreponame + '" data-version="latest">latest</a></li>';
 					// console.log(res.body.length,res.body)
-					if(res.body.length>0){
-						for(var x in res.body){
-							repoversionlist.innerHTML+='<li><a class="install-ext-link" data-repo="'+fullreponame+'" data-version="'+res.body[x].name+'">'+res.body[x].name+'</a></li>';
+					if (res.body.length > 0) {
+						for (var x in res.body) {
+							repoversionlist.innerHTML += '<li><a class="install-ext-link" data-repo="' + fullreponame + '" data-version="' + res.body[x].name + '">' + res.body[x].name + '</a></li>';
 						}
 					}
 				}
@@ -3320,164 +3288,165 @@ var searchTblClick = function(e){
 	}
 };
 
-var extmodalClick = function(e){
+var extmodalClick = function (e) {
 	var eTarget = e.target;
-	if(eTarget.getAttribute("class")==='install-ext-link'){
+	if (eTarget.getAttribute("class") === 'install-ext-link') {
 		silkscreenModal.hideSilkscreen();
 
 		request
 			.get('/p-admin/extension/install')
 			.query({
-				name:eTarget.getAttribute("data-repo"),
-				version:eTarget.getAttribute("data-version"),
-				format:"json"
+				name: eTarget.getAttribute("data-repo"),
+				version: eTarget.getAttribute("data-version"),
+				format: "json"
 			})
 			.set('Accept', 'application/json')
-			.end(function(error, res){
-				if(res && res.error){
+			.end(function (error, res) {
+				if (res && res.error) {
 					error = res.error;
 				}
-				if(error){
-					ribbonNotification.showRibbon( error.message,4000,'error');
+				if (error) {
+					ribbonNotification.showRibbon(error.message, 4000, 'error');
 				}
-				else{
-					document.getElementById("ext-console").style.display="block";
-					getConsoleOutput(res.body,eTarget.getAttribute("data-repo").split('/')[1]);
+				else {
+					document.getElementById("ext-console").style.display = "block";
+					getConsoleOutput(res.body, eTarget.getAttribute("data-repo").split('/')[1]);
 				}
 			});
 	}
 };
 
-var getConsoleOutput = function(responsebody,fullrepo,extname,operation,options){
-	var t = setInterval(function(){
-			getOutputFromFile(responsebody.data.repo,responsebody.data.time);
-		},4000),
+var getConsoleOutput = function (responsebody, fullrepo, extname, operation, options) {
+	var t = setInterval(function () {
+			getOutputFromFile(responsebody.data.repo, responsebody.data.time);
+		}, 4000),
 		otf,
-		cnt=0,
-		lastres='',
+		cnt = 0,
+		lastres = '',
 		repo = responsebody.data.repo,
 		time = responsebody.data.time;
-	if(options && options.getRequest){
+	if (options && options.getRequest) {
 		var getRequest = options.getRequest,
-				fullrepo = options.repo,
-				repo = options.repo,
-				time = options.time;
+			fullrepo = options.repo,
+			repo = options.repo,
+			time = options.time;
 	}
-	else{
-		var getRequest = (operation === 'remove') ? '/p-admin/extension/remove/log/'+repo+'/'+time : '/p-admin/extension/install/log/'+repo+'/'+time;
+	else {
+		var getRequest = (operation === 'remove') ? '/p-admin/extension/remove/log/' + repo + '/' + time : '/p-admin/extension/install/log/' + repo + '/' + time;
 	}
-	consoleOutput.innerHTML='';
+	consoleOutput.innerHTML = '';
 
-	var getOutputFromFile = function(repo,time){
+	var getOutputFromFile = function (repo, time) {
 		request
 			.get(getRequest)
 			.set('Accept', ' text/plain')
-			.end(function(error, res){
-				try{
-					if(res.error){
+			.end(function (error, res) {
+				try {
+					if (res.error) {
 						error = res.error;
 					}
 				}
-				catch(e){
+				catch (e) {
 					console.log(e);
 				}
 
-				if(error){
-					ribbonNotification.showRibbon( error.message || res.text ,8000,'error');
+				if (error) {
+					ribbonNotification.showRibbon(error.message || res.text, 8000, 'error');
 					// console.log("error in ajax for file log data");
-					console.log("cnt",cnt);
-					console.log("res",res);
-					if(res.error || cnt >5){
+					console.log("cnt", cnt);
+					console.log("res", res);
+					if (res.error || cnt > 5) {
 						clearTimeout(t);
 					}
 				}
-				else{
-					if(cnt>20){
+				else {
+					if (cnt > 20) {
 						console.log("made 20 req stop ajax");
 						clearTimeout(t);
 					}
 					// console.log(cnt);
 					// console.log(res.text);
-					if(res.text!==lastres){
+					if (res.text !== lastres) {
 						otf = document.createElement("pre");
-						otf.innerHTML=res.text;
+						otf.innerHTML = res.text;
 						consoleOutput.appendChild(otf);
-						consoleOutput.scrollTop=consoleOutput.scrollHeight;
+						consoleOutput.scrollTop = consoleOutput.scrollHeight;
 					}
-					if(res.text.match('====!!ERROR!!====') || res.text.match('====##END##====')){
-						if(res.text.match('====##END##====')){
-							ribbonNotification.showRibbon( fullrepo+' installed' ,8000,'success');
-							if(!installedtable.innerHTML.match(fullrepo)){
+					if (res.text.match('====!!ERROR!!====') || res.text.match('====##END##====')) {
+						if (res.text.match('====##END##====')) {
+							ribbonNotification.showRibbon(fullrepo + ' installed', 8000, 'success');
+							if (!installedtable.innerHTML.match(fullrepo)) {
 								var installedExt = document.createElement('tr');
-								installedExt.innerHTML='<td><a href="/p-admin/extension/view/'+fullrepo+'">'+fullrepo+'</a><div><small>Refresh page for updated UI</small</div></td>'+'<td></td>'+'<td></td>';
+								installedExt.innerHTML = '<td><a href="/p-admin/extension/view/' + fullrepo + '">' + fullrepo + '</a><div><small>Refresh page for updated UI</small</div></td>' + '<td></td>' + '<td></td>';
 								installedtablebody.appendChild(installedExt);
 							}
-							else{
-								console.log("already installed",repo,time);
+							else {
+								console.log("already installed", repo, time);
 							}
-							cleanupLogFile(repo,time,'install',options);
+							cleanupLogFile(repo, time, 'install', options);
 						}
 						clearTimeout(t);
 					}
-					else if(res.text.match('====!!ERROR!!====') || res.text.match('====##REMOVED-END##====')){
+					else if (res.text.match('====!!ERROR!!====') || res.text.match('====##REMOVED-END##====')) {
 
-						ribbonNotification.showRibbon( fullrepo+' removed' ,4000,'warn');
-						var removeExtElement = document.getElementById('tr-ext-'+extname);
+						ribbonNotification.showRibbon(fullrepo + ' removed', 4000, 'warn');
+						var removeExtElement = document.getElementById('tr-ext-' + extname);
 						removeExtElement.parentNode.removeChild(removeExtElement);
-						cleanupLogFile(repo,time,'remove');
+						cleanupLogFile(repo, time, 'remove');
 						clearTimeout(t);
 					}
-					lastres=res.text;
+					lastres = res.text;
 					cnt++;
 				}
 			});
 	}
 
-	var cleanupLogFile = function(repo,time,mode,options){
+	var cleanupLogFile = function (repo, time, mode, options) {
 		var makenice = (options) ? true : false;
 		request
-			.get('/p-admin/extension/cleanup/log/'+repo+'/'+time)
+			.get('/p-admin/extension/cleanup/log/' + repo + '/' + time)
 			.query({
-				format:"json",
-				mode:mode,
-				makenice:makenice
+				format: "json",
+				mode: mode,
+				makenice: makenice
 			})
 			.set('Accept', ' application/json')
-			.end(function(error,res){
-				if(res.error){
+			.end(function (error, res) {
+				if (res.error) {
 					error = res.error;
 				}
 
-				if(error){
-					ribbonNotification.showRibbon( error.message || res.text ,8000,'error');
+				if (error) {
+					ribbonNotification.showRibbon(error.message || res.text, 8000, 'error');
 				}
 			});
 	}
 };
-},{"./updatemedia":17,"letterpressjs":6,"superagent":13}],17:[function(require,module,exports){
+
+},{"./updatemedia":16,"letterpressjs":6,"superagent":12}],16:[function(require,module,exports){
 'use strict';
 
-var updatemedia = function( element, mediadoc ){
-	var updateMediaResultHtml = function(element,mediadoc){
+var updatemedia = function (element, mediadoc) {
+	var updateMediaResultHtml = function (element, mediadoc) {
 		element.appendChild(generateMediaHtml(mediadoc));
 	};
 
-	var generateMediaHtml = function(mediadoc){
+	var generateMediaHtml = function (mediadoc) {
 		var mediaHtml = document.createElement('div'),
-			htmlForInnerMedia='';
-		mediaHtml.setAttribute('class','_pea-col-span4 media-item-x');
-		mediaHtml.setAttribute('data-id',mediadoc._id);
-		htmlForInnerMedia+='<input style="display:none;" name="assets" type="checkbox" value="'+mediadoc._id+'" checked="checked"></input>';
-		if(mediadoc.assettype.match('image')){
-			htmlForInnerMedia+='<img class="_pea-col-span11" src="'+mediadoc.fileurl+'"/>';
+			htmlForInnerMedia = '';
+		mediaHtml.setAttribute('class', '_pea-col-span4 media-item-x');
+		mediaHtml.setAttribute('data-id', mediadoc._id);
+		htmlForInnerMedia += '<input style="display:none;" name="assets" type="checkbox" value="' + mediadoc._id + '" checked="checked"></input>';
+		if (mediadoc.assettype.match('image')) {
+			htmlForInnerMedia += '<img class="_pea-col-span11" src="' + mediadoc.fileurl + '"/>';
 		}
-		else{
-			htmlForInnerMedia+='<div class="_pea-col-span11"> '+mediadoc.fileurl+'</div>';
+		else {
+			htmlForInnerMedia += '<div class="_pea-col-span11"> ' + mediadoc.fileurl + '</div>';
 		}
-		htmlForInnerMedia+='<div class="mix-options _pea-text-right">';
-		htmlForInnerMedia+='<a data-assetid="'+mediadoc._id+'" title="make primary asset" class="_pea-button make-primary _pea-color-warn">*</a>';
-		htmlForInnerMedia+='<a data-assetid="'+mediadoc._id+'" title="remove asset" class="_pea-button remove-asset _pea-color-error">x</a>';
-		htmlForInnerMedia+='</div>';
+		htmlForInnerMedia += '<div class="mix-options _pea-text-right">';
+		htmlForInnerMedia += '<a data-assetid="' + mediadoc._id + '" title="make primary asset" class="_pea-button make-primary _pea-color-warn">*</a>';
+		htmlForInnerMedia += '<a data-assetid="' + mediadoc._id + '" title="remove asset" class="_pea-button remove-asset _pea-color-error">x</a>';
+		htmlForInnerMedia += '</div>';
 		mediaHtml.innerHTML = htmlForInnerMedia;
 		return mediaHtml;
 	};
@@ -3485,64 +3454,100 @@ var updatemedia = function( element, mediadoc ){
 	updateMediaResultHtml(element, mediadoc);
 };
 
-updatemedia.handleMediaButtonClick = function(e){
+updatemedia.handleMediaButtonClick = function (e) {
 	var eTarget = e.target;
-	if(eTarget.getAttribute('class') && eTarget.getAttribute('class').match('remove-asset')){
+	if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('remove-asset')) {
 		document.getElementById('media-files-result').removeChild(eTarget.parentElement.parentElement);
 	}
-	else if(eTarget.getAttribute('class') && eTarget.getAttribute('class').match('make-primary')){
+	else if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('make-primary')) {
 		document.getElementById('primaryasset-input').value = eTarget.getAttribute('data-assetid');
 		var mpbuttons = document.querySelectorAll('._pea-button.make-primary');
-		for(var x in mpbuttons){
-			if(typeof mpbuttons[x]==='object'){
-				mpbuttons[x].style.display='inline-block';
+		for (var x in mpbuttons) {
+			if (typeof mpbuttons[x] === 'object') {
+				mpbuttons[x].style.display = 'inline-block';
 			}
 		}
-		eTarget.style.display='none';
+		eTarget.style.display = 'none';
 	}
 };
 
-updatemedia.uploadFile = function(mediafilesresult,file,options){
+updatemedia.uploadFile = function (mediafilesresult, file, options) {
 	var reader = new FileReader(),
-			client = new XMLHttpRequest(),
-			formData = new FormData(),
-			posturl = (options && options.posturl) ? options.posturl : '/mediaasset/new?format=json',
-			callback = (options && options.callback) ? options.callback : function(data){
-				updatemedia(mediafilesresult,data);
-			};
+		client = new XMLHttpRequest(),
+		formData = new FormData(),
+		posturl = (options && options.posturl) ? options.posturl : '/mediaasset/new?format=json',
+		callback = (options && options.callback) ? options.callback : function (data) {
+			updatemedia(mediafilesresult, data);
+		};
 
-	reader.onload = function() {
+	reader.onload = function () {
 		// console.log(e);
 		// console.log(file);
-		formData.append('mediafile',file,file.name);
+		formData.append('mediafile', file, file.name);
 
 		client.open('post', posturl, true);
-		client.setRequestHeader('x-csrf-token', document.querySelector('input[name=_csrf]').value );
-		client.send(formData);  /* Send to server */ 
+		client.setRequestHeader('x-csrf-token', document.querySelector('input[name=_csrf]').value);
+		client.send(formData); /* Send to server */
 	};
 	reader.readAsDataURL(file);
-	client.onreadystatechange = function(){
-		if(client.readyState === 4){
-			try{
+	client.onreadystatechange = function () {
+		if (client.readyState === 4) {
+			try {
 				var res = JSON.parse(client.response);
-				if(res.result==='error'){
-					window.ribbonNotification.showRibbon( res.data.error,4000,'error');
+				if (res.result === 'error') {
+					window.ribbonNotification.showRibbon(res.data.error, 4000, 'error');
 				}
-				else if(client.status !== 200){
-					window.ribbonNotification.showRibbon( client.status+': '+client.statusText,4000,'error');
+				else if (client.status !== 200) {
+					window.ribbonNotification.showRibbon(client.status + ': ' + client.statusText, 4000, 'error');
 				}
-				else{
-					window.ribbonNotification.showRibbon('saved',4000,'success');
+				else {
+					window.ribbonNotification.showRibbon('saved', 4000, 'success');
 					callback(res.data.doc);
 				}
 			}
-			catch(e){
-				window.ribbonNotification.showRibbon( e.message,4000,'error');
+			catch (e) {
+				window.ribbonNotification.showRibbon(e.message, 4000, 'error');
 				console.log(e);
 			}
 		}
 	};
 };
 
-module.exports =updatemedia;
-},{}]},{},[16]);
+module.exports = updatemedia;
+
+},{}],17:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+module.exports = extend;
+function extend(origin, add) {
+  // Don't do anything if add isn't an object
+  if (!add || typeof add !== 'object') return origin;
+
+  var keys = Object.keys(add);
+  var i = keys.length;
+  while (i--) {
+    origin[keys[i]] = add[keys[i]];
+  }
+  return origin;
+}
+
+},{}]},{},[15]);

@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -1247,7 +1247,7 @@ var request = require('superagent'),
 	updatemedia = require('./updatemedia'),
 	assetTable;
 
-window.addEventListener("load",function(e){
+window.addEventListener("load", function (e) {
 	ajaxFormEventListers("._pea-ajax-form");
 	// wysihtml5Editor = new wysihtml5.Editor("wysihtml5-textarea", { 
 	// 	// id of textarea element
@@ -1255,71 +1255,73 @@ window.addEventListener("load",function(e){
 	// 	parserRules:  wysihtml5ParserRules // defined in parser rules set 
 	// });
 	assetTable = document.getElementById("pea-asset-admin");
-	if(assetTable){
-		assetTable.addEventListener("click",assetTableClick,false);		
+	if (assetTable) {
+		assetTable.addEventListener("click", assetTableClick, false);
 	}
 });
 
-var assetTableClick = function(e){
+var assetTableClick = function (e) {
 	var eTarget = e.target;
-	if(eTarget.getAttribute("class") && eTarget.getAttribute("class").match("delete-asset-button")){
+	if (eTarget.getAttribute("class") && eTarget.getAttribute("class").match("delete-asset-button")) {
 		request
 			.post(eTarget.getAttribute("data-href"))
 			.set('Accept', 'application/json')
-			.send({ 
-				_csrf: document.querySelector('input[name=_csrf]').value 
+			.send({
+				_csrf: document.querySelector('input[name=_csrf]').value
 			})
-			.query({ format: 'json'})
-			.end(function(error, res){
-				if(res.error){
+			.query({
+				format: 'json'
+			})
+			.end(function (error, res) {
+				if (res.error) {
 					error = res.error;
 				}
-				if(error || res.status === 500){
-					ribbonNotification.showRibbon( error.message,4000,'error');
+				if (error || res.status === 500) {
+					ribbonNotification.showRibbon(error.message, 4000, 'error');
 				}
-				else{
-					if(res.body.result==='error'){
-						ribbonNotification.showRibbon( res.body.data.error,4000,'error');
+				else {
+					if (res.body.result === 'error') {
+						ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
 					}
-					else{
-						ribbonNotification.showRibbon( res.body.data ,4000,'warn');
+					else {
+						ribbonNotification.showRibbon(res.body.data, 4000, 'warn');
 						var assetid = eTarget.getAttribute("assetid");
-						var assettr = document.querySelector('[data-tr-assetid="'+assetid+'"]');
+						var assettr = document.querySelector('[data-tr-assetid="' + assetid + '"]');
 						removeTableRow(assettr);
 					}
 				}
-		});
+			});
 	}
 };
 
-var removeTableRow = function(element){
+var removeTableRow = function (element) {
 	element.parentElement.removeChild(element);
 };
 
 },{"./updatemedia":5,"superagent":1}],5:[function(require,module,exports){
 'use strict';
 
-var updatemedia = function( element, mediadoc ){
-	var updateMediaResultHtml = function(element,mediadoc){
+var updatemedia = function (element, mediadoc) {
+	var updateMediaResultHtml = function (element, mediadoc) {
 		element.appendChild(generateMediaHtml(mediadoc));
 	};
 
-	var generateMediaHtml = function(mediadoc){
+	var generateMediaHtml = function (mediadoc) {
 		var mediaHtml = document.createElement('div'),
-			htmlForInnerMedia='';
-		mediaHtml.setAttribute('class','_pea-col-span4 media-item-x');
-		mediaHtml.setAttribute('data-id',mediadoc._id);
-		htmlForInnerMedia+='<input style="display:none;" name="assets" type="checkbox" value="'+mediadoc._id+'" checked="checked"></input>';
-		if(mediadoc.assettype.match('image')){
-			htmlForInnerMedia+='<img class="_pea-col-span11" src="'+mediadoc.fileurl+'"/>';
+			htmlForInnerMedia = '';
+		mediaHtml.setAttribute('class', '_pea-col-span4 media-item-x');
+		mediaHtml.setAttribute('data-id', mediadoc._id);
+		htmlForInnerMedia += '<input style="display:none;" name="assets" type="checkbox" value="' + mediadoc._id + '" checked="checked"></input>';
+		if (mediadoc.assettype.match('image')) {
+			htmlForInnerMedia += '<img class="_pea-col-span11" src="' + mediadoc.fileurl + '"/>';
 		}
-		else{
-			htmlForInnerMedia+='<div class="_pea-col-span11"> '+mediadoc.fileurl+'</div>';
+		else {
+			htmlForInnerMedia += '<div class="_pea-col-span11"> ' + mediadoc.fileurl + '</div>';
 		}
-		htmlForInnerMedia+='<div class="mix-options _pea-text-right">';
-		htmlForInnerMedia+='<a data-assetid="'+mediadoc._id+'" title="make primary asset" class="_pea-button make-primary _pea-color-warn">*</a>';
-		htmlForInnerMedia+='<a data-assetid="'+mediadoc._id+'" title="remove asset" class="_pea-button remove-asset _pea-color-error">x</a>';
-		htmlForInnerMedia+='</div>';
+		htmlForInnerMedia += '<div class="mix-options _pea-text-right">';
+		htmlForInnerMedia += '<a data-assetid="' + mediadoc._id + '" title="make primary asset" class="_pea-button make-primary _pea-color-warn">*</a>';
+		htmlForInnerMedia += '<a data-assetid="' + mediadoc._id + '" title="remove asset" class="_pea-button remove-asset _pea-color-error">x</a>';
+		htmlForInnerMedia += '</div>';
 		mediaHtml.innerHTML = htmlForInnerMedia;
 		return mediaHtml;
 	};
@@ -1327,64 +1329,65 @@ var updatemedia = function( element, mediadoc ){
 	updateMediaResultHtml(element, mediadoc);
 };
 
-updatemedia.handleMediaButtonClick = function(e){
+updatemedia.handleMediaButtonClick = function (e) {
 	var eTarget = e.target;
-	if(eTarget.getAttribute('class') && eTarget.getAttribute('class').match('remove-asset')){
+	if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('remove-asset')) {
 		document.getElementById('media-files-result').removeChild(eTarget.parentElement.parentElement);
 	}
-	else if(eTarget.getAttribute('class') && eTarget.getAttribute('class').match('make-primary')){
+	else if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('make-primary')) {
 		document.getElementById('primaryasset-input').value = eTarget.getAttribute('data-assetid');
 		var mpbuttons = document.querySelectorAll('._pea-button.make-primary');
-		for(var x in mpbuttons){
-			if(typeof mpbuttons[x]==='object'){
-				mpbuttons[x].style.display='inline-block';
+		for (var x in mpbuttons) {
+			if (typeof mpbuttons[x] === 'object') {
+				mpbuttons[x].style.display = 'inline-block';
 			}
 		}
-		eTarget.style.display='none';
+		eTarget.style.display = 'none';
 	}
 };
 
-updatemedia.uploadFile = function(mediafilesresult,file,options){
+updatemedia.uploadFile = function (mediafilesresult, file, options) {
 	var reader = new FileReader(),
-			client = new XMLHttpRequest(),
-			formData = new FormData(),
-			posturl = (options && options.posturl) ? options.posturl : '/mediaasset/new?format=json',
-			callback = (options && options.callback) ? options.callback : function(data){
-				updatemedia(mediafilesresult,data);
-			};
+		client = new XMLHttpRequest(),
+		formData = new FormData(),
+		posturl = (options && options.posturl) ? options.posturl : '/mediaasset/new?format=json',
+		callback = (options && options.callback) ? options.callback : function (data) {
+			updatemedia(mediafilesresult, data);
+		};
 
-	reader.onload = function() {
+	reader.onload = function () {
 		// console.log(e);
 		// console.log(file);
-		formData.append('mediafile',file,file.name);
+		formData.append('mediafile', file, file.name);
 
 		client.open('post', posturl, true);
-		client.setRequestHeader('x-csrf-token', document.querySelector('input[name=_csrf]').value );
-		client.send(formData);  /* Send to server */ 
+		client.setRequestHeader('x-csrf-token', document.querySelector('input[name=_csrf]').value);
+		client.send(formData); /* Send to server */
 	};
 	reader.readAsDataURL(file);
-	client.onreadystatechange = function(){
-		if(client.readyState === 4){
-			try{
+	client.onreadystatechange = function () {
+		if (client.readyState === 4) {
+			try {
 				var res = JSON.parse(client.response);
-				if(res.result==='error'){
-					window.ribbonNotification.showRibbon( res.data.error,4000,'error');
+				if (res.result === 'error') {
+					window.ribbonNotification.showRibbon(res.data.error, 4000, 'error');
 				}
-				else if(client.status !== 200){
-					window.ribbonNotification.showRibbon( client.status+': '+client.statusText,4000,'error');
+				else if (client.status !== 200) {
+					window.ribbonNotification.showRibbon(client.status + ': ' + client.statusText, 4000, 'error');
 				}
-				else{
-					window.ribbonNotification.showRibbon('saved',4000,'success');
+				else {
+					window.ribbonNotification.showRibbon('saved', 4000, 'success');
 					callback(res.data.doc);
 				}
 			}
-			catch(e){
-				window.ribbonNotification.showRibbon( e.message,4000,'error');
+			catch (e) {
+				window.ribbonNotification.showRibbon(e.message, 4000, 'error');
 				console.log(e);
 			}
 		}
 	};
 };
 
-module.exports =updatemedia;
+module.exports = updatemedia;
+
 },{}]},{},[4]);

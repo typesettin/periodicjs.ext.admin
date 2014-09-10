@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -1246,16 +1246,16 @@ module.exports = function(arr, fn, initial){
 var request = require('superagent'),
 	ctTableBody;
 
-window.addEventListener("load",function(e){
+window.addEventListener("load", function (e) {
 	ctTableBody = document.getElementById("ct-t-body");
 	ajaxFormEventListers("._pea-ajax-form");
-	ctTableBody.addEventListener("click",tableClickHandler,false);
+	ctTableBody.addEventListener("click", tableClickHandler, false);
 });
 
-var tableClickHandler = function(e){
+var tableClickHandler = function (e) {
 	var eTarget = e.target,
 		nameInputElement = document.getElementById("remove-item-name");
-	if(eTarget.getAttribute("class") && eTarget.getAttribute("class").match("edit-content-type-button")){
+	if (eTarget.getAttribute("class") && eTarget.getAttribute("class").match("edit-content-type-button")) {
 		var evt = document.createEvent("Event");
 		evt.initEvent("submit", true, false);
 		nameInputElement.value = eTarget.value;
@@ -1265,23 +1265,21 @@ var tableClickHandler = function(e){
 	}
 };
 
-window.addContentTypeRowResult = function(AjaxResponseObject){
-	var newAttribute = AjaxResponseObject.doc.attributes[AjaxResponseObject.doc.attributes.length-1],
+window.addContentTypeRowResult = function (AjaxResponseObject) {
+	var newAttribute = AjaxResponseObject.doc.attributes[AjaxResponseObject.doc.attributes.length - 1],
 		tablerow = document.createElement("tr"),
 		dvaluename = (newAttribute.defaultvalue) ? newAttribute.defaultvalue : '';
-	tablerow.innerHTML = '<td>'+newAttribute.name+'</td>'
-	+'<td>'+newAttribute.datatype+'</td>'
-	+'<td>'+dvaluename+' <button type="button" value="'+newAttribute.name+'" name="attributename" class="edit-content-type-button _pea-button _pea-pull-right _pea-color-error">x</button>';
-	tablerow.id="attr-name-val-"+newAttribute.name;
+	tablerow.innerHTML = '<td>' + newAttribute.name + '</td>' + '<td>' + newAttribute.datatype + '</td>' + '<td>' + dvaluename + ' <button type="button" value="' + newAttribute.name + '" name="attributename" class="edit-content-type-button _pea-button _pea-pull-right _pea-color-error">x</button>';
+	tablerow.id = "attr-name-val-" + newAttribute.name;
 	ctTableBody.appendChild(tablerow);
 };
-window.RemoveContentTypeRowResult = function(AjaxResponseObject){
+window.RemoveContentTypeRowResult = function (AjaxResponseObject) {
 	var nameInputElementVal = document.getElementById("remove-item-name").value,
-		rowElement = document.getElementById("attr-name-val-"+nameInputElementVal);
+		rowElement = document.getElementById("attr-name-val-" + nameInputElementVal);
 	rowElement.parentElement.removeChild(rowElement);
 	// console.log("rowElement",rowElement);
 };
-window.setItemToRemove = function(etarget){
+window.setItemToRemove = function (etarget) {
 	var nameInputElement = document.getElementById("remove-item-name");
 };
 
