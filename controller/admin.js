@@ -531,9 +531,8 @@ var extensions_index = function(req, res) {
 
 var extension_show = function(req, res){
     var extname = req.params.id,
-        Extensions = require(path.join(process.cwd(),'app/lib/extensions')),
-        extPackageConf = Extensions.getExtensionPackageJsonFilePath(extname),
-        extPeriodicConf = Extensions.getExtensionPeriodicConfFilePath(extname);
+        extPackageConf = ExtensionCore.getExtensionPackageJsonFilePath(extname),
+        extPeriodicConf = ExtensionCore.getExtensionPeriodicConfFilePath(extname);
 
 
     // an example using an object instead of an array
