@@ -63,6 +63,7 @@ module.exports = function (periodic) {
 	adminRouter.get('/themes', adminController.loadThemes, adminController.themes_index);
 	adminRouter.get('/users', uacController.loadUacUsers, adminController.users_index);
 	adminRouter.get('/mailer', adminController.mail_index);
+	adminRouter.get('/settings', adminController.settings_index);
 	/**
 	 * admin/extension manager routes
 	 */

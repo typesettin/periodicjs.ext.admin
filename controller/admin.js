@@ -45,6 +45,31 @@ var index = function(req, res) {
     );
 };
 
+var settings_index = function(req,res){
+    CoreController.getPluginViewDefaultTemplate(
+        {
+            viewname:'p-admin/settings/index',
+            themefileext:appSettings.templatefileextension,
+            extname: 'periodicjs.ext.admin'
+        },
+        function(err,templatepath){
+            CoreController.handleDocumentQueryRender({
+                res:res,
+                req:req,
+                renderView:templatepath,
+                responseData:{
+                    pagedata:{
+                        title:'Application Settings',
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/settings.min.js'],
+                        extensions:CoreUtilities.getAdminMenu()
+                    },
+                    user:req.user
+                }
+            });
+        }
+    );
+};
+
 var mail_index = function(req,res){
     CoreController.getPluginViewDefaultTemplate(
         {
@@ -862,6 +887,7 @@ var controller = function(resources){
 
     return{
         index:index,
+        settings_index:settings_index,
         mail_index:mail_index,
         items_index:items_index,
         item_new:item_new,
