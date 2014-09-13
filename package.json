@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.admin",
   "description": "Admin for periodicjs",
-  "version": "1.5.32",
+  "version": "1.5.35",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
@@ -62,9 +62,9 @@
     "uglify-js": "^2.4.15",
     "uglifyify": "^2.5.0"
   },
-  "_id": "periodicjs.ext.admin@1.5.23",
-  "_shasum": "c77e527c9648b4dde36e2fb00a3f8977e9cc6763",
-  "_from": "periodicjs.ext.admin@1.5.23",
+  "_id": "periodicjs.ext.admin@1.5.32",
+  "_shasum": "023f62ea392db977274d1eac17c065ce5487a19b",
+  "_from": "periodicjs.ext.admin@*",
   "_resolved": "https://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.5.23.tgz",
   "gitHead": "23466172484b2277c691c4f2684dfdb1cb92cb23",
   "bugs": {
@@ -86,5 +86,7 @@
     "shasum": "c77e527c9648b4dde36e2fb00a3f8977e9cc6763",
     "tarball": "http://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.5.23.tgz"
   },
-  "directories": {}
+  "directories": {},
+  "readme": "periodicjs.ext.admin\n====================\n\ncontent management administration for a periodicjs based cms\n",
+  "readmeFilename": "README.md"
 }

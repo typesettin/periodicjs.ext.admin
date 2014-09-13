@@ -3,7 +3,10 @@
 	<div class="_pea-container">
 		<div class="_pea_row">
 			<div class="_pea-col-span12">
-				<h2>Edit Content Type: <%= contenttype.name %></h2>
+				<!-- <small class=" _pea-pull-right"> -->
+					<a data-href="/contenttype/<%= contenttype.name %>/delete" class="_pea-button _pea-color-error _pea-text-small _pea-dialog-delete _pea-pull-right" data-successfunction="backToContentLanding" style="line-height:2em">delete</a>
+					<!-- </small> -->
+				<h2>Edit <a href="/p-admin/contenttypes/">Content Type</a>: <%= contenttype.name %></h2>
 			</div>
 		</div>
 		<div class="_pea-row">

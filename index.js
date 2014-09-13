@@ -124,6 +124,7 @@ module.exports = function (periodic) {
 	 */
 	contenttypeRouter.post('/new/:id', contenttypeController.loadContenttype, contenttypeController.create);
 	contenttypeRouter.post('/new', contenttypeController.loadContenttype, contenttypeController.create);
+	contenttypeRouter.post('/:id/delete', contenttypeController.loadContenttype, contenttypeController.remove);
 	contenttypeRouter.post('/append/:id', contenttypeController.loadContenttype, contenttypeController.append);
 	contenttypeRouter.post('/removeitem/:id', contenttypeController.loadContenttype, contenttypeController.removeitem);
 	contenttypeAdminRouter.get('/:id', contenttypeController.loadContenttype, adminController.contenttype_show);

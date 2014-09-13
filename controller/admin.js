@@ -329,6 +329,7 @@ var contenttypes_index = function(req, res) {
                 responseData:{
                     pagedata:{
                         title:'content type admin',
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/contenttype.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     contenttypes: req.controllerData.contenttypes,
