@@ -40,15 +40,12 @@
 						<tbody>
 							<% if(tags.length>0){
 									tags.forEach(function(tag){ %>
-										<tr id="tag-tr-<%= tag._id %>">
+										<tr>
 											<td> 
 												<a href="/p-admin/tag/<%= tag.name %>"> <%= tag.title %> </a>
 											</td>
 											<td>
 												<%- tag.description %>
-
-												<a data-href="/tag/<%= tag.name %>/delete" data-successfunction="removeTagRow" class="_pea-button _pea-color-error _pea-dialog-delete _pea-pull-right">delete</a>
-
 												<a href="/p-admin/tag/<%= tag.name %>" class="_pea-button _pea-pull-right">edit</a>
 											</td>
 										</tr>

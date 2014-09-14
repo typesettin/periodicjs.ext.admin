@@ -384,6 +384,7 @@ var tags_index = function(req, res) {
                 responseData:{
                     pagedata:{
                         title:'tag admin',
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/attributes.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     tags: req.controllerData.tags,

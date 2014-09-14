@@ -1516,9 +1516,9 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
 }
 },{"classie":12,"events":1,"util":5,"util-extend":19}],12:[function(require,module,exports){
 module.exports=require(8)
-},{"./lib/classie":13,"/Users/yawetse/Developer/test/logintest/periodicjs/node_modules/periodicjs.ext.admin/node_modules/ribbonjs/node_modules/classie/index.js":8}],13:[function(require,module,exports){
+},{"./lib/classie":13,"/Users/yawetse/Developer/test/admintest/periodicjs/node_modules/periodicjs.ext.admin/node_modules/ribbonjs/node_modules/classie/index.js":8}],13:[function(require,module,exports){
 module.exports=require(9)
-},{"/Users/yawetse/Developer/test/logintest/periodicjs/node_modules/periodicjs.ext.admin/node_modules/ribbonjs/node_modules/classie/lib/classie.js":9}],14:[function(require,module,exports){
+},{"/Users/yawetse/Developer/test/admintest/periodicjs/node_modules/periodicjs.ext.admin/node_modules/ribbonjs/node_modules/classie/lib/classie.js":9}],14:[function(require,module,exports){
 /**
  * Module dependencies.
  */

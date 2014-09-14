@@ -1,9 +1,23 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
 	<div class="_pea-container">
+		<div class="_pea-row">
+			<h2>New Content Type</h2>
+		</div>
+		<div class="_pea-document" style="margin-bottom:3em;">
+			<div class="_pea-row">
+				<div class=" _pea-col-span12">
+					<form class="_pea-form" method="post"  action="/contenttype/new">
+						<input type="hidden" name="_csrf" value=<%= locals.token %> />
+						<input type="text" placeholder="title" class="_pea-col-span10" name="title"/>
+						<input type="submit" name="searchbutton" value="Create Content Type" class="_pea-col-span2 _pea-color-success"  />
+					</form>
+				</div>
+			</div>
+		</div>
 		<div class="_pea-row _pea-form">
 			<div class="_pea-col-span6">
-				<a href="/p-admin/contenttype/new" class="_pea-button _pea-color-info">New Content Type</a>
+				<h2>View Content Types</h2>
 			</div>
 			<div class="_pea-col-span6 _pea-text-right">
 				<form class="_pea-form" method="get">
