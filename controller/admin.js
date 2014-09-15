@@ -410,7 +410,7 @@ var tag_show = function(req, res) {
                 responseData:{
                     pagedata:{
                         title:req.controllerData.tag.title+' - Edit Tag',
-                        headerjs: ['/extensions/periodicjs.ext.admin/js/tag.min.js'],
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/attributes.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     periodic:{
@@ -423,6 +423,35 @@ var tag_show = function(req, res) {
         }
     );
 };
+
+var tag_parent = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
+        {
+            viewname:'p-admin/tags/show_parent',
+            themefileext:appSettings.templatefileextension,
+            extname: 'periodicjs.ext.admin'
+        },
+        function(err,templatepath){
+            CoreController.handleDocumentQueryRender({
+                res:res,
+                req:req,
+                renderView:templatepath,
+                responseData:{
+                    pagedata:{
+                        title:req.controllerData.tag.title+' - Edit Tag',
+                        extensions:CoreUtilities.getAdminMenu()
+                    },
+                    periodic:{
+                        version: appSettings.version
+                    },
+                    parent: req.controllerData.tag.parent,
+                    user:req.user
+                }
+            });
+        }
+    );
+};
+
 
 var categories_index = function(req, res) {
     CoreController.getPluginViewDefaultTemplate(
@@ -439,6 +468,7 @@ var categories_index = function(req, res) {
                 responseData:{
                     pagedata:{
                         title:'Category admin',
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/attributes.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     categories: req.controllerData.categories,
@@ -464,13 +494,41 @@ var category_show = function(req, res) {
                 responseData:{
                     pagedata:{
                         title:req.controllerData.category.title+' - Edit Tag',
-                        headerjs: ['/extensions/periodicjs.ext.admin/js/category.min.js'],
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/attributes.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     periodic:{
                         version: appSettings.version
                     },
                     category: req.controllerData.category,
+                    user:req.user
+                }
+            });
+        }
+    );
+};
+
+var category_parent = function(req, res) {
+    CoreController.getPluginViewDefaultTemplate(
+        {
+            viewname:'p-admin/categories/show_parent',
+            themefileext:appSettings.templatefileextension,
+            extname: 'periodicjs.ext.admin'
+        },
+        function(err,templatepath){
+            CoreController.handleDocumentQueryRender({
+                res:res,
+                req:req,
+                renderView:templatepath,
+                responseData:{
+                    pagedata:{
+                        title:req.controllerData.category.title+' - Edit Category',
+                        extensions:CoreUtilities.getAdminMenu()
+                    },
+                    periodic:{
+                        version: appSettings.version
+                    },
+                    parent: req.controllerData.category.parent,
                     user:req.user
                 }
             });
@@ -909,8 +967,10 @@ var controller = function(resources){
         contenttype_show:contenttype_show,
         tags_index:tags_index,
         tag_show:tag_show,
+        tag_parent:tag_parent,
         categories_index:categories_index,
         category_show:category_show,
+        category_parent:category_parent,
         assets_index:assets_index,
         assets_show:assets_show,
         users_index:users_index,

@@ -3,20 +3,20 @@
 	<div class="_pea-row">
 		<div class="_pea-col-span8">
 			<% 
-				var genericdoc = item; 
-				var genericdocnamelink = "items"; 
-				var genericdocTitle = "Item"; 
+				var genericdoc = category; 
+				var genericdocname = "category"; 
+				var genericdocnamelink = "categories"; 
+				var genericdocdeletefunction = "backToCategoryLanding"; 
+				var genericdocTitle = "Category"; 
 			%>
 			
 			<% include ../../shared/compose_content %>
-			<% include ../../shared/media_asset %>
 			<% include ../../shared/content_attributes %>
 		</div>
 		<div class="_pea-col-span3 _pea-pull-right">
-			<% include ../../shared/content_options %>
-			<% include ../../shared/content_taxonmy %>
+			<% include ../../shared/attribute_taxonmy %>
 			<% if(genericdoc){%>
-				<% include ../../shared/content_delete %>
+				<% include ../../shared/attribute_delete %>
 			<%}%>
 		</div>
 	</div>

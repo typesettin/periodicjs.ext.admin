@@ -1,9 +1,24 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
 	<div class="_pea-container">
+		<div class="_pea-row">
+			<h2>New Category</h2>
+		</div>
+		<div class="_pea-document" style="margin-bottom:3em;">
+			<div class="_pea-row">
+				<div class=" _pea-col-span12">
+					<form class="_pea-form" method="post"  action="/category/new">
+						<input type="hidden" name="_csrf" value=<%= locals.token %> />
+						<input type="text" placeholder="title" class="_pea-col-span5" name="title"/>
+						<input type="text" placeholder="content" class="_pea-col-span4" name="content" style="margin-left:1em;"/>
+						<input type="submit" name="createbutton" value="Create Tag" class="_pea-col-span2 _pea-pull-right _pea-color-success"  />
+					</form>
+				</div>			
+			</div>
+		</div>
 		<div class="_pea-row _pea-form">
 			<div class="_pea-col-span6">
-				<a href="/p-admin/category/new" class="_pea-button _pea-color-info">New Category</a>
+				<h2>View Categories</h2>
 			</div>
 			<div class="_pea-col-span6 _pea-text-right">
 				<form class="_pea-form" method="get">
@@ -18,22 +33,31 @@
 					<table class="_pea-table _pea-form">
 						<thead>
 							<tr class="_pea-text-left">
-								<th>Title</th>
-								<th>Description</th>
-								<th>Children</th>
+								<th class="_pea-col-span4">Title</th>
+								<th class="_pea-col-span4">Content</th>
+								<th class="_pea-col-span4">Parent Tag</th>
 							</tr>
 						</thead>
 						<tbody>
 							<% if(categories.length>0){
 									categories.forEach(function(category){ %>
-										<tr>
+										<tr id="category-tr-<%= category._id %>">
 											<td> 
 												<a href="/p-admin/category/<%= category.name %>"> <%= category.title %> </a>
 											</td>
 											<td>
-												<%- category.description %>
+												<%- category.content %>
 											</td>
 											<td>
+												<% if(category.parent && category.parent.length>0){
+													%>
+													<small>
+														<a href="/p-admin/category/<%= category.parent[0].name %>"><%= category.parent[0].title %></a>
+													</small>
+												<% } %>
+
+												<a data-href="/category/<%= category.name %>/delete" data-successfunction="removeCategoryRow" class="_pea-button _pea-color-error _pea-dialog-delete _pea-pull-right">delete</a>
+
 												<a href="/p-admin/category/<%= category.name %>" class="_pea-button _pea-pull-right">edit</a>
 											</td>
 										</tr>
@@ -47,8 +71,8 @@
 						<tfoot>
 							<tr class="_pea-text-left">
 								<th>Title</th>
-								<th>Description</th>
-								<th>Children</th>
+								<th>Content</th>
+								<th>Parent Category</th>
 							</tr>
 						</tfoot>
 					</table>

@@ -1,70 +1,10 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
-	<div class="_pea-container">
-	<div class="_pea-row">
-			<h2>New Tag</h2>
-		</div>
-		<div class="_pea-document" style="margin-bottom:3em;">
-			<div class="_pea-row">
-				<div class=" _pea-col-span12">
-					<form class="_pea-form" method="post"  action="/tag/new">
-						<input type="hidden" name="_csrf" value=<%= locals.token %> />
-						<input type="text" placeholder="title" class="_pea-col-span5" name="title"/>
-						<input type="text" placeholder="description" class="_pea-col-span4" name="description" style="margin-left:1em;"/>
-						<input type="submit" name="searchbutton" value="Create Tag" class="_pea-col-span2 _pea-pull-right _pea-color-success"  />
-					</form>
-				</div>
-			</div>
-		</div>
-		<div class="_pea-row _pea-form">
-			<div class="_pea-col-span6">
-				<h2>View Tags</h2>
-			</div>
-			<div class="_pea-col-span6 _pea-text-right">
-				<form class="_pea-form" method="get">
-					<input type="text" placeholder="search" class="_pea-col-span10" name="search"/>
-					<input type="submit" name="searchbutton" value="search" class="_pea-col-span2"  />
-				</form>
-			</div>
-		</div>
-		<div class="_pea-row">
-			<div class="_pea-col-span12">
-				<div class="_pea-document">
-					<table class="_pea-table _pea-form">
-						<thead>
-							<tr class="_pea-text-left">
-								<th>Title</th>
-								<th>Description</th>
-							</tr>
-						</thead>
-						<tbody>
-							<% if(tags.length>0){
-									tags.forEach(function(tag){ %>
-										<tr>
-											<td> 
-												<a href="/p-admin/tag/<%= tag.name %>"> <%= tag.title %> </a>
-											</td>
-											<td>
-												<%- tag.description %>
-												<a href="/p-admin/tag/<%= tag.name %>" class="_pea-button _pea-pull-right">edit</a>
-											</td>
-										</tr>
-										<%
-									});
-								}
-								else{ %>
-									<tr><td colspan="3" class="_pea-text-center">No Tags!</td></tr>
-								<%} %>
-						</tbody>
-						<tfoot>
-							<tr class="_pea-text-left">
-								<th>Title</th>
-								<th>Description</th>
-							</tr>
-						</tfoot>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
+	<script type="text/javascript">
+		<%- locals.viewhelper.passObjToClient(tag.parent,"attributeparent") %>
+		<%- locals.viewhelper.passObjToClient(tag.contenttypes,"attributecontenttypes") %>
+	</script>
+	<form class="_pea-form _pea-ajax-form noFormSubmit" id="edit-tag-form" name="edit-tag-form" method="post" action="/tag/edit" data-successfunction="updateContentTypes" onsubmit="return false;" enctype='multipart/form-data'>
+		<% include compose_tag_form %>
+	</form>
 <% include ../../shared/footer %>

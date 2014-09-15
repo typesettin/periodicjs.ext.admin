@@ -113,13 +113,20 @@ module.exports = function (periodic) {
 	tagRouter.post('/new/:id', tagController.loadTag, tagController.create);
 	tagRouter.post('/new', tagController.loadTag, tagController.create);
 	tagRouter.post('/:id/delete', tagController.loadTag, tagController.remove);
+	tagRouter.post('/edit', tagController.update);
+	tagAdminRouter.get('/edit/:id', tagController.loadTag, adminController.tag_show);
 	tagAdminRouter.get('/:id', tagController.loadTag, adminController.tag_show);
+	tagAdminRouter.get('/:id/parent', tagController.loadTag, adminController.tag_parent);
 	/**
 	 * admin/category manager routes
 	 */
 	categoryRouter.post('/new/:id', categoryController.loadCategory, categoryController.create);
 	categoryRouter.post('/new', categoryController.loadCategory, categoryController.create);
+	categoryRouter.post('/:id/delete', categoryController.loadCategory, categoryController.remove);
+	categoryRouter.post('/edit', categoryController.update);
+	categoryAdminRouter.get('/edit/:id', categoryController.loadCategory, adminController.category_show);
 	categoryAdminRouter.get('/:id', categoryController.loadCategory, adminController.category_show);
+	categoryAdminRouter.get('/:id/parent', categoryController.loadCategory, adminController.category_parent);
 	/**
 	 * admin/categorytype manager routes
 	 */

@@ -1,6 +1,19 @@
-<h2><% if(genericdoc){%>Edit<%}else{%>New<%} %> <%= genericdocTitle %></h2>
+<h2><% if(genericdoc){%>Edit<%}else{%>New<%} %> 
+
+<a href="/p-admin/<%= genericdocnamelink %>/">
+<%= genericdocTitle %>
+</a>
+</h2>
 	<%if(genericdoc){%>
 		<input type="hidden" name="docid" value="<%= genericdoc._id %>">
+	
+		<% if(typeof genericdocname === "string"){%>
+			<input type="hidden" name="doctypename" value="<%= genericdocname %>">
+		<%}%>
+		<% if(typeof genericdocnamelink === "string"){%>
+			<input type="hidden" name="doctypenamelink" value="<%= genericdocnamelink %>">
+		<%}%>
+
 	<%}%>
 	<div class="_pea-document">
 		<div class="_pea-row">
