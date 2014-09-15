@@ -3,8 +3,14 @@
 var formobj = require('./formtoobject'),
 	request = require('superagent'),
 	ribbon = require('ribbonjs'),
+	classie = require('classie'),
 	silkscreen = require('silkscreenjs'),
-	confirmDeleteYes;
+	updatemedia = require('./updatemedia'),
+	mediafilessearchresult,
+	mediasearchresultarray,
+	mediafilesresult,
+	confirmDeleteYes,
+	mediaSearchButton;
 
 var preventSubmitOnEnter = function (e) {
 	// console.log('key press');
@@ -128,6 +134,82 @@ var ajaxDeleteButtonListeners = function () {
 	}
 };
 
+var addMediaItem = function (e) {
+	var eTarget = e.target,
+		mediaitemid = eTarget.getAttribute('data-id'),
+		clickedMediaItem;
+
+	for (var x in mediasearchresultarray) {
+		if (mediasearchresultarray[x]._id === mediaitemid) {
+			clickedMediaItem = mediasearchresultarray[x];
+		}
+	}
+	mediafilessearchresult.innerHTML = '';
+	classie.addClass(mediafilessearchresult, '_pea-hidden');
+	updatemedia(mediafilesresult, clickedMediaItem);
+};
+
+var addMediaListeners = function () {
+	var addMediaButtons = document.querySelectorAll('.add-asset-item');
+	for (var x in addMediaButtons) {
+		if (typeof addMediaButtons[x] === 'object') {
+			addMediaButtons[x].addEventListener('click', addMediaItem, false);
+		}
+	}
+};
+
+var searchMedia = function (e) {
+	var eTarget = e.target,
+		posturl = eTarget.getAttribute('data-href');
+
+	request
+		.get(posturl)
+		.set('x-csrf-token', document.querySelector('input[name=_csrf]').value)
+		.set('Accept', 'application/json')
+		.query({
+			search: document.querySelector('input[name=media-search-query]').value,
+			format: 'json'
+		})
+		.end(function (error, res) {
+			if (res && res.body && res.body.result === 'error') {
+				window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
+			}
+			else if (res && res.clientError) {
+				window.ribbonNotification.showRibbon(res.status + ': ' + res.text, 4000, 'error');
+			}
+			else if (error) {
+				window.ribbonNotification.showRibbon(error.message, 4000, 'error');
+			}
+			else {
+				if (eTarget.getAttribute('data-successfunction')) {
+					var successFunctionString = eTarget.getAttribute('data-successfunction'),
+						successfn = window[successFunctionString];
+					// is object a function?
+					if (typeof successfn === 'function') {
+						mediasearchresultarray = res.body.assets;
+						successfn(mediasearchresultarray);
+					}
+				}
+			}
+		});
+};
+
+window.mediaSearchResult = function (searchData) {
+	classie.removeClass(mediafilessearchresult, '_pea-hidden');
+	mediafilessearchresult.innerHTML = '';
+	if (searchData && searchData.length > 0) {
+		mediafilessearchresult.innerHTML = '<h3 class="no-margin">' + searchData.length + ' Results</h3>';
+		for (var x in searchData) {
+			updatemedia(mediafilessearchresult, searchData[x], true);
+		}
+		addMediaListeners();
+
+	}
+	else {
+		mediafilessearchresult.innerHTML = '<div class="_pea-text-center">No Media Found</div>';
+	}
+};
+
 window.updateContentTypes = function (AjaxDataResponse) {
 	// console.log("runing post update");
 	var contenttypeContainer = document.getElementById('doc-ct-attr'),
@@ -136,7 +218,7 @@ window.updateContentTypes = function (AjaxDataResponse) {
 	for (var x in updatedDoc.contenttypes) {
 		var contentTypeData = updatedDoc.contenttypes[x];
 		contentTypeHtml += '<div>';
-		contentTypeHtml += '<h3 style="margin-top:0;">' + contentTypeData.title + '<small> <a href="/p-admin/contenttype/' + contentTypeData.name + '">(edit)</a></small></h3>';
+		contentTypeHtml += '<h3 style="margin:0.25em 0 0;">' + contentTypeData.title + '<small> <a href="/p-admin/contenttype/' + contentTypeData.name + '">(edit)</a></small></h3>';
 		if (contentTypeData.attributes) {
 			for (var y in contentTypeData.attributes) {
 				var attr = contentTypeData.attributes[y],
@@ -177,6 +259,9 @@ window.makeNiceName = function (username) {
 
 window.addEventListener('load', function () {
 	confirmDeleteYes = document.getElementById('confirm-delete-yes');
+	mediaSearchButton = document.getElementById('media-asset-search-button');
+	mediafilessearchresult = document.getElementById('media-files-search-result');
+	mediafilesresult = document.getElementById('media-files-result');
 	window.silkscreenModal = new silkscreen();
 	window.ribbonNotification = new ribbon({
 		type: 'info',
@@ -184,4 +269,7 @@ window.addEventListener('load', function () {
 	});
 	preventEnterSubmitListeners();
 	ajaxDeleteButtonListeners();
+	if (mediaSearchButton) {
+		mediaSearchButton.addEventListener('click', searchMedia, false);
+	}
 }, false);

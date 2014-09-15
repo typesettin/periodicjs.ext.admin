@@ -5,6 +5,7 @@ var request = require('superagent'),
 	wysihtml5Editor,
 	request = require('superagent'),
 	letterpress = require('letterpressjs'),
+	updatemedia = require('./updatemedia'),
 	createPeriodicTag = function (id, val, callback, url, type) {
 		if ((id === 'NEWTAG' || id === 'SELECT') && val) {
 			request
@@ -41,7 +42,30 @@ var request = require('superagent'),
 		}
 	},
 	cnt_lp,
-	assetTable;
+	assetTable,
+	mediafileinput,
+	mediafilesresult;
+
+var uploadMediaFiles = function (e) {
+	// fetch FileList object
+	var files = e.target.files || e.dataTransfer.files,
+		f,
+		updateitemimage = function (mediadoc) {
+			console.log(mediadoc);
+			// updatemedia(mediafilesresult, mediadoc);
+			window.location.reload();
+		};
+
+	// process all File objects
+	for (var i = 0; i < files.length; i++) {
+		f = files[i];
+		// ParseFile(f);
+		// uploadFile(f);
+		updatemedia.uploadFile(mediafilesresult, f, {
+			callback: updateitemimage
+		});
+	}
+};
 
 var removeTableRow = function (element) {
 	element.parentElement.removeChild(element);
@@ -93,6 +117,14 @@ window.removeAssetRow = function (deleteData) {
 window.addEventListener('load', function () {
 	window.ajaxFormEventListers('._pea-ajax-form');
 	assetTable = document.getElementById('pea-asset-admin');
+	mediafileinput = document.getElementById('padmin-mediafiles');
+	mediafilesresult = document.getElementById('media-files-result');
+	if (mediafileinput) {
+		mediafileinput.addEventListener('change', uploadMediaFiles, false);
+	}
+	if (mediafilesresult) {
+		mediafilesresult.addEventListener('click', updatemedia.handleMediaButtonClick, false);
+	}
 	if (assetTable) {
 		assetTable.addEventListener('click', assetTableClick, false);
 	}

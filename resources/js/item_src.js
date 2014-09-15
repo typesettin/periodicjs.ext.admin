@@ -81,13 +81,12 @@ var request = require('superagent'),
 	mediafileinput,
 	mediafilesresult;
 
-
 var uploadMediaFiles = function (e) {
 	// fetch FileList object
 	var files = e.target.files || e.dataTransfer.files,
 		f,
 		updateitemimage = function (mediadoc) {
-			console.log(mediadoc);
+			// console.log(mediadoc);
 			updatemedia(mediafilesresult, mediadoc);
 		};
 

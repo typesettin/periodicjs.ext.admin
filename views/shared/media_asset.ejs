@@ -4,12 +4,27 @@ else{%>
 <h2>Media Assets</h2>
 <%} %>
 	<div class="_pea-document">
-		<div class="_pea-row _pea-container-forminput">
-			<input type="file" id="padmin-mediafiles" class="_pea-col-span12" name="mediafiles" multiple="multiple" />
+		<div class="_pea-row _pea-container-forminput no-margin">
 			<!-- <div id="filedrag">drag or drop files here</div> -->
 			<!-- http://www.sitepoint.com/html5-file-drag-and-drop/ -->
+			<div class="_pea-col-span8 _pea-text-center">
+				<div class=" _pea-form _pea-row">
+					<input type="text" placeholder="search" id="media-search-query" class="_pea-col-span10" name="media-search-query"/>
+					<a data-href="/p-admin/assets" data-successfunction="mediaSearchResult" class="_pea-col-span2 _pea-button" id="media-asset-search-button" />search</a>
+				</div>
+			</div>
+			<div class="_pea-col-span1">
+				<div class="_pea-row _pea-container-forminput no-margin _pea-text-center">
+				or								
+				</div>
+			</div>
+			<div class="_pea-col-span3">
+				<input type="file" id="padmin-mediafiles" class="_pea-col-span12 _pea-button _pea-color-default" name="mediafiles" multiple="multiple" />
+			</div>
 		</div>
-		<div id="media-files-result" class="_pea-row _pea-container-forminput">
+		<div id="media-files-search-result" style="margin:0.5em 0 0; border-left:none; border-right:none; padding-bottom:0.5em;" class="_pea-row pea-border _pea-hidden _pea-container-forminput">
+		</div>
+		<div id="media-files-result" class="_pea-row no-margin _pea-container-forminput">
 			<% 
 			if (genericdoc && genericdoc.primaryasset){%><input type="hidden" id="primaryasset-input" name="primaryasset" value="<%- genericdoc.primaryasset._id%>"/><%} %>
 			

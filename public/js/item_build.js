@@ -3161,13 +3161,12 @@ var request = require('superagent'),
 	mediafileinput,
 	mediafilesresult;
 
-
 var uploadMediaFiles = function (e) {
 	// fetch FileList object
 	var files = e.target.files || e.dataTransfer.files,
 		f,
 		updateitemimage = function (mediadoc) {
-			console.log(mediadoc);
+			// console.log(mediadoc);
 			updatemedia(mediafilesresult, mediadoc);
 		};
 
@@ -3247,7 +3246,7 @@ window.addEventListener('load', function () {
 },{"./updatemedia":16,"letterpressjs":6,"superagent":12}],16:[function(require,module,exports){
 'use strict';
 
-var updatemedia = function (element, mediadoc) {
+var updatemedia = function (element, mediadoc, additem) {
 	var updateMediaResultHtml = function (element, mediadoc) {
 		element.appendChild(generateMediaHtml(mediadoc));
 	};
@@ -3257,16 +3256,24 @@ var updatemedia = function (element, mediadoc) {
 			htmlForInnerMedia = '';
 		mediaHtml.setAttribute('class', '_pea-col-span4 media-item-x');
 		mediaHtml.setAttribute('data-id', mediadoc._id);
-		htmlForInnerMedia += '<input style="display:none;" name="assets" type="checkbox" value="' + mediadoc._id + '" checked="checked"></input>';
+		if (!additem) {
+			htmlForInnerMedia += '<input style="display:none;" name="assets" type="checkbox" value="' + mediadoc._id + '" checked="checked"></input>';
+		}
 		if (mediadoc.assettype.match('image')) {
-			htmlForInnerMedia += '<img class="_pea-col-span11" src="' + mediadoc.fileurl + '"/>';
+			htmlForInnerMedia += '<img class="_pea-col-span11" title="' + mediadoc.name + '" src="' + mediadoc.fileurl + '"/>';
 		}
 		else {
 			htmlForInnerMedia += '<div class="_pea-col-span11"> ' + mediadoc.fileurl + '</div>';
 		}
 		htmlForInnerMedia += '<div class="mix-options _pea-text-right">';
-		htmlForInnerMedia += '<a data-assetid="' + mediadoc._id + '" title="make primary asset" class="_pea-button make-primary _pea-color-warn">*</a>';
-		htmlForInnerMedia += '<a data-assetid="' + mediadoc._id + '" title="remove asset" class="_pea-button remove-asset _pea-color-error">x</a>';
+		if (additem) {
+			htmlForInnerMedia += '<a data-id="' + mediadoc._id + '"  title="' + mediadoc.name + '" class="_pea-button add-asset-item _pea-color-success">+</a>';
+		}
+		else {
+			htmlForInnerMedia += '<a href="/p-admin/asset/' + mediadoc._id + '" target="_blank"  title="edit asset" class="_pea-button edit-asset _pea-color-info">i</a>';
+			htmlForInnerMedia += '<a data-assetid="' + mediadoc._id + '" title="make primary asset" class="_pea-button make-primary _pea-color-warn">*</a>';
+			htmlForInnerMedia += '<a data-assetid="' + mediadoc._id + '" title="remove asset" class="_pea-button remove-asset _pea-color-error">x</a>';
+		}
 		htmlForInnerMedia += '</div>';
 		mediaHtml.innerHTML = htmlForInnerMedia;
 		return mediaHtml;

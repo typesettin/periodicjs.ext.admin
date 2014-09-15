@@ -1,15 +1,25 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
 	<div class="_pea-container">
-		<div class="_pea-row _pea-form">
-			<div class="_pea-col-span6">
-				<!-- <a href="/p-admin/item/new" class="_pea-button _pea-color-info">New Item</a> -->
-			</div>
-			<div class="_pea-col-span6 _pea-text-right">
-				<form class="_pea-form" method="get">
-					<input type="text" placeholder="search" class="_pea-col-span10" name="search"/>
-					<input type="submit" name="searchbutton" value="search" class="_pea-col-span2"  />
-				</form>
+		<div class="_pea-document">
+			<div  class="_pea-row _pea-form">
+				<div class="_pea-col-span8 _pea-text-right">
+					<form class="_pea-form" method="get">
+						<input type="text" placeholder="search" class="_pea-col-span10" name="search"/>
+						<input type="submit" name="searchbutton" value="search" class="_pea-col-span2"  />
+					</form>
+				</div>
+				<div class="_pea-col-span1">
+					<div class="_pea-row _pea-container-forminput no-margin _pea-text-center">
+					or								
+					</div>
+				</div>
+				<div class="_pea-col-span3">
+					<div class="_pea-row _pea-container-forminput no-margin _pea-text-center _pea-form">
+						<input type="hidden" name="_csrf" value=<%= locals.token %> >
+						<input type="file" id="padmin-mediafiles" name="mediafiles" multiple="multiple"  value="Upload" class="_pea-button _pea-col-span12 _pea-color-default"/>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="_pea-row">

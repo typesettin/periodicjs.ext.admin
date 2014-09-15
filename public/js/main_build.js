@@ -1,4 +1,97 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/*
+ * classie
+ * http://github.amexpub.com/modules/classie
+ *
+ * Copyright (c) 2013 AmexPub. All rights reserved.
+ */
+
+module.exports = require('./lib/classie');
+
+},{"./lib/classie":2}],2:[function(require,module,exports){
+/*!
+ * classie - class helper functions
+ * from bonzo https://github.com/ded/bonzo
+ * 
+ * classie.has( elem, 'my-class' ) -> true/false
+ * classie.add( elem, 'my-new-class' )
+ * classie.remove( elem, 'my-unwanted-class' )
+ * classie.toggle( elem, 'my-class' )
+ */
+
+/*jshint browser: true, strict: true, undef: true */
+/*global define: false */
+'use strict';
+
+  // class helper functions from bonzo https://github.com/ded/bonzo
+
+  function classReg( className ) {
+    return new RegExp("(^|\\s+)" + className + "(\\s+|$)");
+  }
+
+  // classList support for class management
+  // altho to be fair, the api sucks because it won't accept multiple classes at once
+  var hasClass, addClass, removeClass;
+
+  if (typeof document === "object" && 'classList' in document.documentElement ) {
+    hasClass = function( elem, c ) {
+      return elem.classList.contains( c );
+    };
+    addClass = function( elem, c ) {
+      elem.classList.add( c );
+    };
+    removeClass = function( elem, c ) {
+      elem.classList.remove( c );
+    };
+  }
+  else {
+    hasClass = function( elem, c ) {
+      return classReg( c ).test( elem.className );
+    };
+    addClass = function( elem, c ) {
+      if ( !hasClass( elem, c ) ) {
+        elem.className = elem.className + ' ' + c;
+      }
+    };
+    removeClass = function( elem, c ) {
+      elem.className = elem.className.replace( classReg( c ), ' ' );
+    };
+  }
+
+  function toggleClass( elem, c ) {
+    var fn = hasClass( elem, c ) ? removeClass : addClass;
+    fn( elem, c );
+  }
+
+  var classie = {
+    // full names
+    hasClass: hasClass,
+    addClass: addClass,
+    removeClass: removeClass,
+    toggleClass: toggleClass,
+    // short names
+    has: hasClass,
+    add: addClass,
+    remove: removeClass,
+    toggle: toggleClass
+  };
+
+  // transport
+
+  if ( typeof module === "object" && module && typeof module.exports === "object" ) {
+    // commonjs / browserify
+    module.exports = classie;
+  } else {
+    // AMD
+    define(classie);
+  }
+
+  // If there is a window object, that at least has a document property,
+  // define classie
+  if ( typeof window === "object" && typeof window.document === "object" ) {
+    window.classie = classie;
+  }
+},{}],3:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -301,7 +394,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],2:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -326,7 +419,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],3:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -391,14 +484,14 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],5:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -988,7 +1081,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":4,"_process":3,"inherits":2}],6:[function(require,module,exports){
+},{"./support/isBuffer":6,"_process":5,"inherits":4}],8:[function(require,module,exports){
 /*
  * manuscript
  * http://github.com/typesettin/manuscript
@@ -998,7 +1091,7 @@ function hasOwnProperty(obj, prop) {
 
 module.exports = require('./lib/ribbon');
 
-},{"./lib/ribbon":7}],7:[function(require,module,exports){
+},{"./lib/ribbon":9}],9:[function(require,module,exports){
 /*
  * ribbon
  * http://github.com/typesettin/ribbon
@@ -1197,100 +1290,11 @@ module.exports = ribbon;
 if ( typeof window === "object" && typeof window.document === "object" ) {
 	window.ribbon = ribbon;
 }
-},{"classie":8,"events":1,"util":5,"util-extend":19}],8:[function(require,module,exports){
-/*
- * classie
- * http://github.amexpub.com/modules/classie
- *
- * Copyright (c) 2013 AmexPub. All rights reserved.
- */
-
-module.exports = require('./lib/classie');
-
-},{"./lib/classie":9}],9:[function(require,module,exports){
-/*!
- * classie - class helper functions
- * from bonzo https://github.com/ded/bonzo
- * 
- * classie.has( elem, 'my-class' ) -> true/false
- * classie.add( elem, 'my-new-class' )
- * classie.remove( elem, 'my-unwanted-class' )
- * classie.toggle( elem, 'my-class' )
- */
-
-/*jshint browser: true, strict: true, undef: true */
-/*global define: false */
-'use strict';
-
-  // class helper functions from bonzo https://github.com/ded/bonzo
-
-  function classReg( className ) {
-    return new RegExp("(^|\\s+)" + className + "(\\s+|$)");
-  }
-
-  // classList support for class management
-  // altho to be fair, the api sucks because it won't accept multiple classes at once
-  var hasClass, addClass, removeClass;
-
-  if (typeof document === "object" && 'classList' in document.documentElement ) {
-    hasClass = function( elem, c ) {
-      return elem.classList.contains( c );
-    };
-    addClass = function( elem, c ) {
-      elem.classList.add( c );
-    };
-    removeClass = function( elem, c ) {
-      elem.classList.remove( c );
-    };
-  }
-  else {
-    hasClass = function( elem, c ) {
-      return classReg( c ).test( elem.className );
-    };
-    addClass = function( elem, c ) {
-      if ( !hasClass( elem, c ) ) {
-        elem.className = elem.className + ' ' + c;
-      }
-    };
-    removeClass = function( elem, c ) {
-      elem.className = elem.className.replace( classReg( c ), ' ' );
-    };
-  }
-
-  function toggleClass( elem, c ) {
-    var fn = hasClass( elem, c ) ? removeClass : addClass;
-    fn( elem, c );
-  }
-
-  var classie = {
-    // full names
-    hasClass: hasClass,
-    addClass: addClass,
-    removeClass: removeClass,
-    toggleClass: toggleClass,
-    // short names
-    has: hasClass,
-    add: addClass,
-    remove: removeClass,
-    toggle: toggleClass
-  };
-
-  // transport
-
-  if ( typeof module === "object" && module && typeof module.exports === "object" ) {
-    // commonjs / browserify
-    module.exports = classie;
-  } else {
-    // AMD
-    define(classie);
-  }
-
-  // If there is a window object, that at least has a document property,
-  // define classie
-  if ( typeof window === "object" && typeof window.document === "object" ) {
-    window.classie = classie;
-  }
-},{}],10:[function(require,module,exports){
+},{"classie":10,"events":3,"util":7,"util-extend":22}],10:[function(require,module,exports){
+module.exports=require(1)
+},{"./lib/classie":11,"/Users/yawetse/Developer/test/logintest/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/index.js":1}],11:[function(require,module,exports){
+module.exports=require(2)
+},{"/Users/yawetse/Developer/test/logintest/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/lib/classie.js":2}],12:[function(require,module,exports){
 /*
  * manuscript
  * http://github.com/typesettin/silkscreen
@@ -1300,7 +1304,7 @@ module.exports = require('./lib/classie');
 
 module.exports = require('./lib/silkscreen');
 
-},{"./lib/silkscreen":11}],11:[function(require,module,exports){
+},{"./lib/silkscreen":13}],13:[function(require,module,exports){
 /*
  * silkscreen
  * http://github.com/typesettin/silkscreen
@@ -1514,11 +1518,11 @@ module.exports = silkscreen;
 if ( typeof window === "object" && typeof window.document === "object" ) {
 	window.silkscreen = silkscreen;
 }
-},{"classie":12,"events":1,"util":5,"util-extend":19}],12:[function(require,module,exports){
-module.exports=require(8)
-},{"./lib/classie":13,"/Users/yawetse/Developer/test/admintest/periodicjs/node_modules/periodicjs.ext.admin/node_modules/ribbonjs/node_modules/classie/index.js":8}],13:[function(require,module,exports){
-module.exports=require(9)
-},{"/Users/yawetse/Developer/test/admintest/periodicjs/node_modules/periodicjs.ext.admin/node_modules/ribbonjs/node_modules/classie/lib/classie.js":9}],14:[function(require,module,exports){
+},{"classie":14,"events":3,"util":7,"util-extend":22}],14:[function(require,module,exports){
+module.exports=require(1)
+},{"./lib/classie":15,"/Users/yawetse/Developer/test/logintest/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/index.js":1}],15:[function(require,module,exports){
+module.exports=require(2)
+},{"/Users/yawetse/Developer/test/logintest/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/lib/classie.js":2}],16:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -2569,7 +2573,7 @@ request.put = function(url, data, fn){
 
 module.exports = request;
 
-},{"emitter":15,"reduce":16}],15:[function(require,module,exports){
+},{"emitter":17,"reduce":18}],17:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -2735,7 +2739,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 
 /**
  * Reduce `arr` with `fn`.
@@ -2760,7 +2764,7 @@ module.exports = function(arr, fn, initial){
   
   return curr;
 };
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 var formToObject = function (formRef) {
@@ -2925,14 +2929,20 @@ formToObject.prototype.setFormObj = function () {
 
 module.exports = formToObject;
 
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var formobj = require('./formtoobject'),
 	request = require('superagent'),
 	ribbon = require('ribbonjs'),
+	classie = require('classie'),
 	silkscreen = require('silkscreenjs'),
-	confirmDeleteYes;
+	updatemedia = require('./updatemedia'),
+	mediafilessearchresult,
+	mediasearchresultarray,
+	mediafilesresult,
+	confirmDeleteYes,
+	mediaSearchButton;
 
 var preventSubmitOnEnter = function (e) {
 	// console.log('key press');
@@ -3056,6 +3066,82 @@ var ajaxDeleteButtonListeners = function () {
 	}
 };
 
+var addMediaItem = function (e) {
+	var eTarget = e.target,
+		mediaitemid = eTarget.getAttribute('data-id'),
+		clickedMediaItem;
+
+	for (var x in mediasearchresultarray) {
+		if (mediasearchresultarray[x]._id === mediaitemid) {
+			clickedMediaItem = mediasearchresultarray[x];
+		}
+	}
+	mediafilessearchresult.innerHTML = '';
+	classie.addClass(mediafilessearchresult, '_pea-hidden');
+	updatemedia(mediafilesresult, clickedMediaItem);
+};
+
+var addMediaListeners = function () {
+	var addMediaButtons = document.querySelectorAll('.add-asset-item');
+	for (var x in addMediaButtons) {
+		if (typeof addMediaButtons[x] === 'object') {
+			addMediaButtons[x].addEventListener('click', addMediaItem, false);
+		}
+	}
+};
+
+var searchMedia = function (e) {
+	var eTarget = e.target,
+		posturl = eTarget.getAttribute('data-href');
+
+	request
+		.get(posturl)
+		.set('x-csrf-token', document.querySelector('input[name=_csrf]').value)
+		.set('Accept', 'application/json')
+		.query({
+			search: document.querySelector('input[name=media-search-query]').value,
+			format: 'json'
+		})
+		.end(function (error, res) {
+			if (res && res.body && res.body.result === 'error') {
+				window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
+			}
+			else if (res && res.clientError) {
+				window.ribbonNotification.showRibbon(res.status + ': ' + res.text, 4000, 'error');
+			}
+			else if (error) {
+				window.ribbonNotification.showRibbon(error.message, 4000, 'error');
+			}
+			else {
+				if (eTarget.getAttribute('data-successfunction')) {
+					var successFunctionString = eTarget.getAttribute('data-successfunction'),
+						successfn = window[successFunctionString];
+					// is object a function?
+					if (typeof successfn === 'function') {
+						mediasearchresultarray = res.body.assets;
+						successfn(mediasearchresultarray);
+					}
+				}
+			}
+		});
+};
+
+window.mediaSearchResult = function (searchData) {
+	classie.removeClass(mediafilessearchresult, '_pea-hidden');
+	mediafilessearchresult.innerHTML = '';
+	if (searchData && searchData.length > 0) {
+		mediafilessearchresult.innerHTML = '<h3 class="no-margin">' + searchData.length + ' Results</h3>';
+		for (var x in searchData) {
+			updatemedia(mediafilessearchresult, searchData[x], true);
+		}
+		addMediaListeners();
+
+	}
+	else {
+		mediafilessearchresult.innerHTML = '<div class="_pea-text-center">No Media Found</div>';
+	}
+};
+
 window.updateContentTypes = function (AjaxDataResponse) {
 	// console.log("runing post update");
 	var contenttypeContainer = document.getElementById('doc-ct-attr'),
@@ -3064,7 +3150,7 @@ window.updateContentTypes = function (AjaxDataResponse) {
 	for (var x in updatedDoc.contenttypes) {
 		var contentTypeData = updatedDoc.contenttypes[x];
 		contentTypeHtml += '<div>';
-		contentTypeHtml += '<h3 style="margin-top:0;">' + contentTypeData.title + '<small> <a href="/p-admin/contenttype/' + contentTypeData.name + '">(edit)</a></small></h3>';
+		contentTypeHtml += '<h3 style="margin:0.25em 0 0;">' + contentTypeData.title + '<small> <a href="/p-admin/contenttype/' + contentTypeData.name + '">(edit)</a></small></h3>';
 		if (contentTypeData.attributes) {
 			for (var y in contentTypeData.attributes) {
 				var attr = contentTypeData.attributes[y],
@@ -3105,6 +3191,9 @@ window.makeNiceName = function (username) {
 
 window.addEventListener('load', function () {
 	confirmDeleteYes = document.getElementById('confirm-delete-yes');
+	mediaSearchButton = document.getElementById('media-asset-search-button');
+	mediafilessearchresult = document.getElementById('media-files-search-result');
+	mediafilesresult = document.getElementById('media-files-result');
 	window.silkscreenModal = new silkscreen();
 	window.ribbonNotification = new ribbon({
 		type: 'info',
@@ -3112,9 +3201,112 @@ window.addEventListener('load', function () {
 	});
 	preventEnterSubmitListeners();
 	ajaxDeleteButtonListeners();
+	if (mediaSearchButton) {
+		mediaSearchButton.addEventListener('click', searchMedia, false);
+	}
 }, false);
 
-},{"./formtoobject":17,"ribbonjs":6,"silkscreenjs":10,"superagent":14}],19:[function(require,module,exports){
+},{"./formtoobject":19,"./updatemedia":21,"classie":1,"ribbonjs":8,"silkscreenjs":12,"superagent":16}],21:[function(require,module,exports){
+'use strict';
+
+var updatemedia = function (element, mediadoc, additem) {
+	var updateMediaResultHtml = function (element, mediadoc) {
+		element.appendChild(generateMediaHtml(mediadoc));
+	};
+
+	var generateMediaHtml = function (mediadoc) {
+		var mediaHtml = document.createElement('div'),
+			htmlForInnerMedia = '';
+		mediaHtml.setAttribute('class', '_pea-col-span4 media-item-x');
+		mediaHtml.setAttribute('data-id', mediadoc._id);
+		if (!additem) {
+			htmlForInnerMedia += '<input style="display:none;" name="assets" type="checkbox" value="' + mediadoc._id + '" checked="checked"></input>';
+		}
+		if (mediadoc.assettype.match('image')) {
+			htmlForInnerMedia += '<img class="_pea-col-span11" title="' + mediadoc.name + '" src="' + mediadoc.fileurl + '"/>';
+		}
+		else {
+			htmlForInnerMedia += '<div class="_pea-col-span11"> ' + mediadoc.fileurl + '</div>';
+		}
+		htmlForInnerMedia += '<div class="mix-options _pea-text-right">';
+		if (additem) {
+			htmlForInnerMedia += '<a data-id="' + mediadoc._id + '"  title="' + mediadoc.name + '" class="_pea-button add-asset-item _pea-color-success">+</a>';
+		}
+		else {
+			htmlForInnerMedia += '<a href="/p-admin/asset/' + mediadoc._id + '" target="_blank"  title="edit asset" class="_pea-button edit-asset _pea-color-info">i</a>';
+			htmlForInnerMedia += '<a data-assetid="' + mediadoc._id + '" title="make primary asset" class="_pea-button make-primary _pea-color-warn">*</a>';
+			htmlForInnerMedia += '<a data-assetid="' + mediadoc._id + '" title="remove asset" class="_pea-button remove-asset _pea-color-error">x</a>';
+		}
+		htmlForInnerMedia += '</div>';
+		mediaHtml.innerHTML = htmlForInnerMedia;
+		return mediaHtml;
+	};
+
+	updateMediaResultHtml(element, mediadoc);
+};
+
+updatemedia.handleMediaButtonClick = function (e) {
+	var eTarget = e.target;
+	if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('remove-asset')) {
+		document.getElementById('media-files-result').removeChild(eTarget.parentElement.parentElement);
+	}
+	else if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('make-primary')) {
+		document.getElementById('primaryasset-input').value = eTarget.getAttribute('data-assetid');
+		var mpbuttons = document.querySelectorAll('._pea-button.make-primary');
+		for (var x in mpbuttons) {
+			if (typeof mpbuttons[x] === 'object') {
+				mpbuttons[x].style.display = 'inline-block';
+			}
+		}
+		eTarget.style.display = 'none';
+	}
+};
+
+updatemedia.uploadFile = function (mediafilesresult, file, options) {
+	var reader = new FileReader(),
+		client = new XMLHttpRequest(),
+		formData = new FormData(),
+		posturl = (options && options.posturl) ? options.posturl : '/mediaasset/new?format=json',
+		callback = (options && options.callback) ? options.callback : function (data) {
+			updatemedia(mediafilesresult, data);
+		};
+
+	reader.onload = function () {
+		// console.log(e);
+		// console.log(file);
+		formData.append('mediafile', file, file.name);
+
+		client.open('post', posturl, true);
+		client.setRequestHeader('x-csrf-token', document.querySelector('input[name=_csrf]').value);
+		client.send(formData); /* Send to server */
+	};
+	reader.readAsDataURL(file);
+	client.onreadystatechange = function () {
+		if (client.readyState === 4) {
+			try {
+				var res = JSON.parse(client.response);
+				if (res.result === 'error') {
+					window.ribbonNotification.showRibbon(res.data.error, 4000, 'error');
+				}
+				else if (client.status !== 200) {
+					window.ribbonNotification.showRibbon(client.status + ': ' + client.statusText, 4000, 'error');
+				}
+				else {
+					window.ribbonNotification.showRibbon('saved', 4000, 'success');
+					callback(res.data.doc);
+				}
+			}
+			catch (e) {
+				window.ribbonNotification.showRibbon(e.message, 4000, 'error');
+				console.log(e);
+			}
+		}
+	};
+};
+
+module.exports = updatemedia;
+
+},{}],22:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3149,4 +3341,4 @@ function extend(origin, add) {
   return origin;
 }
 
-},{}]},{},[18]);
+},{}]},{},[20]);
