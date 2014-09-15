@@ -4,13 +4,15 @@
 		<div class="_pea-col-span8">
 			<% 
 				var genericdoc = item; 
+				var genericdocname = "item"; 
+				var genericdocdeletefunction = "backToItemLanding"; 
 				var genericdocnamelink = "items"; 
 				var genericdocTitle = "Item"; 
 			%>
 			
 			<% include ../../shared/compose_content %>
-			<% include ../../shared/media_asset %>
 			<% include ../../shared/content_attributes %>
+			<% include ../../shared/media_asset %>
 		</div>
 		<div class="_pea-col-span3 _pea-pull-right">
 			<% include ../../shared/content_options %>

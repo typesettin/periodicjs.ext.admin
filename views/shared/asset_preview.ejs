@@ -1,0 +1,11 @@
+<h2><a href="/p-admin/assets">Asset</a> Preview</h2>
+<div class="_pea-document">
+	<div class="_pea-row _pea-text-center">
+		<% if(asset.assettype && asset.assettype.match("image")){ %>
+			<img class="_pea-col-span12" src="<%=asset.fileurl%>"/><%
+		} 
+		else{ %>
+			<div class="_pea-col-span12"> <%=asset.fileurl%></div>
+		<% } %>
+	</div>
+</div>

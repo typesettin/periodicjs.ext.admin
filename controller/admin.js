@@ -288,7 +288,7 @@ var assets_index = function(req, res) {
     );
 };
 
-var assets_show = function(req, res) {
+var asset_show = function(req, res) {
     CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/assets/show',
@@ -972,7 +972,7 @@ var controller = function(resources){
         category_show:category_show,
         category_parent:category_parent,
         assets_index:assets_index,
-        assets_show:assets_show,
+        asset_show:asset_show,
         users_index:users_index,
         users_show:users_show,
         users_edit:users_edit,

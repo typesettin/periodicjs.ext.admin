@@ -1,0 +1,26 @@
+<input type="hidden" name="_csrf" value=<%= locals.token %> >
+<div class="_pea-container">
+	<div class="_pea-row">
+		<div class="_pea-col-span6">
+			<% 
+				var genericdoc = asset; 
+				var genericdocname = "asset"; 
+				var genericdocnamelink = "assets"; 
+				var genericdocdeletefunction = "backToAssetLanding"; 
+				var genericdocTitle = "Asset"; 
+			%>
+	
+			<% include ../../shared/asset_preview %>		
+			<% if(genericdoc){%>
+				<% include ../../shared/asset_delete %>
+			<%}%>
+		</div>
+		<div class="_pea-col-span5 _pea-pull-right">
+			<% include ../../shared/asset_taxonmy %>
+			<% include ../../shared/compose_content %>
+			<% include ../../shared/content_attributes %>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="<%= locals.themehelper.extensionPublicResourcePath('periodicjs.ext.admin','js') %>wysihtml5-advanced.js"></script>
+<script type="text/javascript" src="<%= locals.themehelper.extensionPublicResourcePath('periodicjs.ext.admin','js') %>wysihtml5-0.4.0pre.min.js"></script>

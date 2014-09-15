@@ -26,7 +26,8 @@ else{%>
 						<%
 						}%>
 						<div class="mix-options _pea-text-right">	
-							
+							<a href="/p-admin/asset/<%= asset._id %>" target="_blank" title="edit asset" class="_pea-button edit-asset _pea-color-info">i</a>
+
 							<a data-assetid="<%= asset._id %>" title="make primary asset" class="_pea-button make-primary _pea-color-warn"
 							<% if(genericdoc.primaryasset && genericdoc.primaryasset._id.toString() === asset._id.toString()){%>
 							style="display:none;"

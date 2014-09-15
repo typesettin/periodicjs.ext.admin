@@ -8,6 +8,7 @@ module.exports = function (periodic) {
 		tagRouter = periodic.express.Router(),
 		tagAdminRouter = periodic.express.Router(),
 		mediaRouter = periodic.express.Router(),
+		mediaAdminRouter = periodic.express.Router(),
 		userAdminRouter = periodic.express.Router(),
 		contenttypeRouter = periodic.express.Router(),
 		contenttypeAdminRouter = periodic.express.Router(),
@@ -142,6 +143,10 @@ module.exports = function (periodic) {
 	 */
 	mediaRouter.post('/new', mediaassetController.upload, mediaassetController.createassetfile);
 	mediaRouter.post('/:id/delete', mediaassetController.loadAsset, mediaassetController.remove);
+	mediaRouter.post('/edit', mediaassetController.update);
+	mediaAdminRouter.get('/edit/:id', mediaassetController.loadAsset, adminController.asset_show);
+	mediaAdminRouter.get('/:id', mediaassetController.loadAsset, adminController.asset_show);
+	/**
 	/**
 	 * admin/user routes
 	 */
@@ -166,7 +171,7 @@ module.exports = function (periodic) {
 	periodicRouter.get('/tag/search.:ext', tagController.loadTags, tagController.searchResults);
 	periodicRouter.get('/tag/search', tagController.loadTags, tagController.searchResults);
 
-
+	adminRouter.use('/asset', mediaAdminRouter);
 	adminRouter.use('/extension', extensionAdminRouter);
 	adminRouter.use('/theme', themeAdminRouter);
 	adminRouter.use('/contenttype', contenttypeAdminRouter);

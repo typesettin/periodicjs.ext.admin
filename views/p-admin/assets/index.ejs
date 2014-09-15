@@ -27,7 +27,7 @@
 						<tbody>
 							<% if(assets.length>0){
 									assets.forEach(function(asset){ %>
-										<tr data-tr-assetid="<%= asset._id %>">
+										<tr data-tr-assetid="<%= asset._id %>" id="asset-tr-<%= asset._id %>">
 											<td> 
 												<div data-id="asset._id" style="margin-top:0" class="_pea-col-span12 media-item-x">
 													<a href="/p-admin/asset/<%= asset._id %>"> 
@@ -47,7 +47,7 @@
 												<%} %>
 											</td>
 											<td>
-												<a data-href="/mediaasset/<%= asset._id %>/delete" assetid="<%= asset._id %>" class="_pea-button _pea-pull-right delete-asset-button _pea-color-error">delete</a>
+												<a data-href="/mediaasset/<%= asset._id %>/delete" data-successfunction="removeAssetRow" assetid="<%= asset._id %>" class="_pea-button _pea-pull-right _pea-dialog-delete _pea-color-error">delete</a>
 												<a href="/p-admin/asset/<%= asset._id %>" class="_pea-button _pea-pull-right">edit</a>
 												<small style="word-break: break-word;"><%- JSON.stringify( asset.attributes) %></small>
 											</td>

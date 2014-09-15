@@ -4,12 +4,13 @@
 		<div class="_pea-col-span8">
 			<% 
 				var genericdoc = collection; 
+				var genericdocname = "collection"; 
+				var genericdocdeletefunction = "backToCollectionLanding"; 
 				var genericdocnamelink = "collections"; 
 				var genericdocTitle = "Collection"; 
 			%>
 			
 			<% include ../../shared/compose_content %>
-			<% include ../../shared/media_asset %>
 			<h2>Collection Items</h2>
 			<div class="_pea-document" id="collection-items">
 				<div id="collection-item-documents" class="_pea-row _pea-container-forminput">
@@ -71,6 +72,7 @@
 				</div>
 			</div>
 			<% include ../../shared/content_attributes %>
+			<% include ../../shared/media_asset %>
 		</div>
 		<div class="_pea-col-span3 _pea-pull-right">
 			<% include ../../shared/content_options %>

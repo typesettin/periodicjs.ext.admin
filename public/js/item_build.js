@@ -3159,8 +3159,7 @@ var request = require('superagent'),
 		}
 	}),
 	mediafileinput,
-	mediafilesresult,
-	deleteButton;
+	mediafilesresult;
 
 
 var uploadMediaFiles = function (e) {
@@ -3182,69 +3181,6 @@ var uploadMediaFiles = function (e) {
 		});
 	}
 };
-
-var deleteItem = function (e) {
-	e.preventDefault();
-	var eTarget = e.target;
-	request
-		.post(eTarget.getAttribute('data-href'))
-		.set('Accept', 'application/json')
-		.send({
-			_csrf: document.querySelector('input[name=_csrf]').value
-		})
-		.query({
-			format: 'json'
-		})
-		.end(function (error, res) {
-			if (res.error) {
-				error = res.error;
-			}
-			if (error || res.status === 500) {
-				window.ribbonNotification.showRibbon(error.message, 4000, 'error');
-			}
-			else {
-				if (res.body.result === 'error') {
-					window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
-				}
-				else {
-					window.ribbonNotification.showRibbon(res.body.data, 4000, 'warn');
-				}
-			}
-		});
-};
-
-window.addEventListener('load', function (e) {
-	tag_lp.init();
-	cat_lp.init();
-	athr_lp.init();
-	cnt_lp.init();
-	if (typeof itemtags === 'object') {
-		tag_lp.setPreloadDataObject(window.itemtags);
-	}
-	if (typeof itemcategories === 'object') {
-		cat_lp.setPreloadDataObject(window.itemcategories);
-	}
-	if (typeof itemauthors === 'object') {
-		athr_lp.setPreloadDataObject(window.itemauthors);
-	}
-	if (typeof itemcontenttypes === 'object') {
-		cnt_lp.setPreloadDataObject(window.itemcontenttypes);
-	}
-	window.ajaxFormEventListers('._pea-ajax-form');
-	wysihtml5Editor = new window.wysihtml5.Editor('wysihtml5-textarea', {
-		// id of textarea element
-		toolbar: 'wysihtml5-toolbar', // id of toolbar element
-		parserRules: window.wysihtml5ParserRules // defined in parser rules set 
-	});
-	mediafileinput = document.getElementById('padmin-mediafiles');
-	mediafilesresult = document.getElementById('media-files-result');
-	mediafileinput.addEventListener('change', uploadMediaFiles, false);
-	mediafilesresult.addEventListener('click', updatemedia.handleMediaButtonClick, false);
-	deleteButton = document.getElementById('delete-item');
-	if (deleteButton) {
-		deleteButton.addEventListener('click', deleteItem, false);
-	}
-});
 
 window.updateContentTypes = function (AjaxDataResponse) {
 	// console.log("runing post update");
@@ -3273,8 +3209,40 @@ window.updateContentTypes = function (AjaxDataResponse) {
 	contenttypeContainer.innerHTML = contentTypeHtml;
 };
 
-
 window.cnt_lp = cnt_lp;
+
+window.backToItemLanding = function () {
+	window.location = '/p-admin/items';
+};
+
+window.addEventListener('load', function () {
+	tag_lp.init();
+	cat_lp.init();
+	athr_lp.init();
+	cnt_lp.init();
+	if (typeof itemtags === 'object') {
+		tag_lp.setPreloadDataObject(window.itemtags);
+	}
+	if (typeof itemcategories === 'object') {
+		cat_lp.setPreloadDataObject(window.itemcategories);
+	}
+	if (typeof itemauthors === 'object') {
+		athr_lp.setPreloadDataObject(window.itemauthors);
+	}
+	if (typeof itemcontenttypes === 'object') {
+		cnt_lp.setPreloadDataObject(window.itemcontenttypes);
+	}
+	window.ajaxFormEventListers('._pea-ajax-form');
+	wysihtml5Editor = new window.wysihtml5.Editor('wysihtml5-textarea', {
+		// id of textarea element
+		toolbar: 'wysihtml5-toolbar', // id of toolbar element
+		parserRules: window.wysihtml5ParserRules // defined in parser rules set 
+	});
+	mediafileinput = document.getElementById('padmin-mediafiles');
+	mediafilesresult = document.getElementById('media-files-result');
+	mediafileinput.addEventListener('change', uploadMediaFiles, false);
+	mediafilesresult.addEventListener('click', updatemedia.handleMediaButtonClick, false);
+});
 
 },{"./updatemedia":16,"letterpressjs":6,"superagent":12}],16:[function(require,module,exports){
 'use strict';

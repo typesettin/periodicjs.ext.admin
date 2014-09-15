@@ -3164,8 +3164,7 @@ var request = require('superagent'),
 	collectionDocsResults,
 	collectionDocsItemTable,
 	mediafileinput,
-	mediafilesresult,
-	deleteButton;
+	mediafilesresult;
 
 
 var generateCollectionDoc = function (documentstoadd) {
@@ -3314,35 +3313,39 @@ var uploadMediaFiles = function (e) {
 	}
 };
 
-var deleteCollection = function (e) {
-	e.preventDefault();
-	var eTarget = e.target;
-	request
-		.post(eTarget.getAttribute('data-href'))
-		.set('Accept', 'application/json')
-		.send({
-			_csrf: document.querySelector('input[name=_csrf]').value
-		})
-		.query({
-			format: 'json'
-		})
-		.end(function (error, res) {
-			if (res.error) {
-				error = res.error;
-			}
-			if (error || res.status === 500) {
-				window.ribbonNotification.showRibbon(error.message, 4000, 'error');
-			}
-			else {
-				if (res.body.result === 'error') {
-					window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
+window.updateContentTypes = function (AjaxDataResponse) {
+	// console.log("runing post update");
+	var contenttypeContainer = document.getElementById('doc-ct-attr'),
+		updatedDoc = AjaxDataResponse.doc,
+		contentTypeHtml = '';
+	for (var x in updatedDoc.contenttypes) {
+		var contentTypeData = updatedDoc.contenttypes[x];
+		contentTypeHtml += '<div>';
+		contentTypeHtml += '<h3 style="margin-top:0;">' + contentTypeData.title + '<small> <a href="/p-admin/contenttype/' + contentTypeData.name + '">(edit)</a></small></h3>';
+		if (contentTypeData.attributes) {
+			for (var y in contentTypeData.attributes) {
+				var attr = contentTypeData.attributes[y],
+					defaultVal = attr.defaultvalue || '';
+				if (updatedDoc.contenttypeattributes && updatedDoc.contenttypeattributes[contentTypeData.name] && updatedDoc.contenttypeattributes[contentTypeData.name][attr.name]) {
+					defaultVal = updatedDoc.contenttypeattributes[contentTypeData.name][attr.name];
 				}
-				else {
-					window.ribbonNotification.showRibbon(res.body.data, 4000, 'warn');
-				}
+				contentTypeHtml += '<div class="_pea-row _pea-container-forminput">';
+				contentTypeHtml += '<label class="_pea-label _pea-col-span3"> ' + attr.title + ' </label>';
+				contentTypeHtml += '<input class="_pea-col-span9 noFormSubmit" type="text" placeholder="' + attr.title + '" value="' + defaultVal + '" name="contenttypeattributes.' + contentTypeData.name + '.' + attr.name + '">';
+				contentTypeHtml += '</div>';
 			}
-		});
+		}
+		contentTypeHtml += '</div>';
+	}
+	contenttypeContainer.innerHTML = contentTypeHtml;
 };
+
+window.cnt_lp = cnt_lp;
+
+window.backToCollectionLanding = function () {
+	window.location = '/p-admin/collections';
+};
+
 window.addEventListener('load', function () {
 	tag_lp.init();
 	cat_lp.init();
@@ -3379,40 +3382,7 @@ window.addEventListener('load', function () {
 	mediafilesresult.addEventListener('click', updatemedia.handleMediaButtonClick, false);
 	searchDocButton.addEventListener('click', searchDocs, false);
 	collectionDocs.addEventListener('click', collectionDocsCLick, false);
-	deleteButton = document.getElementById('delete-collection');
-	if (deleteButton) {
-		deleteButton.addEventListener('click', deleteCollection, false);
-	}
 });
-
-window.updateContentTypes = function (AjaxDataResponse) {
-	// console.log("runing post update");
-	var contenttypeContainer = document.getElementById('doc-ct-attr'),
-		updatedDoc = AjaxDataResponse.doc,
-		contentTypeHtml = '';
-	for (var x in updatedDoc.contenttypes) {
-		var contentTypeData = updatedDoc.contenttypes[x];
-		contentTypeHtml += '<div>';
-		contentTypeHtml += '<h3 style="margin-top:0;">' + contentTypeData.title + '<small> <a href="/p-admin/contenttype/' + contentTypeData.name + '">(edit)</a></small></h3>';
-		if (contentTypeData.attributes) {
-			for (var y in contentTypeData.attributes) {
-				var attr = contentTypeData.attributes[y],
-					defaultVal = attr.defaultvalue || '';
-				if (updatedDoc.contenttypeattributes && updatedDoc.contenttypeattributes[contentTypeData.name] && updatedDoc.contenttypeattributes[contentTypeData.name][attr.name]) {
-					defaultVal = updatedDoc.contenttypeattributes[contentTypeData.name][attr.name];
-				}
-				contentTypeHtml += '<div class="_pea-row _pea-container-forminput">';
-				contentTypeHtml += '<label class="_pea-label _pea-col-span3"> ' + attr.title + ' </label>';
-				contentTypeHtml += '<input class="_pea-col-span9 noFormSubmit" type="text" placeholder="' + attr.title + '" value="' + defaultVal + '" name="contenttypeattributes.' + contentTypeData.name + '.' + attr.name + '">';
-				contentTypeHtml += '</div>';
-			}
-		}
-		contentTypeHtml += '</div>';
-	}
-	contenttypeContainer.innerHTML = contentTypeHtml;
-};
-
-window.cnt_lp = cnt_lp;
 
 },{"./updatemedia":16,"letterpressjs":6,"superagent":12}],16:[function(require,module,exports){
 'use strict';
