@@ -6,6 +6,7 @@ var formobj = require('./formtoobject'),
 	classie = require('classie'),
 	silkscreen = require('silkscreenjs'),
 	updatemedia = require('./updatemedia'),
+	semver = require('semver'),
 	mediafilessearchresult,
 	mediasearchresultarray,
 	mediafilesresult,
@@ -255,6 +256,32 @@ window.makeNiceName = function (username) {
 	else {
 		return false;
 	}
+};
+
+window.checkPeriodicVersion = function () {
+	request
+		.get('/p-admin/check_periodic_version')
+		.set('Accept', 'application/json')
+		.end(function (error, res) {
+			if (res.error) {
+				error = res.error;
+			}
+			if (error) {
+				console.error('cannot check periodic version', error);
+			}
+			else {
+				if (res.body) {
+					var ajaxResponseData = res.body;
+					if (ajaxResponseData.status === 'current') {
+						console.info(ajaxResponseData.message);
+					}
+					else {
+						window.ribbonNotification.showRibbon(ajaxResponseData.message, 6000, 'warn');
+						// console.error(ajaxResponseData.message);
+					}
+				}
+			}
+		});
 };
 
 window.addEventListener('load', function () {

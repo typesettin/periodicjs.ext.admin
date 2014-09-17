@@ -1,5 +1,5 @@
 <input type="hidden" name="_csrf" value=<%= locals.token %> >
-<div class="_pea-container">
+<div class="_pea-container _pea-theme">
 	<div class="_pea-row">
 		<div class="_pea-col-span8">
 			<% 
@@ -16,6 +16,7 @@
 		<div class="_pea-col-span3 _pea-pull-right">
 			<% include ../../shared/attribute_taxonmy %>
 			<% if(genericdoc){%>
+				<% include ../../shared/attribute_children %>
 				<% include ../../shared/attribute_delete %>
 			<%}%>
 		</div>

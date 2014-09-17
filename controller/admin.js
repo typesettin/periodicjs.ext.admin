@@ -2,7 +2,9 @@
 
 var path = require('path'),
     async = require('async'),
-    fs = require('fs-extra'),
+    request = require('superagent'),
+    semver = require('semver'),
+   fs = require('fs-extra'),
     moment = require('moment'),
     Utilities = require('periodicjs.core.utilities'),
     ControllerHelper = require('periodicjs.core.controllerhelper'),
@@ -493,7 +495,7 @@ var category_show = function(req, res) {
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
-                        title:req.controllerData.category.title+' - Edit Tag',
+                        title:req.controllerData.category.title+' - Edit Category',
                         headerjs: ['/extensions/periodicjs.ext.admin/js/attributes.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
@@ -935,6 +937,41 @@ var users_edit = function(req, res){
     );
 };
 
+var check_periodic_version = function(req, server_res){
+    request
+    .get('https://registry.npmjs.org/periodicjs')
+    .set('Accept', 'application/json')
+    .end(function (error, res) {
+        if (res.error) {
+            error = res.error;
+        }
+        if (error) {            
+            CoreController.handleDocumentQueryErrorResponse({
+                err:error,
+                res:res,
+                req:req
+            });
+        }
+        else {
+            var latestPeriodicVersion = res.body['dist-tags'].latest;
+            var currentPeriodicVersion = appSettings.version;
+            if (semver.gte(currentPeriodicVersion, latestPeriodicVersion)) {
+                server_res.send({
+                    status:'current',
+                    message:'Your instance of Periodic ' + currentPeriodicVersion + ' is up to date with the current version ' + latestPeriodicVersion
+                });
+            }
+            else {
+                // console.log('\u0007');
+                server_res.send({
+                    status:'error',
+                    message:'Your instance of Periodic: ' + currentPeriodicVersion + ' is out of date, Current Version: ' + latestPeriodicVersion
+                });
+            }
+        }
+    });
+};
+
 var controller = function(resources){
     logger = resources.logger;
     mongoose = resources.mongoose;
@@ -976,7 +1013,8 @@ var controller = function(resources){
         users_index:users_index,
         users_show:users_show,
         users_edit:users_edit,
-        users_new:users_new
+        users_new:users_new,
+        check_periodic_version:check_periodic_version
     };
 };
 

@@ -35,11 +35,66 @@ var wysihtml5Editor,
 		}
 		else if (id !== 'SELECT' || id !== 'NEWTAG') {
 			callback(id, val);
-			console.log('type', type);
+			// console.log('type', type);
 		}
 	},
+	doctypename,
+	doctypenamelink,
+	docid,
 	parent_lp,
 	cnt_lp;
+
+
+var getAttributeChildHtml = function (attribute, makelink) {
+	var returnHtml = '<li>';
+	if (makelink) {
+		returnHtml += '<a href="/p-admin/' + doctypename.value + '/' + attribute.name + '">' + attribute.title + '</a>';
+	}
+	else {
+		returnHtml += attribute.title;
+	}
+	if (attribute.childDocs) {
+		for (var x in attribute.childDocs) {
+			returnHtml += '<ul>' + getAttributeChildHtml(attribute.childDocs[x], true) + '</ul>';
+		}
+	}
+	returnHtml += '</li>';
+	return returnHtml;
+};
+
+var getChildrenHtml = function (attributes) {
+	var returnHtml = '<ul>';
+	returnHtml += getAttributeChildHtml(attributes, false);
+	returnHtml += '</ul>';
+
+	return returnHtml;
+};
+
+var getChildren = function () {
+	var childHtmlContainer = document.getElementById('child-attributes');
+	request
+		.get('/' + doctypename.value + '/' + docid.value + '/children')
+		.query({
+			format: 'json'
+		})
+		.set('Accept', 'application/json')
+		.end(function (error, res) {
+			if (res.error) {
+				error = res.error;
+			}
+			if (error) {
+				console.error(error);
+			}
+			else {
+				if (res.body.children) {
+					childHtmlContainer.innerHTML = getChildrenHtml(res.body.children);
+				}
+				else {
+					childHtmlContainer.innerHTML = 'no child ' + doctypenamelink;
+				}
+			}
+		});
+};
 
 window.removeTagRow = function (deleteData) {
 	var rowElement = document.getElementById('tag-tr-' + deleteData._id);
@@ -84,11 +139,15 @@ window.updateContentTypes = function (AjaxDataResponse) {
 		contentTypeHtml += '</div>';
 	}
 	contenttypeContainer.innerHTML = contentTypeHtml;
+	if (docid) {
+		getChildren();
+	}
 };
 
 window.addEventListener('load', function () {
-	var doctypename = document.querySelector('input[name=doctypename]'),
-		doctypenamelink = document.querySelector('input[name=doctypenamelink]');
+	docid = document.querySelector('input[name=docid]');
+	doctypename = document.querySelector('input[name=doctypename]');
+	doctypenamelink = document.querySelector('input[name=doctypenamelink]');
 	if (document.querySelector('#padmin-parent')) {
 		parent_lp = new letterpress({
 			idSelector: '#padmin-parent',
@@ -131,5 +190,9 @@ window.addEventListener('load', function () {
 			toolbar: 'wysihtml5-toolbar', // id of toolbar element
 			parserRules: window.wysihtml5ParserRules // defined in parser rules set 
 		});
+	}
+
+	if (docid) {
+		getChildren();
 	}
 });

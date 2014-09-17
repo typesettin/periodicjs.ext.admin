@@ -50,10 +50,10 @@ module.exports = function (periodic) {
 	/**
 	 * admin routes
 	 */
-	// adminRouter.get('/',authController.ensureAuthenticated,adminController.index);
-	adminRouter.get('/', function (req, res) {
-		res.redirect('/p-admin/user/' + req.user.username);
-	});
+	adminRouter.get('/', adminController.settings_index);
+	// adminRouter.get('/', function (req, res) {
+	// 	res.redirect('/p-admin/user/' + req.user.username);
+	// });
 	adminRouter.get('/items', itemController.loadItems, adminController.items_index);
 	adminRouter.get('/contenttypes', contenttypeController.loadContenttypes, adminController.contenttypes_index);
 	adminRouter.get('/tags', tagController.loadTags, adminController.tags_index);
@@ -65,6 +65,7 @@ module.exports = function (periodic) {
 	adminRouter.get('/users', uacController.loadUacUsers, adminController.users_index);
 	adminRouter.get('/mailer', adminController.mail_index);
 	adminRouter.get('/settings', adminController.settings_index);
+	adminRouter.get('/check_periodic_version', adminController.check_periodic_version);
 	/**
 	 * admin/extension manager routes
 	 */
@@ -166,10 +167,12 @@ module.exports = function (periodic) {
 	periodicRouter.get('/user/search', userController.loadUsers, userController.searchResults);
 	periodicRouter.get('/category/search.:ext', categoryController.loadCategories, categoryController.searchResults);
 	periodicRouter.get('/category/search', categoryController.loadCategories, categoryController.searchResults);
+	periodicRouter.get('/category/:id/children', categoryController.loadCategory, categoryController.loadChildren, categoryController.showChildren);
 	periodicRouter.get('/contenttype/search.:ext', contenttypeController.loadContenttypes, contenttypeController.searchResults);
 	periodicRouter.get('/contenttype/search', contenttypeController.loadContenttypes, contenttypeController.searchResults);
 	periodicRouter.get('/tag/search.:ext', tagController.loadTags, tagController.searchResults);
 	periodicRouter.get('/tag/search', tagController.loadTags, tagController.searchResults);
+	periodicRouter.get('/tag/:id/children', tagController.loadTag, tagController.loadChildren, tagController.showChildren);
 
 	adminRouter.use('/asset', mediaAdminRouter);
 	adminRouter.use('/extension', extensionAdminRouter);
