@@ -990,6 +990,99 @@ function hasOwnProperty(obj, prop) {
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./support/isBuffer":4,"_process":3,"inherits":2}],6:[function(require,module,exports){
 /*
+ * classie
+ * http://github.amexpub.com/modules/classie
+ *
+ * Copyright (c) 2013 AmexPub. All rights reserved.
+ */
+
+module.exports = require('./lib/classie');
+
+},{"./lib/classie":7}],7:[function(require,module,exports){
+/*!
+ * classie - class helper functions
+ * from bonzo https://github.com/ded/bonzo
+ * 
+ * classie.has( elem, 'my-class' ) -> true/false
+ * classie.add( elem, 'my-new-class' )
+ * classie.remove( elem, 'my-unwanted-class' )
+ * classie.toggle( elem, 'my-class' )
+ */
+
+/*jshint browser: true, strict: true, undef: true */
+/*global define: false */
+'use strict';
+
+  // class helper functions from bonzo https://github.com/ded/bonzo
+
+  function classReg( className ) {
+    return new RegExp("(^|\\s+)" + className + "(\\s+|$)");
+  }
+
+  // classList support for class management
+  // altho to be fair, the api sucks because it won't accept multiple classes at once
+  var hasClass, addClass, removeClass;
+
+  if (typeof document === "object" && 'classList' in document.documentElement ) {
+    hasClass = function( elem, c ) {
+      return elem.classList.contains( c );
+    };
+    addClass = function( elem, c ) {
+      elem.classList.add( c );
+    };
+    removeClass = function( elem, c ) {
+      elem.classList.remove( c );
+    };
+  }
+  else {
+    hasClass = function( elem, c ) {
+      return classReg( c ).test( elem.className );
+    };
+    addClass = function( elem, c ) {
+      if ( !hasClass( elem, c ) ) {
+        elem.className = elem.className + ' ' + c;
+      }
+    };
+    removeClass = function( elem, c ) {
+      elem.className = elem.className.replace( classReg( c ), ' ' );
+    };
+  }
+
+  function toggleClass( elem, c ) {
+    var fn = hasClass( elem, c ) ? removeClass : addClass;
+    fn( elem, c );
+  }
+
+  var classie = {
+    // full names
+    hasClass: hasClass,
+    addClass: addClass,
+    removeClass: removeClass,
+    toggleClass: toggleClass,
+    // short names
+    has: hasClass,
+    add: addClass,
+    remove: removeClass,
+    toggle: toggleClass
+  };
+
+  // transport
+
+  if ( typeof module === "object" && module && typeof module.exports === "object" ) {
+    // commonjs / browserify
+    module.exports = classie;
+  } else {
+    // AMD
+    define(classie);
+  }
+
+  // If there is a window object, that at least has a document property,
+  // define classie
+  if ( typeof window === "object" && typeof window.document === "object" ) {
+    window.classie = classie;
+  }
+},{}],8:[function(require,module,exports){
+/*
  * manuscript
  * http://github.com/typesettin/manuscript
  *
@@ -998,7 +1091,7 @@ function hasOwnProperty(obj, prop) {
 
 module.exports = require('./lib/letterpress');
 
-},{"./lib/letterpress":7}],7:[function(require,module,exports){
+},{"./lib/letterpress":9}],9:[function(require,module,exports){
 /*
  * letterpress
  * http://github.com/typesettin/letterpress
@@ -1392,100 +1485,7 @@ module.exports = letterpress;
 if ( typeof window === "object" && typeof window.document === "object" ) {
 	window.letterpress = letterpress;
 }
-},{"classie":8,"domhelper":10,"events":1,"superagent":12,"util":5,"util-extend":17}],8:[function(require,module,exports){
-/*
- * classie
- * http://github.amexpub.com/modules/classie
- *
- * Copyright (c) 2013 AmexPub. All rights reserved.
- */
-
-module.exports = require('./lib/classie');
-
-},{"./lib/classie":9}],9:[function(require,module,exports){
-/*!
- * classie - class helper functions
- * from bonzo https://github.com/ded/bonzo
- * 
- * classie.has( elem, 'my-class' ) -> true/false
- * classie.add( elem, 'my-new-class' )
- * classie.remove( elem, 'my-unwanted-class' )
- * classie.toggle( elem, 'my-class' )
- */
-
-/*jshint browser: true, strict: true, undef: true */
-/*global define: false */
-'use strict';
-
-  // class helper functions from bonzo https://github.com/ded/bonzo
-
-  function classReg( className ) {
-    return new RegExp("(^|\\s+)" + className + "(\\s+|$)");
-  }
-
-  // classList support for class management
-  // altho to be fair, the api sucks because it won't accept multiple classes at once
-  var hasClass, addClass, removeClass;
-
-  if (typeof document === "object" && 'classList' in document.documentElement ) {
-    hasClass = function( elem, c ) {
-      return elem.classList.contains( c );
-    };
-    addClass = function( elem, c ) {
-      elem.classList.add( c );
-    };
-    removeClass = function( elem, c ) {
-      elem.classList.remove( c );
-    };
-  }
-  else {
-    hasClass = function( elem, c ) {
-      return classReg( c ).test( elem.className );
-    };
-    addClass = function( elem, c ) {
-      if ( !hasClass( elem, c ) ) {
-        elem.className = elem.className + ' ' + c;
-      }
-    };
-    removeClass = function( elem, c ) {
-      elem.className = elem.className.replace( classReg( c ), ' ' );
-    };
-  }
-
-  function toggleClass( elem, c ) {
-    var fn = hasClass( elem, c ) ? removeClass : addClass;
-    fn( elem, c );
-  }
-
-  var classie = {
-    // full names
-    hasClass: hasClass,
-    addClass: addClass,
-    removeClass: removeClass,
-    toggleClass: toggleClass,
-    // short names
-    has: hasClass,
-    add: addClass,
-    remove: removeClass,
-    toggle: toggleClass
-  };
-
-  // transport
-
-  if ( typeof module === "object" && module && typeof module.exports === "object" ) {
-    // commonjs / browserify
-    module.exports = classie;
-  } else {
-    // AMD
-    define(classie);
-  }
-
-  // If there is a window object, that at least has a document property,
-  // define classie
-  if ( typeof window === "object" && typeof window.document === "object" ) {
-    window.classie = classie;
-  }
-},{}],10:[function(require,module,exports){
+},{"classie":6,"domhelper":10,"events":1,"superagent":12,"util":5,"util-extend":17}],10:[function(require,module,exports){
 /*
  * domhelper
  * http://github.com/yawetse/domhelper
@@ -1835,7 +1835,7 @@ module.exports = domhelper;
 if ( typeof window === "object" && typeof window.document === "object" ) {
 	window.domhelper = domhelper;
 }
-},{"classie":8}],12:[function(require,module,exports){
+},{"classie":6}],12:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -3181,7 +3181,6 @@ module.exports = updatemedia;
 'use strict';
 
 var letterpress = require('letterpressjs'),
-	request = require('superagent'),
 	updatemedia = require('./updatemedia'),
 	roles_lp = new letterpress({
 		idSelector: '#padmin-userroles',
@@ -3198,42 +3197,8 @@ var letterpress = require('letterpressjs'),
 			}
 		}
 	}),
-	deleteButton,
 	mediafileinput,
 	mediafilesresult;
-
-var deleteUser = function (e) {
-	e.preventDefault();
-	var eTarget = e.target;
-	request
-		.post(eTarget.getAttribute('data-href'))
-		.set('Accept', 'application/json')
-		.send({
-			_csrf: document.querySelector('input[name=_csrf]').value
-		})
-		.query({
-			format: 'json'
-		})
-		.end(function (error, res) {
-			if (res.error) {
-				error = res.error;
-			}
-			if (error || res.status === 500) {
-				window.ribbonNotification.showRibbon(error.message, 4000, 'error');
-			}
-			else {
-				if (res.body.result === 'error') {
-					window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
-				}
-				else {
-					window.ribbonNotification.showRibbon(res.body.data, 4000, 'warn');
-					// var assetid = eTarget.getAttribute('assetid');
-					// var assettr = document.querySelector('[data-tr-assetid="'+assetid+'"]');
-					// removeTableRow(assettr);
-				}
-			}
-		});
-};
 
 var uploadMediaFiles = function (e) {
 	// fetch FileList object
@@ -3255,6 +3220,10 @@ var uploadMediaFiles = function (e) {
 	}
 };
 
+window.backToUsersLanding = function () {
+	window.location = '/p-admin/users';
+};
+
 window.addEventListener('load', function () {
 	if (document.querySelector('#padmin-userroles')) {
 		roles_lp.init();
@@ -3262,18 +3231,15 @@ window.addEventListener('load', function () {
 			roles_lp.setPreloadDataObject(window.userprofileuseroles);
 		}
 	}
-	deleteButton = document.getElementById('delete-user');
 	window.ajaxFormEventListers('._pea-ajax-form');
-	if (deleteButton) {
-		deleteButton.addEventListener('click', deleteUser, false);
-	}
+
 	mediafileinput = document.getElementById('padmin-mediafiles');
 	mediafilesresult = document.getElementById('media-files-result');
 	mediafileinput.addEventListener('change', uploadMediaFiles, false);
 	mediafilesresult.addEventListener('click', updatemedia.handleMediaButtonClick, false);
 });
 
-},{"./updatemedia":15,"letterpressjs":6,"superagent":12}],17:[function(require,module,exports){
+},{"./updatemedia":15,"letterpressjs":8}],17:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a

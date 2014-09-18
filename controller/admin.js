@@ -19,7 +19,40 @@ var path = require('path'),
     User,
     Collection,
     Item,//Item
+    AppDBSetting,
+    Contenttype,
     logger;
+
+var loadDefaultContentTypes = function(contentypes,callback){
+    var query = {
+        _id: {
+            $in:contentypes
+        }
+    };
+
+    CoreController.searchModel({
+        model: Contenttype,
+        query: query,
+        callback: callback
+    });
+};
+var getDefaultContentTypes = function(contentypesetting,callback){
+    CoreController.loadModel({
+        docid: contentypesetting,
+        model: AppDBSetting,
+        callback:function(err,defaultcontenttypes){
+            if(err){
+                callback(err,null);
+            }
+            else if(defaultcontenttypes && defaultcontenttypes.value){
+                loadDefaultContentTypes(defaultcontenttypes.value,callback);
+            }
+            else{
+                callback(null,null);
+            }
+        }
+    });
+};
 
 var index = function(req, res) {
     CoreController.getPluginViewDefaultTemplate(
@@ -125,6 +158,7 @@ var items_index = function(req, res) {
 };
 
 var item_new = function(req, res) {
+
     CoreController.getPluginViewDefaultTemplate(
         {
             viewname:'p-admin/items/new',
@@ -135,22 +169,34 @@ var item_new = function(req, res) {
             if(!err && !User.hasPrivilege(req.user,110)){
                 err = new Error('You don\'t have access to view content');
             }
-            CoreController.handleDocumentQueryRender({
-                res:res,
-                req:req,
-                renderView:templatepath,
-                responseData:{
-                    pagedata:{
-                        title:'New Item',
-                        headerjs: ['/extensions/periodicjs.ext.admin/js/item.min.js'],
-                        extensions:CoreUtilities.getAdminMenu()
-                    },
-                    item:null,
-                    serverdate:moment().format('YYYY-MM-DD'),
-                    servertime:moment().format('HH:mm'),
-                    user:req.user
+            getDefaultContentTypes('item_default_contenttypes',function(err,defaultcontenttypes){
+                if(err){
+                    CoreController.handleDocumentQueryErrorResponse({
+                        err:err,
+                        res:res,
+                        req:req
+                    });
                 }
-            });
+                else{
+                    CoreController.handleDocumentQueryRender({
+                        res:res,
+                        req:req,
+                        renderView:templatepath,
+                        responseData:{
+                            pagedata:{
+                                title:'New Item',
+                                headerjs: ['/extensions/periodicjs.ext.admin/js/item.min.js'],
+                                extensions:CoreUtilities.getAdminMenu()
+                            },
+                            item:null,
+                            default_contentypes:defaultcontenttypes,
+                            serverdate:moment().format('YYYY-MM-DD'),
+                            servertime:moment().format('HH:mm'),
+                            user:req.user
+                        }
+                    });
+                }
+            });            
         }
     );
 };
@@ -216,20 +262,32 @@ var collection_new = function(req, res) {
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            CoreController.handleDocumentQueryRender({
-                res:res,
-                req:req,
-                renderView:templatepath,
-                responseData:{
-                    pagedata:{
-                        title:'New Collection',
-                        headerjs: ['/extensions/periodicjs.ext.admin/js/collection.min.js'],
-                        extensions:CoreUtilities.getAdminMenu()
-                    },
-                    collection:null,
-                    serverdate:moment().format('YYYY-MM-DD'),
-                    servertime:moment().format('HH:mm'),
-                    user:req.user
+            getDefaultContentTypes('collection_default_contenttypes',function(err,defaultcontenttypes){
+                if(err){
+                    CoreController.handleDocumentQueryErrorResponse({
+                        err:err,
+                        res:res,
+                        req:req
+                    });
+                }
+                else{
+                    CoreController.handleDocumentQueryRender({
+                        res:res,
+                        req:req,
+                        renderView:templatepath,
+                        responseData:{
+                            pagedata:{
+                                title:'New Collection',
+                                headerjs: ['/extensions/periodicjs.ext.admin/js/collection.min.js'],
+                                extensions:CoreUtilities.getAdminMenu()
+                            },
+                            collection:null,
+                            default_contentypes:defaultcontenttypes,
+                            serverdate:moment().format('YYYY-MM-DD'),
+                            servertime:moment().format('HH:mm'),
+                            user:req.user
+                        }
+                    });
                 }
             });
         }
@@ -981,6 +1039,8 @@ var controller = function(resources){
     Item = mongoose.model('Item');
     Collection = mongoose.model('Collection');
     User  = mongoose.model('User');
+    AppDBSetting = mongoose.model('Setting');
+    Contenttype = mongoose.model('Contenttype');
 
     return{
         index:index,

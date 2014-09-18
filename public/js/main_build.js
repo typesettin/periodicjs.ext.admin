@@ -1,97 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/*
- * classie
- * http://github.amexpub.com/modules/classie
- *
- * Copyright (c) 2013 AmexPub. All rights reserved.
- */
-
-module.exports = require('./lib/classie');
-
-},{"./lib/classie":2}],2:[function(require,module,exports){
-/*!
- * classie - class helper functions
- * from bonzo https://github.com/ded/bonzo
- * 
- * classie.has( elem, 'my-class' ) -> true/false
- * classie.add( elem, 'my-new-class' )
- * classie.remove( elem, 'my-unwanted-class' )
- * classie.toggle( elem, 'my-class' )
- */
-
-/*jshint browser: true, strict: true, undef: true */
-/*global define: false */
-'use strict';
-
-  // class helper functions from bonzo https://github.com/ded/bonzo
-
-  function classReg( className ) {
-    return new RegExp("(^|\\s+)" + className + "(\\s+|$)");
-  }
-
-  // classList support for class management
-  // altho to be fair, the api sucks because it won't accept multiple classes at once
-  var hasClass, addClass, removeClass;
-
-  if (typeof document === "object" && 'classList' in document.documentElement ) {
-    hasClass = function( elem, c ) {
-      return elem.classList.contains( c );
-    };
-    addClass = function( elem, c ) {
-      elem.classList.add( c );
-    };
-    removeClass = function( elem, c ) {
-      elem.classList.remove( c );
-    };
-  }
-  else {
-    hasClass = function( elem, c ) {
-      return classReg( c ).test( elem.className );
-    };
-    addClass = function( elem, c ) {
-      if ( !hasClass( elem, c ) ) {
-        elem.className = elem.className + ' ' + c;
-      }
-    };
-    removeClass = function( elem, c ) {
-      elem.className = elem.className.replace( classReg( c ), ' ' );
-    };
-  }
-
-  function toggleClass( elem, c ) {
-    var fn = hasClass( elem, c ) ? removeClass : addClass;
-    fn( elem, c );
-  }
-
-  var classie = {
-    // full names
-    hasClass: hasClass,
-    addClass: addClass,
-    removeClass: removeClass,
-    toggleClass: toggleClass,
-    // short names
-    has: hasClass,
-    add: addClass,
-    remove: removeClass,
-    toggle: toggleClass
-  };
-
-  // transport
-
-  if ( typeof module === "object" && module && typeof module.exports === "object" ) {
-    // commonjs / browserify
-    module.exports = classie;
-  } else {
-    // AMD
-    define(classie);
-  }
-
-  // If there is a window object, that at least has a document property,
-  // define classie
-  if ( typeof window === "object" && typeof window.document === "object" ) {
-    window.classie = classie;
-  }
-},{}],3:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -394,7 +301,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],4:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -419,7 +326,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],5:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -484,14 +391,14 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],6:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],7:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1081,7 +988,100 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":6,"_process":5,"inherits":4}],8:[function(require,module,exports){
+},{"./support/isBuffer":4,"_process":3,"inherits":2}],6:[function(require,module,exports){
+/*
+ * classie
+ * http://github.amexpub.com/modules/classie
+ *
+ * Copyright (c) 2013 AmexPub. All rights reserved.
+ */
+
+module.exports = require('./lib/classie');
+
+},{"./lib/classie":7}],7:[function(require,module,exports){
+/*!
+ * classie - class helper functions
+ * from bonzo https://github.com/ded/bonzo
+ * 
+ * classie.has( elem, 'my-class' ) -> true/false
+ * classie.add( elem, 'my-new-class' )
+ * classie.remove( elem, 'my-unwanted-class' )
+ * classie.toggle( elem, 'my-class' )
+ */
+
+/*jshint browser: true, strict: true, undef: true */
+/*global define: false */
+'use strict';
+
+  // class helper functions from bonzo https://github.com/ded/bonzo
+
+  function classReg( className ) {
+    return new RegExp("(^|\\s+)" + className + "(\\s+|$)");
+  }
+
+  // classList support for class management
+  // altho to be fair, the api sucks because it won't accept multiple classes at once
+  var hasClass, addClass, removeClass;
+
+  if (typeof document === "object" && 'classList' in document.documentElement ) {
+    hasClass = function( elem, c ) {
+      return elem.classList.contains( c );
+    };
+    addClass = function( elem, c ) {
+      elem.classList.add( c );
+    };
+    removeClass = function( elem, c ) {
+      elem.classList.remove( c );
+    };
+  }
+  else {
+    hasClass = function( elem, c ) {
+      return classReg( c ).test( elem.className );
+    };
+    addClass = function( elem, c ) {
+      if ( !hasClass( elem, c ) ) {
+        elem.className = elem.className + ' ' + c;
+      }
+    };
+    removeClass = function( elem, c ) {
+      elem.className = elem.className.replace( classReg( c ), ' ' );
+    };
+  }
+
+  function toggleClass( elem, c ) {
+    var fn = hasClass( elem, c ) ? removeClass : addClass;
+    fn( elem, c );
+  }
+
+  var classie = {
+    // full names
+    hasClass: hasClass,
+    addClass: addClass,
+    removeClass: removeClass,
+    toggleClass: toggleClass,
+    // short names
+    has: hasClass,
+    add: addClass,
+    remove: removeClass,
+    toggle: toggleClass
+  };
+
+  // transport
+
+  if ( typeof module === "object" && module && typeof module.exports === "object" ) {
+    // commonjs / browserify
+    module.exports = classie;
+  } else {
+    // AMD
+    define(classie);
+  }
+
+  // If there is a window object, that at least has a document property,
+  // define classie
+  if ( typeof window === "object" && typeof window.document === "object" ) {
+    window.classie = classie;
+  }
+},{}],8:[function(require,module,exports){
 /*
  * manuscript
  * http://github.com/typesettin/manuscript
@@ -1290,11 +1290,7 @@ module.exports = ribbon;
 if ( typeof window === "object" && typeof window.document === "object" ) {
 	window.ribbon = ribbon;
 }
-},{"classie":10,"events":3,"util":7,"util-extend":22}],10:[function(require,module,exports){
-module.exports=require(1)
-},{"./lib/classie":11,"/Users/yawetse/Developer/test/logintest/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/index.js":1}],11:[function(require,module,exports){
-module.exports=require(2)
-},{"/Users/yawetse/Developer/test/logintest/periodicjs/node_modules/periodicjs.ext.admin/node_modules/classie/lib/classie.js":2}],12:[function(require,module,exports){
+},{"classie":6,"events":1,"util":5,"util-extend":19}],10:[function(require,module,exports){
 ;(function(exports) {
 
 // export the class if we are in a Node-like system.
@@ -2331,7 +2327,7 @@ if (typeof define === 'function' && define.amd)
   semver = {}
 );
 
-},{}],13:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /*
  * manuscript
  * http://github.com/typesettin/silkscreen
@@ -2341,7 +2337,7 @@ if (typeof define === 'function' && define.amd)
 
 module.exports = require('./lib/silkscreen');
 
-},{"./lib/silkscreen":14}],14:[function(require,module,exports){
+},{"./lib/silkscreen":12}],12:[function(require,module,exports){
 /*
  * silkscreen
  * http://github.com/typesettin/silkscreen
@@ -2556,42 +2552,7 @@ if (typeof window === "object" && typeof window.document === "object") {
 	window.silkscreen = silkscreen;
 }
 
-},{"classie":1,"events":3,"util":7,"util-extend":15}],15:[function(require,module,exports){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-module.exports = extend;
-function extend(origin, add) {
-  // Don't do anything if add isn't an object
-  if (!add || typeof add !== 'object') return origin;
-
-  var keys = Object.keys(add);
-  var i = keys.length;
-  while (i--) {
-    origin[keys[i]] = add[keys[i]];
-  }
-  return origin;
-}
-
-},{}],16:[function(require,module,exports){
+},{"classie":6,"events":1,"util":5,"util-extend":19}],13:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -3642,7 +3603,7 @@ request.put = function(url, data, fn){
 
 module.exports = request;
 
-},{"emitter":17,"reduce":18}],17:[function(require,module,exports){
+},{"emitter":14,"reduce":15}],14:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -3808,7 +3769,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],18:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 
 /**
  * Reduce `arr` with `fn`.
@@ -3833,7 +3794,7 @@ module.exports = function(arr, fn, initial){
   
   return curr;
 };
-},{}],19:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 var formToObject = function (formRef) {
@@ -3998,7 +3959,7 @@ formToObject.prototype.setFormObj = function () {
 
 module.exports = formToObject;
 
-},{}],20:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 var formobj = require('./formtoobject'),
@@ -4127,8 +4088,9 @@ var confirmDeleteDialog = function (e) {
 
 var ajaxDeleteButtonListeners = function () {
 	var deleteButtons = document.querySelectorAll('._pea-dialog-delete');
-
-	confirmDeleteYes.addEventListener('click', deleteContentSubmit, false);
+	if (confirmDeleteYes) {
+		confirmDeleteYes.addEventListener('click', deleteContentSubmit, false);
+	}
 	for (var x in deleteButtons) {
 		if (typeof deleteButtons[x] === 'object') {
 			deleteButtons[x].addEventListener('click', confirmDeleteDialog, false);
@@ -4230,7 +4192,21 @@ window.updateContentTypes = function (AjaxDataResponse) {
 				}
 				contentTypeHtml += '<div class="_pea-row _pea-container-forminput">';
 				contentTypeHtml += '<label class="_pea-label _pea-col-span3"> ' + attr.title + ' </label>';
-				contentTypeHtml += '<input class="_pea-col-span9 noFormSubmit" type="text" placeholder="' + attr.title + '" value="' + defaultVal + '" name="contenttypeattributes.' + contentTypeData.name + '.' + attr.name + '">';
+				if (attr.datatype === 'array' && attr.defaultvalue) {
+					var selectOptionsFromDefaultVal = attr.defaultvalue.split(',');
+					contentTypeHtml += '<select class="_pea-col-span9 noFormSubmit" name="contenttypeattributes.' + contentTypeData.name + '.' + attr.name + '">';
+					for (var j in selectOptionsFromDefaultVal) {
+						contentTypeHtml += '<option ';
+						if (selectOptionsFromDefaultVal[j] === defaultVal) {
+							contentTypeHtml += 'selected="selected"';
+						}
+						contentTypeHtml += ' value="' + selectOptionsFromDefaultVal[j] + '">' + selectOptionsFromDefaultVal[j] + '</option>';
+					}
+					contentTypeHtml += '</select>';
+				}
+				else {
+					contentTypeHtml += '<input class="_pea-col-span9 noFormSubmit" type="text" placeholder="' + attr.title + '" value="' + defaultVal + '" name="contenttypeattributes.' + contentTypeData.name + '.' + attr.name + '">';
+				}
 				contentTypeHtml += '</div>';
 			}
 		}
@@ -4302,7 +4278,7 @@ window.addEventListener('load', function () {
 	}
 }, false);
 
-},{"./formtoobject":19,"./updatemedia":21,"classie":1,"ribbonjs":8,"semver":12,"silkscreenjs":13,"superagent":16}],21:[function(require,module,exports){
+},{"./formtoobject":16,"./updatemedia":18,"classie":6,"ribbonjs":8,"semver":10,"silkscreenjs":11,"superagent":13}],18:[function(require,module,exports){
 'use strict';
 
 var updatemedia = function (element, mediadoc, additem) {
@@ -4402,6 +4378,39 @@ updatemedia.uploadFile = function (mediafilesresult, file, options) {
 
 module.exports = updatemedia;
 
-},{}],22:[function(require,module,exports){
-module.exports=require(15)
-},{"/Users/yawetse/Developer/test/logintest/periodicjs/node_modules/periodicjs.ext.admin/node_modules/silkscreenjs/node_modules/util-extend/extend.js":15}]},{},[20]);
+},{}],19:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+module.exports = extend;
+function extend(origin, add) {
+  // Don't do anything if add isn't an object
+  if (!add || typeof add !== 'object') return origin;
+
+  var keys = Object.keys(add);
+  var i = keys.length;
+  while (i--) {
+    origin[keys[i]] = add[keys[i]];
+  }
+  return origin;
+}
+
+},{}]},{},[17]);

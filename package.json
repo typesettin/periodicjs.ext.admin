@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.admin",
   "description": "Admin for periodicjs",
-  "version": "1.5.81",
+  "version": "1.7.0",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
@@ -42,7 +42,7 @@
     "periodicjs.ext.mailer": "~1.5.2",
     "periodicjs.ext.login": "~1.5.3",
     "periodicjs.ext.scheduled_content": "~1.5.2",
-    "periodicjs.ext.user_access_control": "~1.5.3"
+    "periodicjs.ext.user_access_control": "~1.5.4"
   },
   "devDependencies": {
     "browserify": "~4.2.1",
@@ -64,16 +64,16 @@
     "uglify-js": "^2.4.15",
     "uglifyify": "^2.5.0"
   },
-  "_id": "periodicjs.ext.admin@1.5.5",
-  "_shasum": "630c5cd47e907f72eef95671bb8270c71d40b02f",
-  "_from": "periodicjs.ext.admin@1.5.5",
-  "_resolved": "https://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.5.5.tgz",
+  "_id": "periodicjs.ext.admin@1.5.81",
+  "_shasum": "63f43b4661501258855f14b4702e93e724b95f79",
+  "_from": "periodicjs.ext.admin@1.5.81",
+  "_resolved": "https://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.5.81.tgz",
   "gitHead": "23466172484b2277c691c4f2684dfdb1cb92cb23",
   "bugs": {
     "url": "https://github.com/typesettin/periodicjs.ext.admin/issues"
   },
   "homepage": "https://github.com/typesettin/periodicjs.ext.admin",
-  "_npmVersion": "1.5.0-alpha-4",
+  "_npmVersion": "2.0.0-beta.0",
   "_npmUser": {
     "name": "yawetse",
     "email": "yaw.etse@gmail.com"
@@ -85,8 +85,8 @@
     }
   ],
   "dist": {
-    "shasum": "630c5cd47e907f72eef95671bb8270c71d40b02f",
-    "tarball": "http://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.5.5.tgz"
+    "shasum": "63f43b4661501258855f14b4702e93e724b95f79",
+    "tarball": "http://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.5.81.tgz"
   },
   "directories": {}
 }

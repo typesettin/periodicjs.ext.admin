@@ -1,7 +1,15 @@
 <h2>Content Type Attributes</h2>
 <div class="_pea-document" id="doc-ct-attr">
-	<% if(genericdoc && genericdoc.contenttypes){
-		genericdoc.contenttypes.forEach(function(ct){
+	<% 
+	var contenttypestouse;
+	if(!genericdoc && default_contentypes){
+		contenttypestouse = default_contentypes;
+	}
+	else if(genericdoc && genericdoc.contenttypes){
+		contenttypestouse = genericdoc.contenttypes;
+	}
+	if(contenttypestouse){
+		contenttypestouse.forEach(function(ct){
 			%>
 			<div>
 				<h3 style="margin-top:0;"><%= ct.title %><small> <a href="/p-admin/contenttype/<%=ct.name%>">(edit)</a></small></h3>
@@ -9,7 +17,7 @@
 					ct.attributes.forEach(function(attr){
 						var defaultVal = attr.defaultvalue;
 
-						if(genericdoc.contenttypeattributes && genericdoc.contenttypeattributes[ct.name] && genericdoc.contenttypeattributes[ct.name][attr.name]){
+						if(genericdoc && genericdoc.contenttypeattributes && genericdoc.contenttypeattributes[ct.name] && genericdoc.contenttypeattributes[ct.name][attr.name]){
 							defaultVal = genericdoc.contenttypeattributes[ct.name][attr.name];
 						}
 						%>
@@ -17,7 +25,23 @@
 							<label class="_pea-label _pea-col-span3">
 								<%= attr.title %>
 							</label>
-							<input class="_pea-col-span9 noFormSubmit" type="text" placeholder="<%= attr.title %>" value="<%- defaultVal %>" name="contenttypeattributes.<%= ct.name %>.<%= attr.name %>">
+							<% 
+								if(attr.datatype==='array' && attr.defaultvalue){
+									var selectOptionsFromDefaultVal = attr.defaultvalue.split(',');
+									%>
+									<select class="_pea-col-span9 noFormSubmit" name="contenttypeattributes.<%= ct.name %>.<%= attr.name %>">
+										<% selectOptionsFromDefaultVal.forEach(function(ctvalues,i){
+											%>
+											<option <% if(i===0 ){%> selected="selected"
+											<%}%> value="<%= ctvalues %>"><%= ctvalues %></option>
+											<%
+										}); %>
+									</select>
+									<%
+								} 
+								else{%>
+									<input class="_pea-col-span9 noFormSubmit" type="text" placeholder="<%= attr.title %>" value="<%- defaultVal %>" name="contenttypeattributes.<%= ct.name %>.<%= attr.name %>">
+							<%}%>
 						</div>
 					<%});
 				} %>

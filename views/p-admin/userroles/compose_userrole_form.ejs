@@ -8,9 +8,9 @@
 			%>
 			
 			<h2>
-				<% if(genericdoc){%>Edit<%}else{%>New<%} %> <%= genericdocTitle %>
+				<% if(genericdoc){%>Edit<%}else{%>New<%} %> <a href="/p-admin/userroles"><%= genericdocTitle %></a>
 				<%if(genericdoc){%>
-					<button id="delete-userrole" data-href="/p-admin/userrole/<%= genericdoc._id %>/delete" class="_pea-pull-right _pea-button _pea-color-error">delete</button>
+					<button data-href="/p-admin/userrole/<%= genericdoc._id %>/delete" class="_pea-pull-right _pea-button _pea-color-error _pea-dialog-delete" data-successfunction="backToUserRolesLanding">delete</button>
 				<%}%>
 			</h2>
 			<%if(genericdoc){%>

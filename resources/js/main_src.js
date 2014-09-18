@@ -126,8 +126,9 @@ var confirmDeleteDialog = function (e) {
 
 var ajaxDeleteButtonListeners = function () {
 	var deleteButtons = document.querySelectorAll('._pea-dialog-delete');
-
-	confirmDeleteYes.addEventListener('click', deleteContentSubmit, false);
+	if (confirmDeleteYes) {
+		confirmDeleteYes.addEventListener('click', deleteContentSubmit, false);
+	}
 	for (var x in deleteButtons) {
 		if (typeof deleteButtons[x] === 'object') {
 			deleteButtons[x].addEventListener('click', confirmDeleteDialog, false);
@@ -229,7 +230,21 @@ window.updateContentTypes = function (AjaxDataResponse) {
 				}
 				contentTypeHtml += '<div class="_pea-row _pea-container-forminput">';
 				contentTypeHtml += '<label class="_pea-label _pea-col-span3"> ' + attr.title + ' </label>';
-				contentTypeHtml += '<input class="_pea-col-span9 noFormSubmit" type="text" placeholder="' + attr.title + '" value="' + defaultVal + '" name="contenttypeattributes.' + contentTypeData.name + '.' + attr.name + '">';
+				if (attr.datatype === 'array' && attr.defaultvalue) {
+					var selectOptionsFromDefaultVal = attr.defaultvalue.split(',');
+					contentTypeHtml += '<select class="_pea-col-span9 noFormSubmit" name="contenttypeattributes.' + contentTypeData.name + '.' + attr.name + '">';
+					for (var j in selectOptionsFromDefaultVal) {
+						contentTypeHtml += '<option ';
+						if (selectOptionsFromDefaultVal[j] === defaultVal) {
+							contentTypeHtml += 'selected="selected"';
+						}
+						contentTypeHtml += ' value="' + selectOptionsFromDefaultVal[j] + '">' + selectOptionsFromDefaultVal[j] + '</option>';
+					}
+					contentTypeHtml += '</select>';
+				}
+				else {
+					contentTypeHtml += '<input class="_pea-col-span9 noFormSubmit" type="text" placeholder="' + attr.title + '" value="' + defaultVal + '" name="contenttypeattributes.' + contentTypeData.name + '.' + attr.name + '">';
+				}
 				contentTypeHtml += '</div>';
 			}
 		}

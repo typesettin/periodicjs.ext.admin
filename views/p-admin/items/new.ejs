@@ -1,5 +1,8 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
+<script type="text/javascript">
+	<%- locals.viewhelper.passObjToClient(default_contentypes,"itemcontenttypes") %>
+	</script>
 	<form class="_pea-form" method="post" action="/item/new">
 		<% include compose_item_form %>
 	</form>

@@ -5,12 +5,13 @@
 			<% 
 				var genericdoc = (userprofile)? userprofile : {}; 
 			%>
-			
+			<%if(genericdoc.username){%>
+					<!-- <button id="delete-user" data-href="/p-admin/user/<%= genericdoc._id %>/delete" class="_pea-pull-right _pea-button _pea-color-error">delete</button> -->
+			<a data-href="/p-admin/user/<%= genericdoc._id %>/delete"  class="_pea-button _pea-color-error _pea-text-small _pea-dialog-delete _pea-pull-right" data-successfunction="backToUsersLanding" >delete</a>
+
+				<%}%>
 			<h2>
 				<% if(genericdoc.username){%>Edit<%}else{%>New<%} %> User
-				<%if(genericdoc.username){%>
-					<button id="delete-user" data-href="/p-admin/user/<%= genericdoc._id %>/delete" class="_pea-pull-right _pea-button _pea-color-error">delete</button>
-				<%}%>
 			</h2>
 			<%if(genericdoc){%>
 				<input type="hidden" name="docid" value="<%= genericdoc._id %>">
