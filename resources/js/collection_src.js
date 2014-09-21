@@ -97,6 +97,15 @@ var generateCollectionDoc = function (documentstoadd) {
 	documentstoadd.removeChild(documentstoadd.firstChild);
 	documentstoadd.appendChild(removecolumn);
 	documentstoadd.firstChild.setAttribute('class', '_pea-col-span9');
+	var docidinput = document.createElement('input');
+	docidinput.type = 'checkbox';
+	docidinput.style.display = 'none';
+	docidinput.name = 'items';
+	docidinput.checked = 'checked';
+	docidinput.value = '{"order":10,"item":"' + docid + '"}';
+	documentstoadd.firstChild.appendChild(docidinput);
+	// console.log('docidinput', docidinput);
+	// console.log('documentstoadd', documentstoadd.firstChild);
 	collectionDocsItemTable.appendChild(documentstoadd);
 	documentstoadd.style.display = 'table-row';
 	documentstoadd.style.width = '100%';
@@ -131,7 +140,7 @@ var collectionDocsCLick = function (e) {
 							window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
 						}
 						else {
-							generateCollectionDoc(eTarget.parentElement.parentElement);
+							generateCollectionDoc(eTarget.parentElement.parentElement, eTarget.getAttribute('data-docid'));
 						}
 					}
 				});
@@ -231,33 +240,6 @@ var uploadMediaFiles = function (e) {
 			callback: updateitemimage
 		});
 	}
-};
-
-window.updateContentTypes = function (AjaxDataResponse) {
-	// console.log("runing post update");
-	var contenttypeContainer = document.getElementById('doc-ct-attr'),
-		updatedDoc = AjaxDataResponse.doc,
-		contentTypeHtml = '';
-	for (var x in updatedDoc.contenttypes) {
-		var contentTypeData = updatedDoc.contenttypes[x];
-		contentTypeHtml += '<div>';
-		contentTypeHtml += '<h3 style="margin-top:0;">' + contentTypeData.title + '<small> <a href="/p-admin/contenttype/' + contentTypeData.name + '">(edit)</a></small></h3>';
-		if (contentTypeData.attributes) {
-			for (var y in contentTypeData.attributes) {
-				var attr = contentTypeData.attributes[y],
-					defaultVal = attr.defaultvalue || '';
-				if (updatedDoc.contenttypeattributes && updatedDoc.contenttypeattributes[contentTypeData.name] && updatedDoc.contenttypeattributes[contentTypeData.name][attr.name]) {
-					defaultVal = updatedDoc.contenttypeattributes[contentTypeData.name][attr.name];
-				}
-				contentTypeHtml += '<div class="_pea-row _pea-container-forminput">';
-				contentTypeHtml += '<label class="_pea-label _pea-col-span3"> ' + attr.title + ' </label>';
-				contentTypeHtml += '<input class="_pea-col-span9 noFormSubmit" type="text" placeholder="' + attr.title + '" value="' + defaultVal + '" name="contenttypeattributes.' + contentTypeData.name + '.' + attr.name + '">';
-				contentTypeHtml += '</div>';
-			}
-		}
-		contentTypeHtml += '</div>';
-	}
-	contenttypeContainer.innerHTML = contentTypeHtml;
 };
 
 window.cnt_lp = cnt_lp;
