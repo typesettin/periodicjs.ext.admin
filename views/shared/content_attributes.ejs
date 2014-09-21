@@ -32,7 +32,7 @@
 									<select class="_pea-col-span9 noFormSubmit" name="contenttypeattributes.<%= ct.name %>.<%= attr.name %>">
 										<% selectOptionsFromDefaultVal.forEach(function(ctvalues,i){
 											%>
-											<option <% if(i===0 ){%> selected="selected"
+											<option <% if(selectOptionsFromDefaultVal[i] === defaultVal ){%> selected="selected"
 											<%}%> value="<%= ctvalues %>"><%= ctvalues %></option>
 											<%
 										}); %>
