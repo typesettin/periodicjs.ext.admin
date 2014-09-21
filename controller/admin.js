@@ -4,7 +4,7 @@ var path = require('path'),
     async = require('async'),
     request = require('superagent'),
     semver = require('semver'),
-   fs = require('fs-extra'),
+    fs = require('fs-extra'),
     moment = require('moment'),
     Utilities = require('periodicjs.core.utilities'),
     ControllerHelper = require('periodicjs.core.controllerhelper'),
@@ -209,22 +209,53 @@ var item_edit = function(req, res) {
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            CoreController.handleDocumentQueryRender({
-                res:res,
-                req:req,
-                renderView:templatepath,
-                responseData:{
-                    pagedata:{
-                        title:req.controllerData.item.title+' - Edit Item',
-                        headerjs: ['/extensions/periodicjs.ext.admin/js/item.min.js'],
-                        extensions:CoreUtilities.getAdminMenu()
-                    },
-                    item: req.controllerData.item,
-                    serverdate:moment(req.controllerData.item.publishat).format('YYYY-MM-DD'),
-                    servertime:moment(req.controllerData.item.publishat).format('HH:mm'),
-                    user:req.user
+            getDefaultContentTypes('item_default_contenttypes',function(err,defaultcontenttypes){
+                if(err){
+                    CoreController.handleDocumentQueryErrorResponse({
+                        err:err,
+                        res:res,
+                        req:req
+                    });
+                }
+                else{
+                    if(defaultcontenttypes && defaultcontenttypes.length >0){
+                        if(req.controllerData.item.contenttypes && req.controllerData.item.contenttypes.length>0){
+                            for(var a in defaultcontenttypes){
+                                var alreadyHasContenttype = false;
+                                for(var b in  req.controllerData.item.contenttypes){
+                                    if( defaultcontenttypes[a]._id.equals(req.controllerData.item.contenttypes[b]._id)){
+                                        alreadyHasContenttype = true;
+                                    }
+                                    // console.log('a',a,'defaultcontenttypes[a]._id',defaultcontenttypes[a]._id,'b',b,req.controllerData.item.contenttypes[b]._id,'alreadyHasContenttype',alreadyHasContenttype);
+                                }
+                                if(alreadyHasContenttype===false){
+                                    req.controllerData.item.contenttypes.push(defaultcontenttypes[a]);
+                                }
+                            }
+                        }
+                        else{
+                            req.controllerData.item.contenttypes = defaultcontenttypes;                        
+                        }
+                    }
+                    CoreController.handleDocumentQueryRender({
+                        res:res,
+                        req:req,
+                        renderView:templatepath,
+                        responseData:{
+                            pagedata:{
+                                title:req.controllerData.item.title+' - Edit Item',
+                                headerjs: ['/extensions/periodicjs.ext.admin/js/item.min.js'],
+                                extensions:CoreUtilities.getAdminMenu()
+                            },
+                            item: req.controllerData.item,
+                            serverdate:moment(req.controllerData.item.publishat).format('YYYY-MM-DD'),
+                            servertime:moment(req.controllerData.item.publishat).format('HH:mm'),
+                            user:req.user
+                        }
+                    });
                 }
             });
+            
         }
     );
 };
@@ -302,22 +333,55 @@ var collection_edit = function(req, res) {
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            CoreController.handleDocumentQueryRender({
-                res:res,
-                req:req,
-                renderView:templatepath,
-                responseData:{
-                    pagedata:{
-                        title:req.controllerData.collection.title+' - Edit Collection',
-                        headerjs: ['/extensions/periodicjs.ext.admin/js/collection.min.js'],
-                        extensions:CoreUtilities.getAdminMenu()
-                    },
-                    collection: req.controllerData.collection,
-                    serverdate:moment(req.controllerData.collection.publishat).format('YYYY-MM-DD'),
-                    servertime:moment(req.controllerData.collection.publishat).format('HH:mm'),
-                    user:req.user
+            
+
+            getDefaultContentTypes('collection_default_contenttypes',function(err,defaultcontenttypes){
+                if(err){
+                    CoreController.handleDocumentQueryErrorResponse({
+                        err:err,
+                        res:res,
+                        req:req
+                    });
                 }
-            });
+                else{
+                    if(defaultcontenttypes && defaultcontenttypes.length >0){
+                        if(req.controllerData.collection.contenttypes && req.controllerData.collection.contenttypes.length>0){
+                            for(var a in defaultcontenttypes){
+                                var alreadyHasContenttype = false;
+                                for(var b in  req.controllerData.collection.contenttypes){
+                                    if( defaultcontenttypes[a]._id.equals(req.controllerData.collection.contenttypes[b]._id)){
+                                        alreadyHasContenttype = true;
+                                    }
+                                    // console.log('a',a,'defaultcontenttypes[a]._id',defaultcontenttypes[a]._id,'b',b,req.controllerData.collection.contenttypes[b]._id,'alreadyHasContenttype',alreadyHasContenttype);
+                                }
+                                if(alreadyHasContenttype===false){
+                                    req.controllerData.collection.contenttypes.push(defaultcontenttypes[a]);
+                                }
+                            }
+                        }
+                        else{
+                            req.controllerData.collection.contenttypes = defaultcontenttypes;                        
+                        }
+                    }
+                    CoreController.handleDocumentQueryRender({
+                        res:res,
+                        req:req,
+                        renderView:templatepath,
+                        responseData:{
+                            pagedata:{
+                                title:req.controllerData.collection.title+' - Edit Collection',
+                                headerjs: ['/extensions/periodicjs.ext.admin/js/collection.min.js'],
+                                extensions:CoreUtilities.getAdminMenu()
+                            },
+                            collection: req.controllerData.collection,
+                            serverdate:moment(req.controllerData.collection.publishat).format('YYYY-MM-DD'),
+                            servertime:moment(req.controllerData.collection.publishat).format('HH:mm'),
+                            user:req.user
+                        }
+                    });
+                }
+            }); 
+
         }
     );
 };

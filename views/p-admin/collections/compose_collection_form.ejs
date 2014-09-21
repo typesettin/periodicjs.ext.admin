@@ -18,48 +18,52 @@
 					<table class="_pea-table _pea-form">
 					<tbody id="collection-table-items">
 					<%if(collection && collection.items){ %>
-						<% collection.items.forEach(function(docresult){%>
-							<tr id="tr-docid-<%= docresult.item._id%>">
-								<td class="_pea-col-span9">
-									<input style="display:none;"  name="items" type="checkbox" value='{"order":<%=docresult.order%>,"item":"<%=docresult.item._id%>"}' checked="checked"></input>
-									<%= docresult.item.title %>
-									<div><small>
-										<%
-										if(docresult.item.tags && docresult.item.tags.length >0){
-											%>
-											<strong>tags:</strong> <%
-											for(var i in docresult.item.tags){
-												%> 
-												<%=docresult.item.tags[i].title %>, 
-												<%
+						<% collection.items.forEach(function(docresult){
+							if(docresult.item){
+								%>
+								<tr id="tr-docid-<%= docresult.item._id%>">
+									<td class="_pea-col-span9">
+										<input style="display:none;"  name="items" type="checkbox" value='{"order":<%=docresult.order%>,"item":"<%=docresult.item._id%>"}' checked="checked"></input>
+										<%= docresult.item.title %>
+										<div><small>
+											<%
+											if(docresult.item.tags && docresult.item.tags.length >0){
+												%>
+												<strong>tags:</strong> <%
+												for(var i in docresult.item.tags){
+													%> 
+													<%=docresult.item.tags[i].title %>, 
+													<%
+												}
 											}
-										}
-										if(docresult.item.categories && docresult.item.categories.length >0){
-											%>
-											<strong>categories:</strong> <%
-											for(var i in docresult.item.categories){
-												%> 
-												<%=docresult.item.categories[i].title %>, 
-												<%
+											if(docresult.item.categories && docresult.item.categories.length >0){
+												%>
+												<strong>categories:</strong> <%
+												for(var i in docresult.item.categories){
+													%> 
+													<%=docresult.item.categories[i].title %>, 
+													<%
+												}
 											}
-										}
-										if(docresult.item.contenttypes && docresult.item.contenttypes.length >0){
-											%>
-											<strong>contenttypes:</strong> <%
-											for(var i in docresult.item.contenttypes){
-												%> 
-												<%=docresult.item.contenttypes[i].title %>, 
-												<%
+											if(docresult.item.contenttypes && docresult.item.contenttypes.length >0){
+												%>
+												<strong>contenttypes:</strong> <%
+												for(var i in docresult.item.contenttypes){
+													%> 
+													<%=docresult.item.contenttypes[i].title %>, 
+													<%
+												}
 											}
-										}
-										%>
-									</small></div>
-								</td>
-								<td class="_pea-col-span3 _pea-text-right">
-									<a data-docid="<%= docresult.item._id%>" class="_pea-button remove-doc-to-collection _pea-color-error">x</a>
-								</td>
-							</tr>
-						<%})%>
+											%>
+										</small></div>
+									</td>
+									<td class="_pea-col-span3 _pea-text-right">
+										<a data-docid="<%= docresult.item._id%>" class="_pea-button remove-doc-to-collection _pea-color-error">x</a>
+									</td>
+								</tr>
+							<%		
+							}
+						})%>
 					<%}%>
 					</tbody>
 					</table>
