@@ -26,7 +26,10 @@ else{%>
 		</div>
 		<div id="media-files-result" class="_pea-row no-margin _pea-container-forminput">
 			<% 
-			if (genericdoc && genericdoc.primaryasset){%><input type="hidden" id="primaryasset-input" name="primaryasset" value="<%- genericdoc.primaryasset._id%>"/><%} %>
+			if (genericdoc && genericdoc.primaryasset){%><input type="hidden" id="primaryasset-input" name="primaryasset" value="<%- genericdoc.primaryasset._id%>"/><%}
+			else if(genericdoc && genericdoc.assets && genericdoc.assets.length>0){%>
+				<input type="hidden" id="primaryasset-input" name="primaryasset" value="<%- genericdoc.assets[0]._id%>"/>
+			<% } %>
 			
 			<% if(genericdoc && genericdoc.assets){
 				genericdoc.assets.forEach(function(asset){
