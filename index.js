@@ -50,10 +50,10 @@ module.exports = function (periodic) {
 	/**
 	 * admin routes
 	 */
-	adminRouter.get('/', adminController.settings_index);
-	// adminRouter.get('/', function (req, res) {
-	// 	res.redirect('/p-admin/user/' + req.user.username);
-	// });
+	// adminRouter.get('/', adminController.settings_index);
+	adminRouter.get('/', function (req, res) {
+		res.redirect('/p-admin/user/' + req.user.username);
+	});
 	adminRouter.get('/items', itemController.loadItems, adminController.items_index);
 	adminRouter.get('/contenttypes', contenttypeController.loadContenttypes, adminController.contenttypes_index);
 	adminRouter.get('/tags', tagController.loadTags, adminController.tags_index);
@@ -65,6 +65,7 @@ module.exports = function (periodic) {
 	adminRouter.get('/users', uacController.loadUacUsers, adminController.users_index);
 	adminRouter.get('/mailer', adminController.mail_index);
 	adminRouter.get('/settings', adminController.settings_index);
+	adminRouter.get('/settings/faq', adminController.settings_faq);
 	adminRouter.get('/check_periodic_version', adminController.check_periodic_version);
 	/**
 	 * admin/extension manager routes

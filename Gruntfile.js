@@ -106,7 +106,7 @@ module.exports = function (grunt) {
 					'resources/**/*.js',
 					'test/**/*.js',
 				],
-				tasks: ['lint', 'packagejs', /*'doc',*/ 'test'],
+				tasks: ['lint', 'packagejs', 'copy', /*'doc',*/ 'test'],
 				options: {
 					interrupt: true
 				}

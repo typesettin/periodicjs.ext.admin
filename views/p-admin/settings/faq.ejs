@@ -1,0 +1,150 @@
+<% include ../../shared/header %>
+<% include ../../shared/nav %>
+	<input type="hidden" name="_csrf" value=<%= locals.token %> >
+	<div class="_pea-container _pea-theme">
+		<div class="_pea-row">
+			<div class="_pea-col-span7">
+				<h2>Application Settings</h2>
+				<form class="_pea-form _pea-ajax-form" method="post" action="/p-admin/settings/update">
+					<div class="_pea-document">
+						<div class="_pea-row">
+							<h3>Overview</h3>
+								<p class="extra-padding">Periodic is a pure information and content management system. Periodic is designed for you to implement your own information architecture, unlike some traditional content management solutions, there are no assumptions made about your data model, which allows for information hierarchies and taxonomies to be extremely malleable.</p>
+					
+						</div>
+					</div>
+					<div class="_pea-document">
+						<div class="_pea-row">
+							<h3>Content</h3>
+								<h4>Entities</h4>
+								<dl>
+									<dt><strong>Items</strong></dt>
+										<dd>Items are the base content entity, when used in conjunction with content types you can define new types of items with additional custom fields.</dd>
+										<dd>Complicated taxonomies and information hierarchies can be created by classifying items with content types, tags and categories.</dd>
+										<dd><small>The Drupal equivalent would be a node, the wordpress equivalent would be a post.</small></dd>
+									<dt><strong>Collections</strong></dt>
+										<dd>Collections are a generic grouping of items, they can be used to provide gallery, listicle, and slide show functionilty</dd>
+										<dd>Like Items, you can create complicated information heirarchies by using custom attributes with content types, tags and categories.</dd>
+										<dd><small>In equivalent content management systems, collections are like galleries.</small></dd>
+									<dt><strong>(Media) Assets</strong></dt>
+										<dd>Assets are uploaded files, you can create complicated information models and add additional fields with content types</dd>
+								</dl>
+								<h4>Attributes & Taxonomies</h4>
+								<dl>
+									<dt><strong>Categories</strong></dt>
+										<dd>Categories are an entity attribute that can be nested into logical heirachries, additional attributes can be added with content types</dd>
+									<dt><strong>Tags</strong></dt>
+										<dd>Tags are an entity attribute that can be nested into logical heirachries, additional attributes can be added with content types</dd>
+								</dl>
+								<h4>Classification</h4>
+								<dl>
+									<dt><strong>Content Types</strong></dt>
+										<dd>Content Types are collections of additional attributes that can be added to Entities and Attributes.</dd>
+										<dd>Content Types can be used to create "podcasts", "images", "slideshows", "listicles", "videos" and more by adding additional properties to items, collections, assets, tags and categories.</dd>
+								</dl>
+						</div>
+					</div>
+					<div class="_pea-document">
+						<div class="_pea-row">
+							<h3>Themes</h3>
+								<p class="extra-padding">Themes contain views and routes and are installed by uploading to the <a class="_pea-button">content/themes</a> directory.</p>
+							<h4>Installing/Switching themes</h4>
+								<p class="extra-padding">Changing themes can be done through the admin extension interface or manually in your application environment configuration json files.</p>
+
+						</div>
+					</div>
+					<div class="_pea-document">
+						<div class="_pea-row">
+							<h3>Extensions</h3>
+								<p class="extra-padding">Extensions are simply node modules that are name-spaced by the extension name prefix 'periodicjs.ext.'. The <strong>index.js</strong> file is loaded during runtime if the extension is enabled.</p>
+								<p class="extra-padding">Any part of the application can be overwritten via extensions; routes, controllers, views, etc.</p>
+								<h4>Installing extensions</h4>
+								<a class="_pea-button _pea-col-span12">$ npm install periodicjs.ext.myextension</a>
+								<a class="_pea-button _pea-col-span12">$ npm install periodicjs.ext.myextension --skip-install-periodic-ext</a>
+								<p class="extra-padding">You can install extensions from the command line via npm, by installing with the <strong>--skip-install-periodic-ext</strong> command line argument, your extension configuration file will not be modified.</p>
+								<h4>Configuring, Removing, Enabling and Disabling extensions</h4>
+								<p class="extra-padding">The state of all extensions are in the <a class="_pea-button">content/extensions/extensions.json</a> configuration file and is loaded at runtime.</p>
+								<p class="extra-padding">Extensions can be enabled/disabled/removed either manually from <strong>extensions.json</strong>  or from the admin extension interface.</p>
+					
+						</div>
+					</div>
+					<div class="_pea-document">
+						<div class="_pea-row">
+							<h3>Configuration</h3>
+								<h4>Application Configuration</h4>
+								<p class="extra-padding">Your application loads <a class="_pea-button">content/config/config.json</a> at runtime, here you can modify the runtime environment (or via the command line).</p>
+								<p class="extra-padding"><strong>config.json</strong> will override any settings in your environment specific configurations</p>
+								<h4>Database Configuration</h4>
+								<p class="extra-padding">The Database configuration settings are located in <a class="_pea-button">content/config/database.js</a>, <strong>database.js</strong> is loaded at runtime. You can modify the environment specific database configuration here.</p>					
+						</div>
+					</div>
+					<div class="_pea-document">
+						<div class="_pea-row">
+							<h3>Runtimes</h3>
+								<p class="extra-padding">Periodic runs with a production grade process manager called <a href="https://github.com/Unitech/pm2" target="_blank">PM2</a>, this allows for you application to restart only when necessary and runs as a process in the background.</p>
+								<h4>Starting Periodic</h4>
+										<a class="_pea-button _pea-col-span12">$ npm start</a>
+									<p class="extra-padding">Periodic runs with npm, the exact commands are in <a class="_pea-button">package.json</a>. 
+									</p>
+										<a class="_pea-button _pea-col-span12">$ npm start -p [port] -e [environment]</a>
+									<p class="extra-padding">The run time environment can be modified with command line arguments for the specific environment and port settings. <span class="_pea-color-error">WARNING: anything in config.json will override these settings</span>
+									</p>
+										<a class="_pea-button _pea-col-span12">$ npm run nd</a>
+									<p class="extra-padding">For development purposes only, the nd script runs with <a href="http://nodemon.io/" target="_blank">nodemon</a>
+									</p>
+								<h4>Stopping Periodic</h4>
+								<a class="_pea-button _pea-col-span12">$ npm stop</a>
+								<a class="_pea-button _pea-col-span12">$ pm2 kill periodicjs</a>
+									<p class="extra-padding">Both npm stop and pm2 kill will stop the periodic daemon.</p>
+
+								<h4>Restarting Periodic</h4>
+									<a class="_pea-button _pea-col-span12">$ npm run reload</a>
+									<p class="extra-padding">npm run reload, reloads the pm2 daemon.</p>
+					
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="_pea-col-span4 _pea-pull-right">
+				<h2>More Info</h2>
+				<div class="_pea-document">
+					<div class="_pea-row">
+						<h3>Full Documentation</h3>
+						<p>Periodic is a extremely flexible and modular by design.</p>
+						<p>Overriding, extending, customizing existing and new functionality is highly encouraged.</p>
+						<p>Please read the <a href="https://github.com/typesettin/periodicjs/wiki" target="_blank">full documentation on github</a> and help build a better platform.</p>
+					</div>
+				</div>
+
+				<h2>Upgrades</h2>
+				<div class="_pea-document">
+					<div class="_pea-row _pea-form">
+						<a class="_pea-button _pea-col-span12">
+							$ cd path/to/periodic/directory </br>
+							$ npm install periodicjs@latest --upgrade-install-periodic</a>
+								<p class="extra-padding">Running npm install periodicjs with the <strong>--upgrade-install-periodic</strong> command line argument installs periodic without modifying which extensions you have installed.</p>
+					</div>
+				</div>
+
+				<h2>FAQ</h2>
+				<div class="_pea-document">
+					<div class="_pea-row">
+						<dl>
+							<dt><strong>Themes</strong></dt>
+								<dd>Make sure you define <strong>route.js</strong> in your theme directory, this file is loaded at runtime and your theme cannot be loaded without it.</dd>
+								<dd>Themes must also have a <strong>periodicjs.theme.json</strong> file.</dd>
+							<dt><strong>Extensions</strong></dt>
+								<dd>Make sure you define <strong>index.js</strong> in your extension directory, this file is loaded at runtime and your extension cannot be loaded without it.</dd>
+								<dd>Extensions must also have a <strong>periodicjs.ext.json</strong> file.</dd>
+						</dl>
+					</div>
+				</div>
+
+
+				
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="<%= locals.themehelper.extensionPublicResourcePath('periodicjs.ext.admin','js') %>wysihtml5-advanced.js"></script>
+	<script type="text/javascript" src="<%= locals.themehelper.extensionPublicResourcePath('periodicjs.ext.admin','js') %>wysihtml5-0.4.0pre.min.js"></script>
+<% include ../../shared/footer %>

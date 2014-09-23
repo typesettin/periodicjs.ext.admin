@@ -15,6 +15,7 @@ var path = require('path'),
     CoreUtilities,
     CoreController,
     appSettings,
+    dbSettings,
     mongoose,
     User,
     Collection,
@@ -88,6 +89,8 @@ var settings_index = function(req,res){
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
+            console.log('appSettings',appSettings);
+            console.log('dbSettings.url',dbSettings.url);
             CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
@@ -95,6 +98,31 @@ var settings_index = function(req,res){
                 responseData:{
                     pagedata:{
                         title:'Application Settings',
+                        headerjs: ['/extensions/periodicjs.ext.admin/js/settings.min.js'],
+                        extensions:CoreUtilities.getAdminMenu()
+                    },
+                    user:req.user
+                }
+            });
+        }
+    );
+};
+
+var settings_faq = function(req,res){
+    CoreController.getPluginViewDefaultTemplate(
+        {
+            viewname:'p-admin/settings/faq',
+            themefileext:appSettings.templatefileextension,
+            extname: 'periodicjs.ext.admin'
+        },
+        function(err,templatepath){
+            CoreController.handleDocumentQueryRender({
+                res:res,
+                req:req,
+                renderView:templatepath,
+                responseData:{
+                    pagedata:{
+                        title:'Application Quick Help',
                         headerjs: ['/extensions/periodicjs.ext.admin/js/settings.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
@@ -972,7 +1000,7 @@ var users_show = function(req, res){
                 renderView:templatepath,
                 responseData:{
                     pagedata:{
-                        title:'Manage Users',
+                        title: 'User profile ('+req.controllerData.user.username+')',
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     userprofile: req.controllerData.user,
@@ -1098,6 +1126,7 @@ var controller = function(resources){
     logger = resources.logger;
     mongoose = resources.mongoose;
     appSettings = resources.settings;
+    dbSettings = resources.db;
     CoreController = new ControllerHelper(resources);
     CoreUtilities = new Utilities(resources);
     Item = mongoose.model('Item');
@@ -1109,6 +1138,7 @@ var controller = function(resources){
     return{
         index:index,
         settings_index:settings_index,
+        settings_faq:settings_faq,
         mail_index:mail_index,
         items_index:items_index,
         item_new:item_new,

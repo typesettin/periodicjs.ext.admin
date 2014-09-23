@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.admin",
   "description": "Admin for periodicjs",
-  "version": "1.7.4",
+  "version": "1.7.9",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
@@ -64,10 +64,10 @@
     "uglify-js": "^2.4.15",
     "uglifyify": "^2.5.0"
   },
-  "_id": "periodicjs.ext.admin@1.5.81",
-  "_shasum": "63f43b4661501258855f14b4702e93e724b95f79",
-  "_from": "periodicjs.ext.admin@1.5.81",
-  "_resolved": "https://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.5.81.tgz",
+  "_id": "periodicjs.ext.admin@1.7.3",
+  "_shasum": "b504f449696f48d3f6c5eff85fd1431dad2170e1",
+  "_from": "periodicjs.ext.admin@1.7.3",
+  "_resolved": "https://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.7.3.tgz",
   "gitHead": "23466172484b2277c691c4f2684dfdb1cb92cb23",
   "bugs": {
     "url": "https://github.com/typesettin/periodicjs.ext.admin/issues"
@@ -85,8 +85,8 @@
     }
   ],
   "dist": {
-    "shasum": "63f43b4661501258855f14b4702e93e724b95f79",
-    "tarball": "http://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.5.81.tgz"
+    "shasum": "b504f449696f48d3f6c5eff85fd1431dad2170e1",
+    "tarball": "http://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.7.3.tgz"
   },
   "directories": {}
 }
