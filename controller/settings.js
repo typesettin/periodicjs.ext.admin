@@ -4,6 +4,8 @@ var path = require('path'),
     // request = require('superagent'),
     // semver = require('semver'),
     fs = require('fs-extra'),
+    str2json = require('string-to-json'),
+    merge = require('utils-merge'),
     ejs = require('ejs'),
     Utilities = require('periodicjs.core.utilities'),
     ControllerHelper = require('periodicjs.core.controllerhelper'),
@@ -149,6 +151,65 @@ var load_theme_settings = function(req,res,next){
     next();
 };
 
+var update_app_settings = function(req,res){
+
+};
+
+var update_theme_settings = function(req,res){
+    var updatedThemeSettings = CoreUtilities.removeEmptyObjectValues(req.body),
+        themesettingsfile = path.join(process.cwd(),'content/themes',appSettings.theme,'periodicjs.theme.json');
+
+        updatedThemeSettings = CoreUtilities.replaceBooleanStringObjectValues(updatedThemeSettings);
+    delete updatedThemeSettings._csrf;
+
+    fs.readJson(themesettingsfile,function(err,themeconfig){
+        if(err){
+            CoreController.handleDocumentQueryErrorResponse({
+                err: err,
+                res: res,
+                req: req
+            });
+        }
+        else{
+            updatedThemeSettings = str2json.convert(updatedThemeSettings);
+            var originalsettings = themeconfig.settings,
+                mergedsettings = merge(originalsettings,updatedThemeSettings.settings),
+                newthemeconfig = themeconfig;
+            newthemeconfig.settings = mergedsettings;
+
+            fs.writeJson(themesettingsfile, newthemeconfig, function(err){
+                if(err){
+                    CoreController.handleDocumentQueryErrorResponse({
+                        err: err,
+                        res: res,
+                        req: req
+                    });
+                }
+                else{
+                    CoreController.handleDocumentQueryRender({
+                        req: req,
+                        res: res,
+                        redirecturl: '/p-admin/settings',
+                        responseData: {
+                            result: 'success',
+                            data: 'theme config updated'
+                        },
+                        callback:function(){ 
+                            CoreUtilities.restart_app({
+                                restartfile: restartfile
+                            });
+                        }
+                    });
+                }
+            });
+            // console.log('originalconfig',originalconfig);
+            // console.log('newthemeconfig',newthemeconfig);
+        }
+    });
+    // console.log('updatedThemeSettings',JSON.parse(updatedThemeSettings));
+
+};
+
 var controller = function(resources){
     logger = resources.logger;
     mongoose = resources.mongoose;
@@ -183,7 +244,9 @@ var controller = function(resources){
         load_app_settings:load_app_settings,
         load_theme_settings:load_theme_settings,
         restart_app:restart_app,
-        update_app:update_app
+        update_app:update_app,
+        update_theme_settings:update_theme_settings,
+        update_app_settings:update_app_settings
     };
 };
 

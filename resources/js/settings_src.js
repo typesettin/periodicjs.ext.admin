@@ -41,7 +41,11 @@ var jsonFormElements = function (options) {
 			returnhtml += '<label class="_pea-col-span3 _pea-label" for="' + elementid + '">' + elementname + '</label>';
 			if (jreoptionvalues && (jreoptionvalues.name === x) && jreoptionvalues.type === 'array' && jreoptionvalues.value) {
 				var selectOptionsFromDefaultVal = jreoptionvalues.value.split(',');
-				returnhtml += '<select class="_pea-col-span9 noFormSubmit" name="' + elementname + '">';
+				returnhtml += '<select class="_pea-col-span9 noFormSubmit" ';
+				if (!options.readonly) {
+					returnhtml += ' name="' + elementname + '" ';
+				}
+				returnhtml += '  >';
 				for (var j in selectOptionsFromDefaultVal) {
 					returnhtml += '<option ';
 					if (selectOptionsFromDefaultVal[j] === elementval) {
@@ -52,7 +56,11 @@ var jsonFormElements = function (options) {
 				returnhtml += '</select>';
 			}
 			else {
-				returnhtml += '<input class="_pea-col-span9" type="text" id="' + elementid + '" name="' + elementname + '" value="' + elementval + '" ' + readonly + ' />';
+				returnhtml += '<input class="_pea-col-span9" type="text" id="' + elementid + '" ';
+				if (!options.readonly) {
+					returnhtml += ' name="' + elementname + '" ';
+				}
+				returnhtml += ' value="' + elementval + '" ' + readonly + ' />';
 			}
 			returnhtml += appendhtml;
 		}
@@ -67,6 +75,7 @@ window.addEventListener('load', function () {
 			updatestatus.style.display = 'block';
 		}
 	});
+	window.ajaxFormEventListers('._pea-ajax-form');
 
 	themesettingsConfiguration = document.getElementById('themesettings-config');
 	themesettingsReadOnly = document.getElementById('themesettings-readonly');

@@ -305,7 +305,7 @@ window.checkPeriodicVersion = function (callback) {
 						}
 					}
 					else {
-						window.ribbonNotification.showRibbon(ajaxResponseData.message + ' - <a href="/p-admin/settings" style="color:#4593e3;" >upgrade now</a>', 12000, 'warn');
+						window.ribbonNotification.showRibbon(ajaxResponseData.message + ' - <a href="/p-admin/settings#update" style="color:#4593e3;" >upgrade now</a>', 12000, 'warn');
 						if (callback) {
 							callback(null, {
 								status: 'needupdate',

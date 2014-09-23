@@ -168,6 +168,8 @@ module.exports = function (periodic) {
 	settingsRouter.get('/faq', adminController.settings_faq);
 	settingsRouter.post('/restart', adminSettingsController.restart_app);
 	settingsRouter.post('/updateapp', adminSettingsController.update_app);
+	settingsRouter.post('/updateappsettings', adminSettingsController.update_app_settings);
+	settingsRouter.post('/updatethemesettings', adminSettingsController.update_theme_settings);
 
 	/**
 	 * periodic routes

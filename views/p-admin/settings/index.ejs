@@ -9,7 +9,7 @@
 		<div class="_pea-row">
 			<div class="_pea-col-span6">
 				<h2>Application Settings</h2>
-				<form class="_pea-form _pea-ajax-form" method="post" action="/p-admin/settings/updateappsettings">
+				<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updateappsettings">
 					<div class="_pea-document">
 						<div class="_pea-row">
 							<p>Updating settings updates <a class="_pea-button">content/config/config.json</a> and restarts your application. Your theme can be changed by updating <a href="/p-admin/themes">theme settings</a>.</p>
@@ -23,14 +23,14 @@
 							</p>
 
 							<p class="_pea-text-center">
-									<a data-href="/p-admin/settings/restart" class=" _pea-button _pea-color-info _pea-dialog-delete" data-successfunction="restartAppResponse" data-donotnotify="true" style="font-size: 110%;">Update Application Settings</a>
+									<button type="submit" class=" _pea-button _pea-color-info " style="font-size: 110%;">Update Application Settings</button>
 							</p>
 						</div>
 					</div>
 				</form>
 					<div id="update-status" class="_pea-document _pea-form" style="display:none;">
 						<div class="_pea-row">
-							<h3>Upgrade Application</h3>
+							<h3><a name="update"></a>Upgrade Application</h3>
 							<div id="upgrade-needed">
 								<p class="extra-padding"><span class="_pea-color-error">WARNING: Make sure you back up before upgrading, once completed your application will automatically restart (if you're running the application with PM2, npm start or npm run nd).</span></p>
 								<p class="extra-padding">Create a back up of your <a class="_pea-button">content</a> directory before upgrading. This is a short cut to running npm install from the command line.</p>
@@ -58,10 +58,10 @@
 			</div>
 			<div class="_pea-col-span5 _pea-pull-right">
 				<h2>Theme Settings</h2>
-				<form class="_pea-form _pea-ajax-form" method="post" action="/p-admin/settings/updatethemesettings">
+				<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updatethemesettings">
+					<input type="hidden" name="_csrf" value=<%= locals.token %> >
 					<div class="_pea-document">
 						<div class="_pea-row">
-						<% console.log(appsettings) %>
 							<p>Updates <a class="_pea-button">content/themes/<%= appsettings.readonly.theme %>/periodicjs.theme.json</a> and restarts your application.</p>
 							<h3>Configuration Options</h3>
 							<p class="extra-padding">
@@ -72,7 +72,7 @@
 								<div id="themesettings-readonly"></div>
 							</p>
 							<p class="_pea-text-center">
-									<a data-href="/p-admin/settings/restart" class=" _pea-button _pea-color-info _pea-dialog-delete" data-successfunction="restartAppResponse" data-donotnotify="true" style="font-size: 110%;">Update Theme Settings</a>
+									<button type="submit" class=" _pea-button _pea-color-info " style="font-size: 110%;">Update Theme Settings</button>
 							</p>
 						</div>
 					</div>
