@@ -1,17 +1,30 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
+<script type="text/javascript">
+<%- locals.viewhelper.passObjToClient(appsettings,"appsettings") %>
+<%- locals.viewhelper.passObjToClient(themesettings,"themesettings") %>
+</script>
 	<input type="hidden" name="_csrf" value=<%= locals.token %> >
 	<div class="_pea-container _pea-theme">
 		<div class="_pea-row">
 			<div class="_pea-col-span6">
 				<h2>Application Settings</h2>
-				<form class="_pea-form _pea-ajax-form" method="post" action="/p-admin/settings/update">
+				<form class="_pea-form _pea-ajax-form" method="post" action="/p-admin/settings/updateappsettings">
 					<div class="_pea-document">
 						<div class="_pea-row">
-							<h3>Overview</h3>
-							<p class="extra-padding">Periodic is a pure information and content management system. Periodic is designed for you to implement your own information architecture, unlike some traditional content management solutions, there are no assumptions made about your data model, which allows for information hierarchies and taxonomies to be extremely malleable.</p>
-							<p>-app settings to write to conf.json (debug,csrf,name,homepage, adminnotificationemail)</p>
-							<p>-app settings to display only (dburl,application:port,environment,version)</p>
+							<p>Updating settings updates <a class="_pea-button">content/config/config.json</a> and restarts your application. Your theme can be changed by updating <a href="/p-admin/themes">theme settings</a>.</p>
+							<h3>Configuration Options</h3>
+							<p class="extra-padding">
+								<div id="appsettings-config"></div>
+							</p>
+							<h3>Read Only</h3>
+							<p class="extra-padding">
+								<div id="appsettings-readonly"></div>
+							</p>
+
+							<p class="_pea-text-center">
+									<a data-href="/p-admin/settings/restart" class=" _pea-button _pea-color-info _pea-dialog-delete" data-successfunction="restartAppResponse" data-donotnotify="true" style="font-size: 110%;">Update Application Settings</a>
+							</p>
 						</div>
 					</div>
 				</form>
@@ -45,14 +58,25 @@
 			</div>
 			<div class="_pea-col-span5 _pea-pull-right">
 				<h2>Theme Settings</h2>
-				<div class="_pea-document">
-					<div class="_pea-row">
-						<h3>Full Documentation</h3>
-						<p>Periodic is a extremely flexible and modular by design.</p>
-						<p>edit themesettings.settings</p>
-						<p>themesettings, display only (author,url,name,periodiccompatibilty)</p>
+				<form class="_pea-form _pea-ajax-form" method="post" action="/p-admin/settings/updatethemesettings">
+					<div class="_pea-document">
+						<div class="_pea-row">
+						<% console.log(appsettings) %>
+							<p>Updates <a class="_pea-button">content/themes/<%= appsettings.readonly.theme %>/periodicjs.theme.json</a> and restarts your application.</p>
+							<h3>Configuration Options</h3>
+							<p class="extra-padding">
+								<div id="themesettings-config"></div>
+							</p>
+							<h3>Read Only</h3>
+							<p class="extra-padding">
+								<div id="themesettings-readonly"></div>
+							</p>
+							<p class="_pea-text-center">
+									<a data-href="/p-admin/settings/restart" class=" _pea-button _pea-color-info _pea-dialog-delete" data-successfunction="restartAppResponse" data-donotnotify="true" style="font-size: 110%;">Update Theme Settings</a>
+							</p>
+						</div>
 					</div>
-				</div>
+				</form>
 					<div class="_pea-document">
 						<div class="_pea-row">
 							<h3>Full Documentation</h3>
