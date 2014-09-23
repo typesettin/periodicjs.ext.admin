@@ -278,7 +278,7 @@ window.makeNiceName = function (username) {
 	}
 };
 
-window.checkPeriodicVersion = function () {
+window.checkPeriodicVersion = function (callback) {
 	request
 		.get('/p-admin/check_periodic_version')
 		.set('Accept', 'application/json')
@@ -287,6 +287,9 @@ window.checkPeriodicVersion = function () {
 				error = res.error;
 			}
 			if (error) {
+				if (callback) {
+					callback(error, null);
+				}
 				console.error('cannot check periodic version', error);
 			}
 			else {
@@ -294,10 +297,21 @@ window.checkPeriodicVersion = function () {
 					var ajaxResponseData = res.body;
 					if (ajaxResponseData.status === 'current') {
 						console.info(ajaxResponseData.message);
+						if (callback) {
+							callback(null, {
+								status: 'uptodate',
+								response: ajaxResponseData.message
+							});
+						}
 					}
 					else {
-						window.ribbonNotification.showRibbon(ajaxResponseData.message, 6000, 'warn');
-						// console.error(ajaxResponseData.message);
+						window.ribbonNotification.showRibbon(ajaxResponseData.message + ' - <a href="/p-admin/settings" style="color:#4593e3;" >upgrade now</a>', 12000, 'warn');
+						if (callback) {
+							callback(null, {
+								status: 'needupdate',
+								response: ajaxResponseData.message
+							});
+						}
 					}
 				}
 			}

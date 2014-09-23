@@ -15,18 +15,20 @@
 						</div>
 					</div>
 				</form>
-					<div class="_pea-document _pea-form">
+					<div id="update-status" class="_pea-document _pea-form" style="display:none;">
 						<div class="_pea-row">
 							<h3>Upgrade Application</h3>
-							<p class="extra-padding"><span class="_pea-color-error">WARNING: Make sure you back up before upgrading, once completed your application will automatically restart (if you're running the application with PM2, npm start or npm run nd).</span></p>
-							<p class="extra-padding">Create a back up of your <a class="_pea-button">content</a> directory before upgrading. This is a short cut to running npm install from the command line.</p>
-							<a class="_pea-button _pea-col-span12">
-							$ cd .. </br>
-							$ npm install periodicjs@latest --upgrade</a>	
+							<div id="upgrade-needed">
+								<p class="extra-padding"><span class="_pea-color-error">WARNING: Make sure you back up before upgrading, once completed your application will automatically restart (if you're running the application with PM2, npm start or npm run nd).</span></p>
+								<p class="extra-padding">Create a back up of your <a class="_pea-button">content</a> directory before upgrading. This is a short cut to running npm install from the command line.</p>
+								<a class="_pea-button _pea-col-span12">
+								$ cd .. </br>
+								$ npm install periodicjs@latest --upgrade</a>	
 
-							<p class="_pea-text-center">
-									<a data-href="/p-admin/settings/upgrade" class=" _pea-button _pea-color-inverse _pea-dialog-delete" data-successfunction="restartAppResponse" data-donotnotify="true" style="font-size: 110%;">Upgrade Application</a>
-							</p>
+								<p class="_pea-text-center">
+										<a data-href="/p-admin/settings/updateapp" class=" _pea-button _pea-color-inverse _pea-dialog-delete" data-successfunction="updateAppResponse" data-donotnotify="true" style="font-size: 110%;">Upgrade Application</a>
+								</p>
+							</div>
 						</div>
 					</div>
 					<div class="_pea-document _pea-form">

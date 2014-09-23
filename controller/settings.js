@@ -89,6 +89,18 @@ var restart_app = function(req,res){
     }
 };
 
+var update_app = function(req,res){
+    CoreController.handleDocumentQueryRender({
+        req: req,
+        res: res,
+        redirecturl: '/p-admin/settings',
+        responseData: {
+            result: 'success',
+            data: 'restarted'
+        }
+    });
+};
+
 var load_app_settings = function(req,res,next){
     var appsettings = {
         readonly:{
@@ -170,7 +182,8 @@ var controller = function(resources){
     return{
         load_app_settings:load_app_settings,
         load_theme_settings:load_theme_settings,
-        restart_app:restart_app
+        restart_app:restart_app,
+        update_app:update_app
     };
 };
 
