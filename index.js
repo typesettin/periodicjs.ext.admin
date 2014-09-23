@@ -15,6 +15,7 @@ module.exports = function (periodic) {
 		categoryRouter = periodic.express.Router(),
 		categoryAdminRouter = periodic.express.Router(),
 		collectionRouter = periodic.express.Router(),
+		settingsRouter = periodic.express.Router(),
 		extensionAdminRouter = periodic.express.Router(),
 		themeAdminRouter = periodic.express.Router(),
 		periodicRouter = periodic.express.Router(),
@@ -28,6 +29,7 @@ module.exports = function (periodic) {
 		contenttypeController = require(path.resolve(process.cwd(), './app/controller/contenttype'))(periodic),
 		collectionController = require(path.resolve(process.cwd(), './app/controller/collection'))(periodic),
 		adminController = require('./controller/admin')(periodic),
+		adminSettingsController = require('./controller/settings')(periodic),
 		authController = require('../periodicjs.ext.login/controller/auth')(periodic),
 		uacController = require('../periodicjs.ext.user_access_control/controller/uac')(periodic);
 	/**
@@ -46,6 +48,7 @@ module.exports = function (periodic) {
 	contenttypeAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	mediaRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	userAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	settingsRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 
 	/**
 	 * admin routes
@@ -64,8 +67,6 @@ module.exports = function (periodic) {
 	adminRouter.get('/themes', adminController.loadThemes, adminController.themes_index);
 	adminRouter.get('/users', uacController.loadUacUsers, adminController.users_index);
 	adminRouter.get('/mailer', adminController.mail_index);
-	adminRouter.get('/settings', adminController.settings_index);
-	adminRouter.get('/settings/faq', adminController.settings_faq);
 	adminRouter.get('/check_periodic_version', adminController.check_periodic_version);
 	/**
 	 * admin/extension manager routes
@@ -148,7 +149,7 @@ module.exports = function (periodic) {
 	mediaRouter.post('/edit', mediaassetController.update);
 	mediaAdminRouter.get('/edit/:id', mediaassetController.loadAsset, adminController.asset_show);
 	mediaAdminRouter.get('/:id', mediaassetController.loadAsset, adminController.asset_show);
-	/**
+
 	/**
 	 * admin/user routes
 	 */
@@ -159,7 +160,12 @@ module.exports = function (periodic) {
 	userAdminRouter.post('/new', userController.create);
 	userAdminRouter.post('/:id/delete', userController.loadUser, userController.remove);
 
-	// userAdminRouter.post('/new',authController.ensureAuthenticated,mediaassetController.upload,mediaassetController.createassetfile);
+
+	/**
+	 * admin/settings routes
+	 */
+	settingsRouter.get('/', adminSettingsController.load_app_settings, adminSettingsController.load_theme_settings, adminController.settings_index);
+	settingsRouter.get('/faq', adminController.settings_faq);
 
 	/**
 	 * periodic routes
@@ -188,6 +194,8 @@ module.exports = function (periodic) {
 	periodic.app.use('/tag', tagRouter);
 	periodic.app.use('/category', categoryRouter);
 	periodic.app.use('/contenttype', contenttypeRouter);
+	periodic.app.use('/contenttype', contenttypeRouter);
+	periodic.app.use('/settings', settingsRouter);
 	periodic.app.use('/mediaasset', mediaRouter);
 	periodic.app.use(periodicRouter);
 };

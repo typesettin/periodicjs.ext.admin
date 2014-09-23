@@ -89,8 +89,8 @@ var settings_index = function(req,res){
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            console.log('appSettings',appSettings);
-            console.log('dbSettings.url',dbSettings.url);
+            console.log('req.controllerData.themesettings',req.controllerData.themesettings);
+            console.log('req.controllerData.appsettings',req.controllerData.appsettings);
             CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
@@ -101,7 +101,9 @@ var settings_index = function(req,res){
                         headerjs: ['/extensions/periodicjs.ext.admin/js/settings.min.js'],
                         extensions:CoreUtilities.getAdminMenu()
                     },
-                    user:req.user
+                    user:req.user,
+                    themesettings:req.controllerData.themesettings,
+                    appsettings:req.controllerData.appsettings,
                 }
             });
         }
