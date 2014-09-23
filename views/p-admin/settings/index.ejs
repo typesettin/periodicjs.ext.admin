@@ -14,20 +14,32 @@
 							<p>-app settings to display only (dburl,application:port,environment,version)</p>
 						</div>
 					</div>
-					<div class="_pea-document">
+				</form>
+					<div class="_pea-document _pea-form">
 						<div class="_pea-row">
 							<h3>Upgrade Application</h3>
-							<p class="extra-padding">Themes contain views and routes and are installed by uploading to the <a class="_pea-button">content/themes</a> directory.</p>	
-							<p>-if up to day, show success, up to date, else prompt warning, will restart automatically - have button</p>
+							<p class="extra-padding"><span class="_pea-color-error">WARNING: Make sure you back up before upgrading, once completed your application will automatically restart (if you're running the application with PM2, npm start or npm run nd).</span></p>
+							<p class="extra-padding">Create a back up of your <a class="_pea-button">content</a> directory before upgrading. This is a short cut to running npm install from the command line.</p>
+							<a class="_pea-button _pea-col-span12">
+							$ cd .. </br>
+							$ npm install periodicjs@latest --upgrade</a>	
+
+							<p class="_pea-text-center">
+									<a data-href="/p-admin/settings/upgrade" class=" _pea-button _pea-color-inverse _pea-dialog-delete" data-successfunction="restartAppResponse" data-donotnotify="true" style="font-size: 110%;">Upgrade Application</a>
+							</p>
 						</div>
 					</div>
-					<div class="_pea-document">
+					<div class="_pea-document _pea-form">
 						<div class="_pea-row">
 							<h3>Restart Application</h3>
-							<p class="extra-padding">Themes contain views and routes and are installed by uploading to the <a class="_pea-button">content/themes</a> directory. <span class="_pea-color-error">WARNING: anything in config.json will override these settings</span></p>
+							<p class="extra-padding"><span class="_pea-color-error">WARNING: Any HTTP POST requests may throw an error, until you refresh the page if you are using CSRF(Cross Site Request Forgery).</span></p>
+							<p class="extra-padding">Using this method to restart the application, updates <a class="_pea-button">content/extensions/restart.json</a>. 
+							<p class="extra-padding">This only works if you're running the application with PM2 (or npm start or npm run nd).</p> 
+							<p class="_pea-text-center">
+									<a data-href="/p-admin/settings/restart" class=" _pea-button _pea-color-inverse _pea-dialog-delete" data-successfunction="restartAppResponse" data-donotnotify="true" style="font-size: 110%;">Restart Application</a>
+							</p>
 						</div>
 					</div>
-				</form>
 			</div>
 			<div class="_pea-col-span5 _pea-pull-right">
 				<h2>Theme Settings</h2>

@@ -166,6 +166,7 @@ module.exports = function (periodic) {
 	 */
 	settingsRouter.get('/', adminSettingsController.load_app_settings, adminSettingsController.load_theme_settings, adminController.settings_index);
 	settingsRouter.get('/faq', adminController.settings_faq);
+	settingsRouter.post('/restart', adminSettingsController.restart_app);
 
 	/**
 	 * periodic routes
@@ -188,6 +189,7 @@ module.exports = function (periodic) {
 	adminRouter.use('/tag', tagAdminRouter);
 	adminRouter.use('/category', categoryAdminRouter);
 	adminRouter.use('/user', userAdminRouter);
+	adminRouter.use('/settings', settingsRouter);
 	periodic.app.use('/p-admin', adminRouter);
 	periodic.app.use('/item', itemRouter);
 	periodic.app.use('/collection', collectionRouter);
@@ -195,7 +197,6 @@ module.exports = function (periodic) {
 	periodic.app.use('/category', categoryRouter);
 	periodic.app.use('/contenttype', contenttypeRouter);
 	periodic.app.use('/contenttype', contenttypeRouter);
-	periodic.app.use('/settings', settingsRouter);
 	periodic.app.use('/mediaasset', mediaRouter);
 	periodic.app.use(periodicRouter);
 };

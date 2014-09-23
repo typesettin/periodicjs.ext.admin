@@ -101,7 +101,10 @@ var deleteContentSubmit = function (e) {
 				window.ribbonNotification.showRibbon(error.message, 4000, 'error');
 			}
 			else {
-				window.ribbonNotification.showRibbon('deleted', 4000, 'warn');
+				if (!eTarget.getAttribute('data-donotnotify')) {
+					window.ribbonNotification.showRibbon('deleted', 4000, 'warn');
+				}
+
 				if (eTarget.getAttribute('data-successfunction')) {
 					var successFunctionString = eTarget.getAttribute('data-successfunction'),
 						successfn = window[successFunctionString];
@@ -117,11 +120,13 @@ var deleteContentSubmit = function (e) {
 var confirmDeleteDialog = function (e) {
 	var eTarget = e.target,
 		posturl = eTarget.getAttribute('data-href'),
-		successfunction = eTarget.getAttribute('data-successfunction');
+		successfunction = eTarget.getAttribute('data-successfunction'),
+		donotnotify = eTarget.getAttribute('data-donotnotify');
 	confirmDeleteYes.setAttribute('data-href', '#');
 	confirmDeleteYes.setAttribute('data-href', posturl);
 	confirmDeleteYes.setAttribute('data-successfunction', successfunction);
-	window.silkscreenModal.showSilkscreen('Delete Warning', document.getElementById('modal-confirm-delete'), 'default');
+	confirmDeleteYes.setAttribute('data-donotnotify', donotnotify);
+	window.silkscreenModal.showSilkscreen('Confirmation Warning', document.getElementById('modal-confirm-delete'), 'default');
 };
 
 var ajaxDeleteButtonListeners = function () {

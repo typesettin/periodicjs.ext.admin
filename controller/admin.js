@@ -89,8 +89,8 @@ var settings_index = function(req,res){
             extname: 'periodicjs.ext.admin'
         },
         function(err,templatepath){
-            console.log('req.controllerData.themesettings',req.controllerData.themesettings);
-            console.log('req.controllerData.appsettings',req.controllerData.appsettings);
+            // console.log('req.controllerData.themesettings',req.controllerData.themesettings);
+            // console.log('req.controllerData.appsettings',req.controllerData.appsettings);
             CoreController.handleDocumentQueryRender({
                 res:res,
                 req:req,
