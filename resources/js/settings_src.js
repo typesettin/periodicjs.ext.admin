@@ -39,7 +39,23 @@ var jsonFormElements = function (options) {
 			var elementval = jsonobject[x];
 			returnhtml += prependhtml;
 			returnhtml += '<label class="_pea-col-span3 _pea-label" for="' + elementid + '">' + elementname + '</label>';
-			if (jreoptionvalues && (jreoptionvalues.name === x) && jreoptionvalues.type === 'array' && jreoptionvalues.value) {
+			if (typeof elementval === 'boolean') {
+				var selectOptionsFromBooleanVal = [true, false];
+				returnhtml += '<select class="_pea-col-span9 noFormSubmit" ';
+				if (!options.readonly) {
+					returnhtml += ' name="' + elementname + '" ';
+				}
+				returnhtml += '  >';
+				for (var k in selectOptionsFromBooleanVal) {
+					returnhtml += '<option ';
+					if (selectOptionsFromBooleanVal[k] === elementval) {
+						returnhtml += 'selected="selected"';
+					}
+					returnhtml += ' value="' + selectOptionsFromBooleanVal[k] + '">' + selectOptionsFromBooleanVal[k] + '</option>';
+				}
+				returnhtml += '</select>';
+			}
+			else if (jreoptionvalues && (jreoptionvalues.name === x) && jreoptionvalues.type === 'array' && jreoptionvalues.value) {
 				var selectOptionsFromDefaultVal = jreoptionvalues.value.split(',');
 				returnhtml += '<select class="_pea-col-span9 noFormSubmit" ';
 				if (!options.readonly) {

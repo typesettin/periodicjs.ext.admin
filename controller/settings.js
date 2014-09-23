@@ -152,7 +152,81 @@ var load_theme_settings = function(req,res,next){
 };
 
 var update_app_settings = function(req,res){
+    var updatedAppSettings = CoreUtilities.removeEmptyObjectValues(req.body),
+        appsettingsfile = path.join(process.cwd(),'content/config/config.json');
 
+        updatedAppSettings = CoreUtilities.replaceBooleanStringObjectValues(updatedAppSettings);
+    delete updatedAppSettings._csrf;
+
+    fs.readJson(appsettingsfile,function(err,appconfig){
+        if(err){
+            CoreController.handleDocumentQueryErrorResponse({
+                err: err,
+                res: res,
+                req: req
+            });
+        }
+        else{
+            updatedAppSettings = str2json.convert(updatedAppSettings);
+            var originalconfig = appconfig,
+                mergedconfig = merge(originalconfig,updatedAppSettings);
+
+            fs.writeJson(appsettingsfile, mergedconfig, function(err){
+                if(err){
+                    CoreController.handleDocumentQueryErrorResponse({
+                        err: err,
+                        res: res,
+                        req: req
+                    });
+                }
+                else{
+                    CoreController.handleDocumentQueryRender({
+                        req: req,
+                        res: res,
+                        redirecturl: '/p-admin/settings',
+                        responseData: {
+                            result: 'success',
+                            data: 'app config updated'
+                        },
+                        callback:function(){ 
+                            CoreUtilities.restart_app({
+                                restartfile: restartfile
+                            });
+                        }
+                    });
+
+                    if(changedemailtemplate && emailtransport){
+                        var d = new Date();
+                        fs.readFile(changedemailtemplate, 'utf8', function(err,templatestring){
+                            if(err){
+                                logger.err(err);
+                            }
+                            else if(templatestring){
+                                sendSettingEmail({
+                                subject: appSettings.name+'[env:'+appSettings.application.environment+'] Application Configuration Change Notification',
+                                user:req.user,
+                                hostname:req.headers.host,
+                                appname:appSettings.name,
+                                appenvironment:appSettings.application.environment,
+                                appport:appSettings.application.port,
+                                settingmessage:'<p>Your application was configuration was changed from the admin interface - '+d+'</p><p><pre>'+JSON.stringify(mergedconfig, null, '\t')+'</pre></p>',
+                                emailtemplate:templatestring,
+                                mailtransport:emailtransport
+                            },function(err,status){
+                                if(err){
+                                    logger.error(err);
+                                }
+                                else{
+                                    console.info('email status',status);
+                                }
+                            });
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    });
 };
 
 var update_theme_settings = function(req,res){
@@ -200,14 +274,38 @@ var update_theme_settings = function(req,res){
                             });
                         }
                     });
+                    if(changedemailtemplate && emailtransport){
+                        var d = new Date();
+                        fs.readFile(changedemailtemplate, 'utf8', function(err,templatestring){
+                            if(err){
+                                logger.err(err);
+                            }
+                            else if(templatestring){
+                                sendSettingEmail({
+                                subject: appSettings.name+'[env:'+appSettings.application.environment+'] Application Theme Setting Change Notification',
+                                user:req.user,
+                                hostname:req.headers.host,
+                                appname:appSettings.name,
+                                appenvironment:appSettings.application.environment,
+                                appport:appSettings.application.port,
+                                settingmessage:'<p>Your theme configuration was changed from the admin interface - '+d+'</p><p><pre>'+JSON.stringify(newthemeconfig, null, '\t')+'</pre></p>',
+                                emailtemplate:templatestring,
+                                mailtransport:emailtransport
+                            },function(err,status){
+                                if(err){
+                                    logger.error(err);
+                                }
+                                else{
+                                    console.info('email status',status);
+                                }
+                            });
+                            }
+                        });
+                    }
                 }
             });
-            // console.log('originalconfig',originalconfig);
-            // console.log('newthemeconfig',newthemeconfig);
         }
     });
-    // console.log('updatedThemeSettings',JSON.parse(updatedThemeSettings));
-
 };
 
 var controller = function(resources){
