@@ -31,7 +31,7 @@
 									collections.forEach(function(collection){ %>
 										<tr>
 											<td class="_pea-col-span6"> 
-												<% if(collection.primaryasset && collection.primaryasset.fileurl  && item.primaryasset.assettype.match("image")){%>
+												<% if(collection.primaryasset && collection.primaryasset.fileurl  && collection.primaryasset.assettype.match("image")){%>
 													<div class="_pea-pull-right _pea-col-span9" style="height:100%;">
 														<a href="/p-admin/collection/edit/<%= collection.name %>" style="position:relative; vertical-align:center;"><%= collection.title %> </a>
 														
