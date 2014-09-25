@@ -67,7 +67,7 @@
 					</div>
 				</div>
 				<!-- https://github.com/yawetse/wysihtml5 -->
-				<textarea id="wysihtml5-textarea" class="textarea-tall _pea-col-span12" name="content" placeholder="New <%= genericdocTitle %>"><% if(genericdoc && typeof genericdoc.content==='string'){%><%= genericdoc.content %><%}%></textarea>
+				<textarea id="wysihtml5-textarea" class="textarea-tall _pea-col-span12" name="content" placeholder="New <%= genericdocTitle %>"><% if(genericdoc && typeof genericdoc.content==='string'){%><%- genericdoc.content %><%}%></textarea>
 			</div>
 		</div>
 	</div>

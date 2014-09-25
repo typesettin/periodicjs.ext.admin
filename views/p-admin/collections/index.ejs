@@ -18,19 +18,36 @@
 					<table class="_pea-table">
 						<thead>
 							<tr class="_pea-text-left">
-								<th>Title</th>
-								<th>Author</th>
-								<th>Categories</th>
-								<th>Tags</th>
-								<th>Type</th>
-								<th>Date</th>
+								<th class="_pea-col-span6">Title</th>
+								<th class="_pea-col-span1">Author</th>
+								<th class="_pea-col-span1">Categories</th>
+								<th class="_pea-col-span2">Tags</th>
+								<th class="_pea-col-span1">Type</th>
+								<th class="_pea-col-span1">Date</th>
 							</tr>
 						</thead>
 						<tbody>
 							<% if(collections.length>0){
 									collections.forEach(function(collection){ %>
 										<tr>
-											<td> <a href="/p-admin/collection/edit/<%= collection.name %>"> <%= collection.title %> </a></td>
+											<td class="_pea-col-span6"> 
+												<% if(collection.primaryasset && collection.primaryasset.fileurl  && item.primaryasset.assettype.match("image")){%>
+													<div class="_pea-pull-right _pea-col-span9" style="height:100%;">
+														<a href="/p-admin/collection/edit/<%= collection.name %>" style="position:relative; vertical-align:center;"><%= collection.title %> </a>
+														
+													</div>
+													<div class="_pea-pull-left _pea-col-span3" style=" overflow:hidden; max-height:5em; padding-right:1em;">
+													
+														<img src="<%- collection.primaryasset.fileurl %>" style="width:100%; height:auto;" />
+													</div>
+												<%} 
+												else{%>
+
+												<div class="_pea-col-span12">
+													<a href="/p-admin/collection/edit/<%= collection.name %>"><%= collection.title %> </a>
+												</div>
+												<%}%>
+											</td>
 											<td><%= collection.primaryauthor.username %></td>
 											<td>
 												<%if(collection.categories && collection.categories.length>0){

@@ -30,7 +30,25 @@
 							<% if(items.length>0){
 									items.forEach(function(item){ %>
 										<tr>
-											<td> <a href="/p-admin/item/edit/<%= item.name %>"> <%= item.title %> </a></td>
+											<td> 
+
+												<% if(item.primaryasset && item.primaryasset.fileurl  && item.primaryasset.assettype.match("image")){%>
+													<div class="_pea-pull-right _pea-col-span9" style="height:100%;">
+														<a href="/p-admin/item/edit/<%= item.name %>" style="position:relative; vertical-align:center;"> <%= item.title %> </a>
+													</div>
+													<div class="_pea-pull-left _pea-col-span3" style=" overflow:hidden; max-height:5em; padding-right:1em;">
+													
+														<img src="<%- item.primaryasset.fileurl %>" style="width:100%; height:auto;" />
+													</div>
+												<%} 
+												else{%>
+
+												<div class="_pea-col-span12">
+													<a href="/p-admin/item/edit/<%= item.name %>"> <%= item.title %> </a>
+												</div>
+												<%}%>
+
+											</td>
 											<td>
 													<%if(item.primaryauthor){%>
 														<%= item.primaryauthor.username %>
