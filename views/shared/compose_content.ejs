@@ -2,8 +2,8 @@
 	<% if(genericdoc){%>Edit<%}else{%>New<%} %> 
 	<a href="/p-admin/<%= genericdocnamelink %>/"> <%= genericdocTitle %> </a>
 	<% if(typeof genericdocname === "string" && genericdoc){%>
-		<a href="/p-admin/<%= genericdocname %>/new" class="_pea-button _pea-color-info _pea-pull-right">New <%= genericdocTitle %></a>
-		<a id="clone-item-button" class="_pea-button  _pea-pull-right">Clone <%= genericdocTitle %></a>
+		
+		<input type="submit" name="save_button" style="font-size: 65%;" value="<% if(genericdoc){%>Update<%}else{%>Save<%}%> <%= genericdocTitle %>" class="_pea-button _pea-color-success _pea-pull-right"/>
 	<%}%>
 </h2>
 	<%if(genericdoc){%>
