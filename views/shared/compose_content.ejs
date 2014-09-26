@@ -1,8 +1,10 @@
-<h2><% if(genericdoc){%>Edit<%}else{%>New<%} %> 
-
-<a href="/p-admin/<%= genericdocnamelink %>/">
-<%= genericdocTitle %>
-</a>
+<h2>
+	<% if(genericdoc){%>Edit<%}else{%>New<%} %> 
+	<a href="/p-admin/<%= genericdocnamelink %>/"> <%= genericdocTitle %> </a>
+	<% if(typeof genericdocname === "string" && genericdoc){%>
+		<a href="/p-admin/<%= genericdocname %>/new" class="_pea-button _pea-color-info _pea-pull-right">New <%= genericdocTitle %></a>
+		<a id="clone-item-button" class="_pea-button  _pea-pull-right">Clone <%= genericdocTitle %></a>
+	<%}%>
 </h2>
 	<%if(genericdoc){%>
 		<input type="hidden" name="docid" value="<%= genericdoc._id %>">

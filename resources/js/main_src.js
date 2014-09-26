@@ -34,8 +34,9 @@ var preventEnterSubmitListeners = function () {
 	document.addEventListener('keypress', preventSubmitOnEnter, false);
 };
 
-var ajaxFormSubmit = function (e) {
-	var f = e.target;
+var ajaxFormSubmit = function (e, element) {
+	// console.log('e', e);
+	var f = (element) ? element : e.target;
 	if (f.getAttribute('data-beforesubmitfunction')) {
 		var beforesubmitFunctionString = f.getAttribute('data-beforesubmitfunction'),
 			beforefn = window[beforesubmitFunctionString];
@@ -76,7 +77,9 @@ var ajaxFormSubmit = function (e) {
 				}
 			}
 		});
-	e.preventDefault();
+	if (e) {
+		e.preventDefault();
+	}
 };
 
 var deleteContentSubmit = function (e) {
@@ -199,6 +202,28 @@ var searchMedia = function (e) {
 				}
 			}
 		});
+};
+
+var cloneContentListener = function () {
+	var clonebutton = document.getElementById('clone-item-button');
+	if (clonebutton) {
+		clonebutton.addEventListener('click', function () {
+			var doctypename = document.querySelector('input[name=doctypename]').value;
+			var editform = document.getElementById('edit-' + doctypename + '-form');
+			editform.setAttribute('action', '/' + doctypename + '/new');
+			editform.querySelector('input[name=name]').value = '';
+			editform.querySelector('input[name=title]').value = editform.querySelector('input[name=title]').value + ' 2';
+			editform.setAttribute('data-successfunction', 'cloneContentView');
+			ajaxFormSubmit(null, editform);
+			// editform.submit();
+		}, false);
+	}
+};
+
+window.cloneContentView = function (data) {
+	var doctypename = document.querySelector('input[name=doctypename]').value;
+	window.location.href = '/p-admin/' + doctypename + '/edit/' + data.doc._id;
+	// console.log('cloneContentView cloneContentView', );
 };
 
 window.mediaSearchResult = function (searchData) {
@@ -330,6 +355,7 @@ window.addEventListener('load', function () {
 	});
 	preventEnterSubmitListeners();
 	ajaxDeleteButtonListeners();
+	cloneContentListener();
 	if (mediaSearchButton) {
 		mediaSearchButton.addEventListener('click', searchMedia, false);
 	}

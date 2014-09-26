@@ -3239,6 +3239,7 @@ window.addEventListener('load', function () {
 	if (typeof itemcontenttypes === 'object') {
 		cnt_lp.setPreloadDataObject(window.itemcontenttypes);
 	}
+
 	window.ajaxFormEventListers('._pea-ajax-form');
 	wysihtml5Editor = new window.wysihtml5.Editor('wysihtml5-textarea', {
 		// id of textarea element
