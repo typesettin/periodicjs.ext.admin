@@ -19,7 +19,7 @@
 	<div class="_pea-document">
 		<div class="_pea-row">
 			<div class="_pea-row _pea-container-forminput">
-				<input class="_pea-col-span12 noFormSubmit" type="text" placeholder="Title" value="<% if(genericdoc && typeof genericdoc.title==='string'){%><%= genericdoc.title %><%}%>" name="title"/>
+				<input class="_pea-col-span12" type="text" placeholder="Title" value="<% if(genericdoc && typeof genericdoc.title==='string'){%><%= genericdoc.title %><%}%>" name="title"/>
 			</div>
 			<div class="_pea-row _pea-container-forminput no-margin">
 				<div id="wysihtml5-toolbar" class="wysihtml5">
@@ -68,7 +68,7 @@
 					</div>
 				</div>
 				<!-- https://github.com/yawetse/wysihtml5 -->
-				<textarea id="wysihtml5-textarea" class="textarea-tall _pea-col-span12" name="content" placeholder="New <%= genericdocTitle %>"><% if(genericdoc && typeof genericdoc.content==='string'){%><%- genericdoc.content %><%}%></textarea>
+				<textarea id="wysihtml5-textarea" class="textarea-tall noFormSubmit _pea-col-span12" name="content" placeholder="New <%= genericdocTitle %>"><% if(genericdoc && typeof genericdoc.content==='string'){%><%- genericdoc.content %><%}%></textarea>
 			</div>
 		</div>
 	</div>

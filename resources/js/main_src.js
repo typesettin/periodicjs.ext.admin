@@ -25,13 +25,14 @@ var preventSubmitOnEnter = function (e) {
 
 var preventEnterSubmitListeners = function () {
 	var noSubmitElements = document.querySelectorAll('.noFormSubmit');
+	// console.log(noSubmitElements);
 	for (var x in noSubmitElements) {
 		if (typeof noSubmitElements[x] === 'object') {
 			noSubmitElements[x].addEventListener('keypress', preventSubmitOnEnter, false);
 			noSubmitElements[x].addEventListener('keydown', preventSubmitOnEnter, false);
 		}
 	}
-	document.addEventListener('keypress', preventSubmitOnEnter, false);
+	// document.addEventListener('keypress', preventSubmitOnEnter, false);
 };
 
 var ajaxFormSubmit = function (e, element) {
@@ -81,6 +82,27 @@ var ajaxFormSubmit = function (e, element) {
 		e.preventDefault();
 	}
 };
+
+var autoSubmitFormOnChange = function () {
+	var formElement = this.form;
+	if (classie.hasClass(formElement, '_pea-ajax-form')) {
+		ajaxFormSubmit(null, formElement);
+	}
+	else {
+		formElement.submit();
+	}
+	// console.log('this.form', this.form);
+};
+
+var submitOnChangeListeners = function () {
+	var autoSubmitElements = document.querySelectorAll('.autoFormSubmit');
+	for (var x in autoSubmitElements) {
+		if (typeof autoSubmitElements[x] === 'object') {
+			autoSubmitElements[x].addEventListener('change', autoSubmitFormOnChange, false);
+		}
+	}
+};
+
 
 var deleteContentSubmit = function (e) {
 	var eTarget = e.target,
@@ -353,6 +375,7 @@ window.addEventListener('load', function () {
 		type: 'info',
 		idSelector: '#_pea_ribbon-element'
 	});
+	submitOnChangeListeners();
 	preventEnterSubmitListeners();
 	ajaxDeleteButtonListeners();
 	cloneContentListener();

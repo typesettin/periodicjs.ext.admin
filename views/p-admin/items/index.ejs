@@ -1,5 +1,16 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
+<% 
+	var  getsortlink= function(field,label){
+		var order = (request.query.sort && request.query.sort.search("-") === 0) ? '' : '-' ;
+		var orderlink = (request.query.sort) ? 
+			'?'+locals.viewhelper.getQueryString(request.query).replace('sort='+request.query.sort,'sort='+order+field) 
+			: '?'+locals.viewhelper.getQueryString(request.query)+'&sort='+order+field;
+		%>
+		<a href="  <%= orderlink %>"><%= label %></a>
+		<%
+	}
+%>
 <input type="hidden" name="_csrf" value=<%= locals.token %> >
 <form name="items-form" class="_pea-form" method="get" >
 	<div class="_pea-container">
@@ -17,28 +28,18 @@
 				<div class="_pea-document">
 					<table class="_pea-table">
 						<thead style="">
-							<tr>
-								<th colspan="4" class="_pea-text-left ">
-									Page
-									<a href="">&laquo;</a> 
-									<input type="text" name="pagenum" class="_pea-text-center" style="width:2em;" value="<%- request.query.pagenum %>"/> of <%- itempages %> 
-									<a href="">&raquo;</a>
-								</th>
-								<th colspan="3" class="_pea-text-right ">
-									<span ><input type="text" name="itemsperpage" class="_pea-text-center"  style="width:2em;" value="<%- request.query.limit %>"/> per page</span> | 
-									<span><%- itemscount %> items</span>
-								</th>
-							</tr>
+							<% editlistingprops = true %>
+							<% include _pagination_item %>
 						</thead>
 						<thead>
 							<tr class="_pea-text-left">
-								<th>Title</th>
+								<th><% getsortlink('title','Title') %></th>
 								<th>Author</th>
 								<th>Categories</th>
 								<th>Tags</th>
 								<th>Type</th>
-								<th>Date</th>
-								<th></th>
+								<th style="width:6em"><% getsortlink('createdat','Date') %></th>
+								<th style="width:6em"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -64,8 +65,13 @@
 
 											</td>
 											<td>
-													<%if(item.primaryauthor){%>
-														<%= item.primaryauthor.username %>
+													<%if(item.authors && item.authors.length>0){
+														item.authors.forEach(function(author){%>
+														<a href="/p-admin/items?filter_authors=<%= author.username %>"><%= author.username %></a>,
+														<%});
+													}
+													else{%>
+													<a href="/p-admin/items?filter_authors=<%= item.primaryauthor.username %>"><%= item.primaryauthor.username %></a>
 													<%}%>
 											</td>
 											<td>
@@ -90,15 +96,18 @@
 												}%>
 											</td>
 											<td>
-												<% var disDate = new Date(item.createdat) %>
-												<%= (disDate.getFullYear()) %>/
-												<%= (disDate.getMonth()+1) %>/
-												<%= (disDate.getDate()) %>
+												<small>
+													<% var disDate = new Date(item.createdat) %>
+												<!-- 	<%= (disDate.getFullYear()) %>/
+													<%= (disDate.getMonth()+1) %>/
+													<%= (disDate.getDate()) %> -->
+													<%- disDate %>
+												</small>
 											</td>
 											<td>
 												<a href="/p-admin/item/edit/<%= item.name %>" class="_pea-button _pea-color-inverse"> edit </a>
-												<a href="/item/<%= item.name %>" class="_pea-button " target="_blank"> preview </a>
-												<a data-href="/item/<%= item.name %>/delete" class="_pea-button _pea-color-error _pea-dialog-delete" data-successfunction="backToItemLanding" >delete</a>
+												<a href="/item/<%= item.name %>" class="_pea-button " target="_blank"> i </a>
+												<a data-href="/item/<%= item.name %>/delete" class="_pea-button _pea-color-error _pea-dialog-delete" data-successfunction="backToItemLanding" >x</a>
 
 											</td>
 										</tr>
@@ -110,18 +119,8 @@
 								<%} %>
 						</tbody>
 						<tfoot style="">
-							<tr>
-								<th colspan="4" class="_pea-text-left ">
-									Page
-									<a href="">&laquo;</a> 
-									<input type="text" name="pagenum" class="_pea-text-center" style="width:2em;" value="<%- request.query.pagenum %>"/> of <%- itempages %> 
-									<a href="">&raquo;</a>
-								</th>
-								<th colspan="3" class="_pea-text-right ">
-									<span ><input type="text" name="itemsperpage" class="_pea-text-center"  style="width:2em;" value="<%- request.query.limit %>"/> per page</span> | 
-									<span><%- itemscount %> items</span>
-								</th>
-							</tr>
+							<% editlistingprops = false %>
+							<% include _pagination_item %>
 						</tfoot>
 						<!-- <tfoot>
 							<tr class="_pea-text-left">

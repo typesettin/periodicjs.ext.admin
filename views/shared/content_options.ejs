@@ -34,7 +34,7 @@
 			"value":"trash",
 			"label":"Trash"
 			}]; %>
-		<select name="status" class="_pea-col-span10">
+		<select name="status" class="_pea-col-span10 autoFormSubmit">
 			<% docstatus.forEach(function(status){
 				%>
 					<option <% if(genericdoc && typeof genericdoc.status==='string' && genericdoc.status === status.value ){%> selected="selected"
