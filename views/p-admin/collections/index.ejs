@@ -1,36 +1,52 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
+<% 
+	var  getsortlink= function(field,label){
+		var order = (request.query.sort && request.query.sort.search("-") === 0) ? '' : '-' ;
+		var orderlink = (request.query.sort) ? 
+			'?'+locals.viewhelper.getQueryString(request.query).replace('sort='+request.query.sort,'sort='+order+field) 
+			: '?'+locals.viewhelper.getQueryString(request.query)+'&sort='+order+field;
+		%>
+		<a href="  <%= orderlink %>"><%= label %></a>
+		<%
+	}
+%>
+<input type="hidden" name="_csrf" value=<%= locals.token %> >
+<form class="_pea-form" method="get" name="collections-form">
 	<div class="_pea-container">
 		<div class="_pea-row _pea-form">
 			<div class="_pea-col-span6">
 				<a href="/p-admin/collection/new" class="_pea-button _pea-color-info">New Collection</a>
 			</div>
 			<div class="_pea-col-span6 _pea-text-right">
-				<form class="_pea-form" method="get">
 					<input type="text" placeholder="search" class="_pea-col-span10" name="search"/>
-					<input type="submit" name="searchbutton" value="search" class="_pea-col-span2"  />
-				</form>
+					<button type="submit" class="_pea-col-span2" >search</button>
 			</div>
 		</div>
 		<div class="_pea-row">
 			<div class="_pea-col-span12">
 				<div class="_pea-document">
 					<table class="_pea-table">
+						<thead style="">
+							<% editlistingprops = true %>
+							<% include _pagination_collection %>
+						</thead>
 						<thead>
 							<tr class="_pea-text-left">
-								<th class="_pea-col-span6">Title</th>
-								<th class="_pea-col-span1">Author</th>
-								<th class="_pea-col-span1">Categories</th>
-								<th class="_pea-col-span2">Tags</th>
-								<th class="_pea-col-span1">Type</th>
-								<th class="_pea-col-span1">Date</th>
+								<th><% getsortlink('title','Title') %></th>
+								<th>Author</th>
+								<th>Categories</th>
+								<th>Tags</th>
+								<th>Type</th>
+								<th style="width:6em"><% getsortlink('createdat','Date') %></th>
+								<th style="width:6em"></th>
 							</tr>
 						</thead>
 						<tbody>
 							<% if(collections.length>0){
 									collections.forEach(function(collection){ %>
 										<tr>
-											<td class="_pea-col-span6"> 
+											<td> 
 												<% if(collection.primaryasset && collection.primaryasset.fileurl  && collection.primaryasset.assettype.match("image")){%>
 													<div class="_pea-pull-right _pea-col-span9" style="height:100%;">
 														<a href="/p-admin/collection/edit/<%= collection.name %>" style="position:relative; vertical-align:center;"><%= collection.title %> </a>
@@ -48,43 +64,61 @@
 												</div>
 												<%}%>
 											</td>
-											<td><%= collection.primaryauthor.username %></td>
+											<td>
+											<%if(collection.authors && collection.authors.length>0){
+													collection.authors.forEach(function(author){%>
+													<a href="/p-admin/collections?filter_authors=<%= author.username %>"><%= author.username %></a>,
+													<%});
+												}
+												else{%>
+												<a href="/p-admin/collections?filter_authors=<%= collection.primaryauthor.username %>"><%= collection.primaryauthor.username %></a>
+												<%}%>
+											</td>
 											<td>
 												<%if(collection.categories && collection.categories.length>0){
 													collection.categories.forEach(function(category){%>
-														<a href="/p-admin/collections/categories/<%= category.name %>"><%= category.title %></a>,
+														<a href="/p-admin/collections?filter_categories=<%= category.name %>"><%= category.title %></a>,
 													<%});
 												}%>
 											</td>
 											<td>
 												<%if(collection.tags && collection.tags.length>0){
 													collection.tags.forEach(function(tag){%>
-														<a href="/p-admin/collections/tags/<%= tag.name %>"><%= tag.title %></a>,
+														<a href="/p-admin/collections?filter_tags=<%= tag.name %>"><%= tag.title %></a>,
 													<%});
 												}%>
 											</td>
 											<td>
 												<%if(collection.contenttypes && collection.contenttypes.length>0){
 													collection.contenttypes.forEach(function(contenttype){%>
-														<a href="/p-admin/collections/contenttype/<%= contenttype.name %>"><%= contenttype.title %></a>,
+														<a href="/p-admin/collections?filter_contenttypes=<%= contenttype.name %>"><%= contenttype.title %></a>,
 													<%});
 												}%>
 											</td>
 											<td>
-												<% var disDate = new Date(collection.createdat) %>
-												<%= (disDate.getFullYear()) %>/
-												<%= (disDate.getMonth()+1) %>/
-												<%= (disDate.getDate()) %>
+												<small>
+													<% var disDate = new Date(collection.createdat) %>
+													<%- disDate %>
+												</small>
+											</td>
+											<td>
+												<a href="/p-admin/collection/edit/<%= collection.name %>" class="_pea-button _pea-color-inverse"> edit </a>
+												<a href="/collection/<%= collection.name %>" class="_pea-button " target="_blank"> i </a>
+												<a data-href="/collection/<%= collection.name %>/delete" class="_pea-button _pea-color-error _pea-dialog-delete" data-successfunction="backToItemLanding" >x</a>
 											</td>
 										</tr>
 										<%
 									});
 								}
 								else{ %>
-									<tr><td colspan="6" class="_pea-text-center">No Collections!</td></tr>
+									<tr><td colspan="7" class="_pea-text-center">No Collections!</td></tr>
 								<%} %>
 						</tbody>
-						<tfoot>
+						<tfoot style="">
+							<% editlistingprops = false %>
+							<% include _pagination_collection %>
+						</tfoot>
+						<!-- <tfoot>
 							<tr class="_pea-text-left">
 								<th>Title</th>
 								<th>Author</th>
@@ -93,10 +127,11 @@
 								<th>Type</th>
 								<th>Date</th>
 							</tr>
-						</tfoot>
+						</tfoot> -->
 					</table>
 				</div>
 			</div>
 		</div>
 	</div>
+</form>
 <% include ../../shared/footer %>

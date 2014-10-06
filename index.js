@@ -61,7 +61,7 @@ module.exports = function (periodic) {
 	adminRouter.get('/contenttypes', contenttypeController.loadContenttypes, adminController.contenttypes_index);
 	adminRouter.get('/tags', tagController.loadTags, adminController.tags_index);
 	adminRouter.get('/categories', categoryController.loadCategories, adminController.categories_index);
-	adminRouter.get('/collections', collectionController.loadCollections, adminController.collections_index);
+	adminRouter.get('/collections', collectionController.loadCollectionsWithCount, collectionController.loadCollectionsWithDefaultLimit, collectionController.loadCollections, adminController.collections_index);
 	adminRouter.get('/assets', mediaassetController.loadAssets, adminController.assets_index);
 	adminRouter.get('/extensions', adminController.loadExtensions, adminController.extensions_index);
 	adminRouter.get('/themes', adminController.loadThemes, adminController.themes_index);

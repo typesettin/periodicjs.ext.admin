@@ -310,6 +310,8 @@ var collections_index = function(req, res) {
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     collections: req.controllerData.collections,
+                    collectionscount: req.controllerData.collectionscount,
+                    collectionpages: Math.ceil(req.controllerData.collectionscount/req.query.limit),
                     user:req.user
                 }
             });
