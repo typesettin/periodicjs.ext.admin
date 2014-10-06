@@ -57,7 +57,7 @@ module.exports = function (periodic) {
 	adminRouter.get('/', function (req, res) {
 		res.redirect('/p-admin/user/' + req.user.username);
 	});
-	adminRouter.get('/items', itemController.loadItems, adminController.items_index);
+	adminRouter.get('/items', itemController.loadItemsWithCount, itemController.loadItemsWithDefaultLimit, itemController.loadItems, adminController.items_index);
 	adminRouter.get('/contenttypes', contenttypeController.loadContenttypes, adminController.contenttypes_index);
 	adminRouter.get('/tags', tagController.loadTags, adminController.tags_index);
 	adminRouter.get('/categories', categoryController.loadCategories, adminController.categories_index);

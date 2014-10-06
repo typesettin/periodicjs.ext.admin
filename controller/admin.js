@@ -179,6 +179,8 @@ var items_index = function(req, res) {
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     items: req.controllerData.items,
+                    itemscount: req.controllerData.itemscount,
+                    itempages: Math.ceil(req.controllerData.itemscount/req.query.limit),
                     // privileges: req.controllerData.privileges,
                     user:req.user
                 }
