@@ -1,5 +1,16 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
+<% 
+	var  getsortlink= function(field,label){
+		var order = (request.query.sort && request.query.sort.search("-") === 0) ? '' : '-' ;
+		var orderlink = (request.query.sort) ? 
+			'?'+locals.viewhelper.getQueryString(request.query).replace('sort='+request.query.sort,'sort='+order+field) 
+			: '?'+locals.viewhelper.getQueryString(request.query)+'&sort='+order+field;
+		%>
+		<a href="  <%= orderlink %>"><%= label %></a>
+		<%
+	}
+%>
 	<div class="_pea-container">
 		<div class="_pea-document">
 			<div  class="_pea-row _pea-form">
@@ -27,10 +38,16 @@
 				<div class="_pea-document">
 					<input type="hidden" name="_csrf" value=<%= locals.token %> >
 					<table id="pea-asset-admin" class="_pea-table _pea-form">
+						<thead style="">
+							<% editlistingprops = true %>
+							<% include _pagination_asset %>
+						</thead>
 						<thead>
 							<tr class="_pea-text-left">
-								<th class="_pea-col-span2">Title</th>
-								<th class="_pea-col-span1">Author</th>
+								<th class="_pea-col-span3" ><% getsortlink('title','Asset') %></th>
+								<th >Author</th>
+								<th style="width:6em"><% getsortlink('createdat','Date') %></th>
+								<th >Type</th>
 								<th >Attributes</th>
 							</tr>
 						</thead>
@@ -53,8 +70,21 @@
 											</td>
 											<td>
 												<% if(asset.author){%>
-													<a href="/p-admin/user/<%= asset.author.username %>/edit"><%= asset.author.username %></a>
+													<a href="/p-admin/assets?filter_authors=<%= asset.author.username %>"><%= asset.author.username %></a>
 												<%} %>
+											</td>
+											<td>
+												<small>
+													<% var disDate = new Date(asset.createdat) %>
+													<%- disDate %>
+												</small>
+											</td>
+											<td>
+												<%if(asset.contenttypes && asset.contenttypes.length>0){
+													asset.contenttypes.forEach(function(contenttype){%>
+														<a href="/p-admin/assets?filter_contenttypes=<%= contenttype.name %>"><%= contenttype.title %></a>,
+													<%});
+												}%>
 											</td>
 											<td>
 												<a data-href="/mediaasset/<%= asset._id %>/delete" data-successfunction="removeAssetRow" assetid="<%= asset._id %>" class="_pea-button _pea-pull-right _pea-dialog-delete _pea-color-error">delete</a>
@@ -69,12 +99,9 @@
 									<tr><td colspan="3" class="_pea-text-center">No Assets!</td></tr>
 								<%} %>
 						</tbody>
-						<tfoot>
-							<tr class="_pea-text-left">
-								<th>Title</th>
-								<th>Author</th>
-								<th>Attributes</th>
-							</tr>
+						<tfoot style="">
+							<% editlistingprops = false %>
+							<% include _pagination_asset %>
 						</tfoot>
 					</table>
 				</div>

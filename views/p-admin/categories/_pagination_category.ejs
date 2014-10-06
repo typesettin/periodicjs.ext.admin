@@ -17,18 +17,18 @@
 		<%}
 		else{%>
 			<%- request.query.pagenum %>
-		<%}%> of <%- contenttypepages %> 
+		<%}%> of <%- categorypages %> 
 
-		<% if(contenttypes && contenttypes.length>0 && contenttypes.length >= request.query.limit){%>
+		<% if(categories && categories.length>0 && categories.length >= request.query.limit){%>
 			<a href="<%= nextlink %>">&raquo;</a>
 		<%}%>
 	</th>
 	<th colspan="2" class="_pea-text-right "> 
-		<a href="/p-admin/contenttypes">Reset Filters</a>
+		<a href="/p-admin/categories">Reset Filters</a>
 		<% if(editlistingprops){%>
 		 | 
 			<span >
-				<% var contenttypesperpage = [{
+				<% var categoriesperpage = [{
 					"value":"15",
 					"label":"15"
 					},{
@@ -38,16 +38,16 @@
 					"value":"50",
 					"label":"50"
 					}]; %>
-				<select name="contenttypesperpage"  class="autoFormSubmit">
-					<% contenttypesperpage.forEach(function(iperpage){
+				<select name="categoriesperpage"  class="autoFormSubmit">
+					<% categoriesperpage.forEach(function(iperpage){
 						%>
-							<option <% if(request.query.contenttypesperpage === iperpage.value ){%> selected="selected"
+							<option <% if(request.query.categoriesperpage === iperpage.value ){%> selected="selected"
 							<%}%> value="<%= iperpage.value %>"><%= iperpage.label %></option>
 						<%
 						}); %>
 				</select> per page
 			</span> | 
-			<span><%- contenttypescount %> total</span>
+			<span><%- categoriescount %> categories</span>
 		<%}%>
 	</th>
 </tr>

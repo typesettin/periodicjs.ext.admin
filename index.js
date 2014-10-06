@@ -60,9 +60,9 @@ module.exports = function (periodic) {
 	adminRouter.get('/items', itemController.loadItemsWithCount, itemController.loadItemsWithDefaultLimit, itemController.loadItems, adminController.items_index);
 	adminRouter.get('/collections', collectionController.loadCollectionsWithCount, collectionController.loadCollectionsWithDefaultLimit, collectionController.loadCollections, adminController.collections_index);
 	adminRouter.get('/contenttypes', contenttypeController.loadContenttypeWithCount, contenttypeController.loadContenttypeWithDefaultLimit, contenttypeController.loadContenttypes, adminController.contenttypes_index);
-	adminRouter.get('/tags', tagController.loadTags, adminController.tags_index);
-	adminRouter.get('/categories', categoryController.loadCategories, adminController.categories_index);
-	adminRouter.get('/assets', mediaassetController.loadAssets, adminController.assets_index);
+	adminRouter.get('/tags', tagController.loadTagsWithCount, tagController.loadTagsWithDefaultLimit, tagController.loadTags, adminController.tags_index);
+	adminRouter.get('/categories', categoryController.loadCategoriesWithCount, categoryController.loadCategoriesWithDefaultLimit, categoryController.loadCategories, adminController.categories_index);
+	adminRouter.get('/assets', mediaassetController.loadAssetWithCount, mediaassetController.loadAssetWithDefaultLimit, mediaassetController.loadAssets, adminController.assets_index);
 	adminRouter.get('/extensions', adminController.loadExtensions, adminController.extensions_index);
 	adminRouter.get('/themes', adminController.loadThemes, adminController.themes_index);
 	adminRouter.get('/users', uacController.loadUacUsers, adminController.users_index);

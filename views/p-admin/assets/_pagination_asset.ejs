@@ -17,18 +17,18 @@
 		<%}
 		else{%>
 			<%- request.query.pagenum %>
-		<%}%> of <%- contenttypepages %> 
+		<%}%> of <%- assetpages %> 
 
-		<% if(contenttypes && contenttypes.length>0 && contenttypes.length >= request.query.limit){%>
+		<% if(assets && assets.length>0 && assets.length >= request.query.limit){%>
 			<a href="<%= nextlink %>">&raquo;</a>
 		<%}%>
 	</th>
-	<th colspan="2" class="_pea-text-right "> 
-		<a href="/p-admin/contenttypes">Reset Filters</a>
+	<th colspan="4" class="_pea-text-right "> 
+		<a href="/p-admin/assets">Reset Filters</a>
 		<% if(editlistingprops){%>
 		 | 
 			<span >
-				<% var contenttypesperpage = [{
+				<% var assetsperpage = [{
 					"value":"15",
 					"label":"15"
 					},{
@@ -38,16 +38,16 @@
 					"value":"50",
 					"label":"50"
 					}]; %>
-				<select name="contenttypesperpage"  class="autoFormSubmit">
-					<% contenttypesperpage.forEach(function(iperpage){
+				<select name="assetsperpage"  class="autoFormSubmit">
+					<% assetsperpage.forEach(function(iperpage){
 						%>
-							<option <% if(request.query.contenttypesperpage === iperpage.value ){%> selected="selected"
+							<option <% if(request.query.assetsperpage === iperpage.value ){%> selected="selected"
 							<%}%> value="<%= iperpage.value %>"><%= iperpage.label %></option>
 						<%
 						}); %>
 				</select> per page
 			</span> | 
-			<span><%- contenttypescount %> total</span>
+			<span><%- assetscount %> total</span>
 		<%}%>
 	</th>
 </tr>

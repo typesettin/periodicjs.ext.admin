@@ -439,6 +439,8 @@ var assets_index = function(req, res) {
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     assets: req.controllerData.assets,
+                    assetscount: req.controllerData.assetscount,
+                    assetpages: Math.ceil(req.controllerData.assetscount/req.query.limit),
                     user:req.user
                 }
             });
@@ -548,6 +550,8 @@ var tags_index = function(req, res) {
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     tags: req.controllerData.tags,
+                    tagscount: req.controllerData.tagscount,
+                    tagpages: Math.ceil(req.controllerData.tagscount/req.query.limit),
                     user:req.user
                 }
             });
@@ -612,7 +616,6 @@ var tag_parent = function(req, res) {
     );
 };
 
-
 var categories_index = function(req, res) {
     CoreController.getPluginViewDefaultTemplate(
         {
@@ -632,6 +635,8 @@ var categories_index = function(req, res) {
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     categories: req.controllerData.categories,
+                    categoriescount: req.controllerData.categoriescount,
+                    categorypages: Math.ceil(req.controllerData.categoriescount/req.query.limit),
                     user:req.user
                 }
             });

@@ -46,7 +46,7 @@
 													<td> <a href="/p-admin/contenttype/<%= contenttype.name %>"> <%= contenttype.title %> </a></td>
 													<td>
 														<% if(contenttype.author){%>
-															<a href="/p-admin/user/<%= contenttype.author.username %>/edit"><%= contenttype.author.username %></a>
+															<a href="/p-admin/contenttypes?filter_authors=<%= contenttype.author.username %>"><%= contenttype.author.username %></a>
 														<%} %>
 													</td>
 													<td>

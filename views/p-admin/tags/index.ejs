@@ -1,81 +1,107 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
+<% 
+	var  getsortlink= function(field,label){
+		var order = (request.query.sort && request.query.sort.search("-") === 0) ? '' : '-' ;
+		var orderlink = (request.query.sort) ? 
+			'?'+locals.viewhelper.getQueryString(request.query).replace('sort='+request.query.sort,'sort='+order+field) 
+			: '?'+locals.viewhelper.getQueryString(request.query)+'&sort='+order+field;
+		%>
+		<a href="  <%= orderlink %>"><%= label %></a>
+		<%
+	}
+%>
 	<div class="_pea-container">
 		<div class="_pea-row">
-			<h2>New Tag</h2>
-		</div>
-		<div class="_pea-document" style="margin-bottom:3em;">
-			<div class="_pea-row">
-				<div class=" _pea-col-span12">
-					<form class="_pea-form" method="post"  action="/tag/new">
-						<input type="hidden" name="_csrf" value=<%= locals.token %> />
-						<input type="text" placeholder="title" class="_pea-col-span5" name="title"/>
-						<input type="text" placeholder="content" class="_pea-col-span4" name="content" style="margin-left:1em;"/>
-						<input type="submit" name="createbutton" value="Create Tag" class="_pea-col-span2 _pea-pull-right _pea-color-success"  />
-					</form>
-				</div>
-			</div>
-		</div>
-		<div class="_pea-row _pea-form">
-			<div class="_pea-col-span6">
-				<h2>View Tags</h2>
-			</div>
-			<div class="_pea-col-span6 _pea-text-right">
-				<form class="_pea-form" method="get">
-					<input type="text" placeholder="search" class="_pea-col-span10" name="search"/>
-					<input type="submit" name="searchbutton" value="search" class="_pea-col-span2"  />
+			<div class="_pea-col-span8">
+				<form class="_pea-form" name="tags-form" method="get">
+					<div class="_pea-row _pea-form">
+						<div class="_pea-col-span6">
+							<h2>View Tags</h2>
+						</div>
+						<div class="_pea-col-span6 _pea-text-right">
+							<form class="_pea-form" method="get">
+								<input type="text" placeholder="search" class="_pea-col-span10" name="search"/>
+								<input type="submit" name="searchbutton" value="search" class="_pea-col-span2"  />
+							</form>
+						</div>
+					</div>
+					<div class="_pea-row">
+						<div class="_pea-col-span12">
+							<div class="_pea-document">
+								<table class="_pea-table _pea-form">
+									<thead style="">
+										<% editlistingprops = true %>
+										<% include _pagination_tag %>
+									</thead>
+									<thead>
+										<tr class="_pea-text-left">
+											<th><% getsortlink('title','Title') %></th>
+											<th class="_pea-col-span4">Content</th>
+											<th class="_pea-col-span4">Parent Tag</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% if(tags.length>0){
+												tags.forEach(function(tag){ %>
+													<tr id="tag-tr-<%= tag._id %>">
+														<td> 
+															<a href="/p-admin/tag/<%= tag.name %>"> <%= tag.title %> </a>
+														</td>
+														<td>
+															<%- tag.content %>
+														</td>
+														<td>
+															<% if(tag.parent && tag.parent.length>0){
+																%>
+																<small>
+																	<a href="/p-admin/tag/<%= tag.parent[0].name %>"><%= tag.parent[0].title %></a>
+																</small>
+															<% } %>
+															
+															<a data-href="/tag/<%= tag.name %>/delete" data-successfunction="removeTagRow" class="_pea-button _pea-color-error _pea-dialog-delete _pea-pull-right">delete</a>
+
+															<a href="/p-admin/tag/<%= tag.name %>" class="_pea-button _pea-pull-right">edit</a>
+														</td>
+													</tr>
+													<%
+												});
+											}
+											else{ %>
+												<tr><td colspan="3" class="_pea-text-center">No Tags!</td></tr>
+											<%} %>
+									</tbody>
+									<tfoot style="">
+										<% editlistingprops = false %>
+										<% include _pagination_tag %>
+									</tfoot>
+								</table>
+							</div>
+						</div>
+					</div>
 				</form>
 			</div>
-		</div>
-		<div class="_pea-row">
-			<div class="_pea-col-span12">
-				<div class="_pea-document">
-					<table class="_pea-table _pea-form">
-						<thead>
-							<tr class="_pea-text-left">
-								<th class="_pea-col-span4">Title</th>
-								<th class="_pea-col-span4">Content</th>
-								<th class="_pea-col-span4">Parent Tag</th>
-							</tr>
-						</thead>
-						<tbody>
-							<% if(tags.length>0){
-									tags.forEach(function(tag){ %>
-										<tr id="tag-tr-<%= tag._id %>">
-											<td> 
-												<a href="/p-admin/tag/<%= tag.name %>"> <%= tag.title %> </a>
-											</td>
-											<td>
-												<%- tag.content %>
-											</td>
-											<td>
-												<% if(tag.parent && tag.parent.length>0){
-													%>
-													<small>
-														<a href="/p-admin/tag/<%= tag.parent[0].name %>"><%= tag.parent[0].title %></a>
-													</small>
-												<% } %>
-												
-												<a data-href="/tag/<%= tag.name %>/delete" data-successfunction="removeTagRow" class="_pea-button _pea-color-error _pea-dialog-delete _pea-pull-right">delete</a>
-
-												<a href="/p-admin/tag/<%= tag.name %>" class="_pea-button _pea-pull-right">edit</a>
-											</td>
-										</tr>
-										<%
-									});
-								}
-								else{ %>
-									<tr><td colspan="3" class="_pea-text-center">No Tags!</td></tr>
-								<%} %>
-						</tbody>
-						<tfoot>
-							<tr class="_pea-text-left">
-								<th>Title</th>
-								<th>Content</th>
-								<th>Parent Tag</th>
-							</tr>
-						</tfoot>
-					</table>
+			<div class="_pea-col-span3 _pea-pull-right">
+				<div class="_pea-row">
+					<h2>New Tag</h2>
+				</div>
+				<div class="_pea-document" style="margin-bottom:3em;">
+					<div class="_pea-row">
+						<div class=" _pea-col-span12">
+							<form class="_pea-form" method="post"  action="/tag/new">
+								<div class="_pea-row _pea-container-forminput">
+									<input type="hidden" name="_csrf" value=<%= locals.token %> />
+									<input type="text" placeholder="title" class="_pea-col-span12" name="title"/>
+								</div>
+								<div class="_pea-row _pea-container-forminput">
+									<input type="text" placeholder="content" class="_pea-col-span12" name="content"/>
+								</div>
+								<div class="_pea-row _pea-container-forminput">
+									<input type="submit" name="createbutton" value="Create Tag" class="_pea-col-span12 _pea-color-info"  />
+								</div>
+							</form>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
