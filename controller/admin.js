@@ -491,6 +491,8 @@ var contenttypes_index = function(req, res) {
                         extensions:CoreUtilities.getAdminMenu()
                     },
                     contenttypes: req.controllerData.contenttypes,
+                    contenttypescount: req.controllerData.contenttypescount,
+                    contenttypepages: Math.ceil(req.controllerData.contenttypescount/req.query.limit),
                     user:req.user
                 }
             });

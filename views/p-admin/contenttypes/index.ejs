@@ -1,83 +1,101 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
-	<div class="_pea-container">
-		<div class="_pea-row">
-			<h2>New Content Type</h2>
-		</div>
-		<div class="_pea-document" style="margin-bottom:3em;">
-			<div class="_pea-row">
-				<div class=" _pea-col-span12">
-					<form class="_pea-form" method="post"  action="/contenttype/new">
-						<input type="hidden" name="_csrf" value=<%= locals.token %> />
-						<input type="text" placeholder="title" class="_pea-col-span10" name="title"/>
-						<input type="submit" name="searchbutton" value="Create Content Type" class="_pea-col-span2 _pea-color-success"  />
-					</form>
+<% 
+	var  getsortlink= function(field,label){
+		var order = (request.query.sort && request.query.sort.search("-") === 0) ? '' : '-' ;
+		var orderlink = (request.query.sort) ? 
+			'?'+locals.viewhelper.getQueryString(request.query).replace('sort='+request.query.sort,'sort='+order+field) 
+			: '?'+locals.viewhelper.getQueryString(request.query)+'&sort='+order+field;
+		%>
+		<a href="  <%= orderlink %>"><%= label %></a>
+		<%
+	}
+%>
+<div class="_pea-container">
+	<div class="_pea-row">
+		<div class="_pea-col-span8">
+			<form class="_pea-form" method="get"  name="contenttypes-form">
+				<div class="_pea-row _pea-form">
+					<div class="_pea-col-span6">
+						<h2>View Content Types</h2>
+					</div>
+					<div class="_pea-col-span6 _pea-text-right">
+							<input type="text" placeholder="search" class="_pea-col-span10" name="search"/>
+							<input type="submit" name="searchbutton" value="search" class="_pea-col-span2"  />
+					</div>
 				</div>
-			</div>
+				<div class="_pea-row">
+					<div class="_pea-col-span12">
+						<div class="_pea-document">
+							<table class="_pea-table _pea-form">
+								<thead style="">
+									<% editlistingprops = true %>
+									<% include _pagination_contenttype %>
+								</thead>
+								<thead>
+									<tr class="_pea-text-left">
+										<th><% getsortlink('title','Title') %></th>
+										<th>Author</th>
+										<th>Attributes</th>
+									</tr>
+								</thead>
+								<tbody>
+									<% if(contenttypes.length>0){
+											contenttypes.forEach(function(contenttype){ %>
+												<tr id="contenttype-tr-<%= contenttype._id %>">
+													<td> <a href="/p-admin/contenttype/<%= contenttype.name %>"> <%= contenttype.title %> </a></td>
+													<td>
+														<% if(contenttype.author){%>
+															<a href="/p-admin/user/<%= contenttype.author.username %>/edit"><%= contenttype.author.username %></a>
+														<%} %>
+													</td>
+													<td>
+														<a data-href="/contenttype/<%= contenttype.name %>/delete" data-successfunction="removeContentTypeRow" class="_pea-button _pea-color-error _pea-dialog-delete _pea-pull-right">delete</a>
+														<a href="/p-admin/contenttype/<%= contenttype.name %>" class="_pea-button _pea-pull-right">edit</a>
+														<%if(contenttype.attributes && contenttype.attributes.length>0){
+															contenttype.attributes.forEach(function(attribute){%>
+																<%= attribute.name %>,
+															<%});
+														}
+														else{%>
+															
+														<%}%>
+														
+													</td>
+												</tr>
+												<%
+											});
+										}
+										else{ %>
+											<tr><td colspan="3" class="_pea-text-center">No Content Types!</td></tr>
+										<%} %>
+								</tbody>
+								<tfoot style="">
+									<% editlistingprops = false %>
+									<% include _pagination_contenttype %>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+			</form>
 		</div>
-		<div class="_pea-row _pea-form">
-			<div class="_pea-col-span6">
-				<h2>View Content Types</h2>
+		<div class="_pea-col-span3 _pea-pull-right">
+			<div class="_pea-row">
+				<h2>New Content Type</h2>
 			</div>
-			<div class="_pea-col-span6 _pea-text-right">
-				<form class="_pea-form" method="get">
-					<input type="text" placeholder="search" class="_pea-col-span10" name="search"/>
-					<input type="submit" name="searchbutton" value="search" class="_pea-col-span2"  />
-				</form>
-			</div>
-		</div>
-		<div class="_pea-row">
-			<div class="_pea-col-span12">
-				<div class="_pea-document">
-					<input type="hidden" name="_csrf" value=<%= locals.token %> />
-					<table class="_pea-table _pea-form">
-						<thead>
-							<tr class="_pea-text-left">
-								<th>Title</th>
-								<th>Author</th>
-								<th>Attributes</th>
-							</tr>
-						</thead>
-						<tbody>
-							<% if(contenttypes.length>0){
-									contenttypes.forEach(function(contenttype){ %>
-										<tr id="contenttype-tr-<%= contenttype._id %>">
-											<td> <a href="/p-admin/contenttype/<%= contenttype.name %>"> <%= contenttype.title %> </a></td>
-											<td>
-												<% if(contenttype.author){%>
-													<a href="/p-admin/user/<%= contenttype.author.username %>/edit"><%= contenttype.author.username %></a>
-												<%} %>
-											</td>
-											<td>
-												<%if(contenttype.attributes && contenttype.attributes.length>0){
-													contenttype.attributes.forEach(function(attribute){%>
-														<%= attribute.name %>,
-													<%});
-												}
-												else{%>
-													
-												<%}%>
-												<a data-href="/contenttype/<%= contenttype.name %>/delete" data-successfunction="removeContentTypeRow" class="_pea-button _pea-color-error _pea-dialog-delete _pea-pull-right">delete</a>
-												<a href="/p-admin/contenttype/<%= contenttype.name %>" class="_pea-button _pea-pull-right">edit</a>
-											</td>
-										</tr>
-										<%
-									});
-								}
-								else{ %>
-									<tr><td colspan="3" class="_pea-text-center">No Content Types!</td></tr>
-								<%} %>
-						</tbody>
-						<tfoot>
-							<tr class="_pea-text-left">
-								<th>Title</th>
-								<th>Author</th>
-								<th>Attributes</th>
-							</tr>
-						</tfoot>
-					</table>
+			<div class="_pea-document" style="margin-bottom:3em;">
+				<div class="_pea-row">
+					<div class=" _pea-col-span12">
+						<form class="_pea-form" method="post"  action="/contenttype/new">
+							<input type="hidden" name="_csrf" value=<%= locals.token %> />
+							<input type="text" placeholder="title" class="_pea-col-span6" name="title"/>
+							<input type="submit" name="searchbutton" value="New Content Type" class="_pea-col-span6 _pea-color-info"  />
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 <% include ../../shared/footer %>
