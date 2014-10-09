@@ -18,7 +18,10 @@ var letterpress = require('letterpressjs'),
 		}
 	}),
 	mediafileinput,
-	mediafilesresult;
+	mediafilesresult,
+	tabelement,
+	componentTab1,
+	ComponentTabs = require('periodicjs.component.tabs');
 
 var uploadMediaFiles = function (e) {
 	// fetch FileList object
@@ -45,6 +48,18 @@ window.backToUsersLanding = function () {
 };
 
 window.addEventListener('load', function () {
+	var passwordElement = document.querySelector('input[name="password"]');
+	if (passwordElement) {
+		setTimeout(function () {
+			passwordElement.value = '';
+			// console.log('passwordElement', passwordElement);
+		}, 500);
+	}
+	tabelement = document.getElementById('tabs');
+	if (tabelement) {
+		componentTab1 = new ComponentTabs(tabelement);
+	}
+
 	if (document.querySelector('#padmin-userroles')) {
 		roles_lp.init();
 		if (typeof window.userprofileuseroles === 'object') {

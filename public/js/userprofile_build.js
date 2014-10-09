@@ -1485,7 +1485,7 @@ module.exports = letterpress;
 if ( typeof window === "object" && typeof window.document === "object" ) {
 	window.letterpress = letterpress;
 }
-},{"classie":1,"domhelper":10,"events":3,"superagent":13,"util":7,"util-extend":12}],10:[function(require,module,exports){
+},{"classie":1,"domhelper":10,"events":3,"superagent":16,"util":7,"util-extend":12}],10:[function(require,module,exports){
 /*
  * domhelper
  * http://github.com/yawetse/domhelper
@@ -1871,6 +1871,120 @@ function extend(origin, add) {
 }
 
 },{}],13:[function(require,module,exports){
+/*
+ * component.tabs
+ * http://github.amexpub.com/modules/component.tabs
+ *
+ * Copyright (c) 2013 AmexPub. All rights reserved.
+ */
+
+'use strict';
+
+module.exports = require('./lib/component.tabs');
+
+},{"./lib/component.tabs":14}],14:[function(require,module,exports){
+/*
+ * component.tabs
+ * http://github.amexpub.com/modules
+ *
+ * Copyright (c) 2014 Yaw Joseph Etse. All rights reserved.
+ */
+'use strict';
+
+var extend = require('util-extend'),
+	classie = require('classie'),
+	events = require('events'),
+	util = require('util');
+
+/**
+ * A module that represents a componentTabs object, a componentTab is a page composition tool.
+ * @{@link https://github.com/typesettin/component.tabs}
+ * @author Yaw Joseph Etse
+ * @copyright Copyright (c) 2014 Typesettin. All rights reserved.
+ * @license MIT
+ * @constructor componentTabs
+ * @requires module:util-extent
+ * @requires module:util
+ * @requires module:events
+ * @param {object} el element of tab container
+ * @param {object} options configuration options
+ */
+var componentTabs = function (el, options) {
+	events.EventEmitter.call(this);
+
+	this.el = el;
+	this.options = extend({}, this.options);
+	extend(this.options, options);
+	this.showTab = this._show;
+	this._init();
+};
+
+util.inherits(componentTabs, events.EventEmitter);
+
+/** module default configuration */
+componentTabs.prototype.options = {
+	start: 0,
+	tabselector: 'nav > ul > li',
+	itemselector: '.content > section',
+	currenttabclass: 'tab-current',
+	currentitemclass: 'content-current'
+};
+/**
+ * initializes tabs and shows current tab.
+ * @emits tabsInitialized
+ */
+componentTabs.prototype._init = function () {
+	// tabs elemes
+	this.tabs = [].slice.call(this.el.querySelectorAll(this.options.tabselector));
+	// content items
+	this.items = [].slice.call(this.el.querySelectorAll(this.options.itemselector));
+	// current index
+	this.current = -1;
+	// show current content item
+	this._show();
+	// init events
+	this._initEvents();
+	if (this.options.callback) {
+		this.options.callback();
+	}
+	this.emit('tabsInitialized');
+
+};
+/**
+ * handle tab click events.
+ */
+componentTabs.prototype._initEvents = function () {
+	var self = this;
+
+	this.tabs.forEach(function (tab, idx) {
+		tab.addEventListener('click', function (ev) {
+			ev.preventDefault();
+			self._show(idx);
+		});
+	});
+	this.emit('tabsEventsInitialized');
+};
+/**
+ * Sets up a new lintotype component.
+ * @param {number} idx tab to show
+ * @emits tabsShowIndex
+ */
+componentTabs.prototype._show = function (idx) {
+	if (this.current >= 0) {
+		classie.remove(this.tabs[this.current],this.options.currenttabclass);
+		classie.remove(this.items[this.current],this.options.currentitemclass);
+	}
+	// change current
+	this.current = idx !== undefined ? idx : this.options.start >= 0 && this.options.start < this.items.length ? this.options.start : 0;
+	classie.add(this.tabs[this.current],this.options.currenttabclass);
+	classie.add(this.items[this.current],this.options.currentitemclass);
+	this.emit('tabsShowIndex', this.current);
+};
+module.exports = componentTabs;
+
+},{"classie":1,"events":3,"util":7,"util-extend":15}],15:[function(require,module,exports){
+module.exports=require(12)
+},{"/Users/yawetse/Developer/github/promise/promise-web-application/periodicjs/node_modules/periodicjs.ext.admin/node_modules/letterpressjs/node_modules/util-extend/extend.js":12}],16:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -2921,7 +3035,7 @@ request.put = function(url, data, fn){
 
 module.exports = request;
 
-},{"emitter":14,"reduce":15}],14:[function(require,module,exports){
+},{"emitter":17,"reduce":18}],17:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -3087,7 +3201,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],15:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 
 /**
  * Reduce `arr` with `fn`.
@@ -3112,7 +3226,7 @@ module.exports = function(arr, fn, initial){
   
   return curr;
 };
-},{}],16:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 var updatemedia = function (element, mediadoc, additem) {
@@ -3212,7 +3326,7 @@ updatemedia.uploadFile = function (mediafilesresult, file, options) {
 
 module.exports = updatemedia;
 
-},{}],17:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var letterpress = require('letterpressjs'),
@@ -3233,7 +3347,10 @@ var letterpress = require('letterpressjs'),
 		}
 	}),
 	mediafileinput,
-	mediafilesresult;
+	mediafilesresult,
+	tabelement,
+	componentTab1,
+	ComponentTabs = require('periodicjs.component.tabs');
 
 var uploadMediaFiles = function (e) {
 	// fetch FileList object
@@ -3260,6 +3377,18 @@ window.backToUsersLanding = function () {
 };
 
 window.addEventListener('load', function () {
+	var passwordElement = document.querySelector('input[name="password"]');
+	if (passwordElement) {
+		setTimeout(function () {
+			passwordElement.value = '';
+			// console.log('passwordElement', passwordElement);
+		}, 500);
+	}
+	tabelement = document.getElementById('tabs');
+	if (tabelement) {
+		componentTab1 = new ComponentTabs(tabelement);
+	}
+
 	if (document.querySelector('#padmin-userroles')) {
 		roles_lp.init();
 		if (typeof window.userprofileuseroles === 'object') {
@@ -3274,4 +3403,4 @@ window.addEventListener('load', function () {
 	mediafilesresult.addEventListener('click', updatemedia.handleMediaButtonClick, false);
 });
 
-},{"./updatemedia":16,"letterpressjs":8}]},{},[17]);
+},{"./updatemedia":19,"letterpressjs":8,"periodicjs.component.tabs":13}]},{},[20]);
