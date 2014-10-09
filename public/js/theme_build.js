@@ -1083,759 +1083,117 @@ function hasOwnProperty(obj, prop) {
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./support/isBuffer":6,"_process":5,"inherits":4}],8:[function(require,module,exports){
 /*
- * manuscript
- * http://github.com/typesettin/manuscript
+ * component.tabs
+ * http://github.amexpub.com/modules/component.tabs
  *
- * Copyright (c) 2014 Yaw Joseph Etse. All rights reserved.
- */
-
-module.exports = require('./lib/letterpress');
-
-},{"./lib/letterpress":9}],9:[function(require,module,exports){
-/*
- * letterpress
- * http://github.com/typesettin/letterpress
- *
- * Copyright (c) 2014 Yaw Joseph Etse. All rights reserved.
+ * Copyright (c) 2013 AmexPub. All rights reserved.
  */
 
 'use strict';
 
-var classie = require('classie'),
-	extend = require('util-extend'),
+module.exports = require('./lib/component.tabs');
+
+},{"./lib/component.tabs":9}],9:[function(require,module,exports){
+/*
+ * component.tabs
+ * http://github.amexpub.com/modules
+ *
+ * Copyright (c) 2014 Yaw Joseph Etse. All rights reserved.
+ */
+'use strict';
+
+var extend = require('util-extend'),
+	classie = require('classie'),
 	events = require('events'),
-	domhelper = require('domhelper'),
-	request = require('superagent'),
 	util = require('util');
 
 /**
- * A module that represents a letterpress.
- * @{@link https://github.com/typesettin/letterpress}
+ * A module that represents a componentTabs object, a componentTab is a page composition tool.
+ * @{@link https://github.com/typesettin/component.tabs}
  * @author Yaw Joseph Etse
  * @copyright Copyright (c) 2014 Typesettin. All rights reserved.
  * @license MIT
- * @module letterpress
- * @requires module:classie
+ * @constructor componentTabs
  * @requires module:util-extent
  * @requires module:util
  * @requires module:events
- * @todo to do later
+ * @param {object} el element of tab container
+ * @param {object} options configuration options
  */
-var letterpress = function(config_options,letterpress_message,show,timed,callback){
-	/** module default configuration */
-	var options,
-		defaults = {
-			idSelector : '#_ltr_letterpress-element',
-			inputNameValue : null,
-			sourcedata : {},
-			element : null,
-			elementContainer : null,
-			sourcetype : "object",
-			sourcearrayname : "tags",
-			nameLabel: "_id",
-			searchquery: "",
-			valueLabel: "title",
-			createTagFunc:function(id,val,callback){
-				callback(id,val);
-			}
-		},
-		container;
+var componentTabs = function (el, options) {
+	events.EventEmitter.call(this);
 
-	//extend default options
-	options = extend( defaults,config_options );
-	options.lastddcount = 1;
-	options.currentddcount = 1;
-
-
-	/** Returns the configuration object 
-	 * @return {object} the module configuration
-	 */
-	this.config = function(){
-		return options;
-	};
-
-	/**
-	 * intialize a new platter
-	 */
-	this.init = function(callback){
-
-		var createLetterPress = function(){
-			this.createContainer();
-			if(options.sourcedata instanceof Array ===false){
-				throw new Error("object must be an array of objects");
-			}
-			else{
-				this.updateSelectOptionsHTML();
-				this.attachEventListeners();
-				this.emit("intializedLetterpress",true);
-				if(options.presetdata){
-					for(var y in options.presetdata){
-						this.createTag(options.presetdata[y][options.nameLabel],options.presetdata[y][options.valueLabel],null,true);
-					}
-				}
-			}
-		}.bind(this);
-
-		if(document.querySelector(options.idSelector)){
-			options.element = document.querySelector(options.idSelector);
-			if(!options.element.name){
-				throw new Error("form element must have a name value");
-			}
-			else{
-				options.inputNameValue = options.element.name;
-				if(options.sourcedata instanceof Array ===false){
-					request
-						.get(options.sourcedata)
-						.end(function(err,res){
-							if(err){
-								console.log(err);
-							}
-							else{
-								if(options.sourcejsonp){
-									window[options.sourcecallback] = function(data){
-										// console.log(data);
-										options.sourcedata = data[options.sourcearrayname];
-										// console.log(this.config().sourcedata);
-										createLetterPress();
-									}.bind(this);
-									var scriptTag = document.createElement("script");
-
-									scriptTag.innerHTML = res.text;
-									document.body.appendChild(scriptTag);
-								}
-								else{
-									options.sourcedata = res.body[options.sourcearrayname];
-									createLetterPress();
-								}
-							}
-						}.bind(this));
-				}
-				else{
-					createLetterPress();
-				}
-			}
-		}
-		else{
-			throw new Error("invalid element selector");
-		}
-	}.bind(this);
-
-	/**
-	 * create letterpress html container
-	 */
-	this.createContainer = function(){
-		var letterpressContainer = document.createElement('div'),
-			ultagdivContainer = document.createElement('div'),
-			lpCheckboxContainer = document.createElement('div'), //http://www.w3schools.com/jsref/dom_obj_checkbox.asp
-			ulTagContainer = document.createElement('ul'),
-			inputLiContainer = document.createElement('li'),
-			selectContainer = document.createElement('select');//http://www.w3schools.com/tags/tag_optgroup.asp
-
-		/** set up input wrapper */
-		letterpressContainer.setAttribute("class","_ltr_l-e-w");
-		letterpressContainer.setAttribute("id",options.inputNameValue+"-dc");
-		options.elementContainer = letterpressContainer;
-
-		domhelper.elementWrap(options.element,options.elementContainer);
-
-		/** set up input ul and taginput wrapper */
-		ultagdivContainer.setAttribute("id",options.inputNameValue+"-dtulc");
-		ultagdivContainer.setAttribute("class","_ltr-dtulc");
-		options.elementContainer.appendChild(ultagdivContainer);
-		/** set up select/optgrp wrapper */
-		selectContainer.setAttribute("id",options.inputNameValue+"-sc");
-		// selectContainer.setAttribute("name",options.inputNameValue+"-sc");
-		selectContainer.setAttribute("class","_ltr-sc");
-		options.elementContainer.appendChild(selectContainer);
-		options.selectContainer = selectContainer;
-		/** set up ul and li wrapper */
-		ulTagContainer.setAttribute("id",options.inputNameValue+"-ulc");
-
-		inputLiContainer.appendChild(options.element);
-		inputLiContainer.setAttribute("class","_ltr-taglistyle showli _ltr-li-wrapper");
-		ulTagContainer.appendChild(inputLiContainer);
-
-		ulTagContainer.setAttribute("class","_ltr-ulc");
-		ultagdivContainer.appendChild(ulTagContainer);
-		options.ulTagContainer = ulTagContainer;
-		options.element.name=options.inputNameValue+"-i";
-
-		/** set up checkbox wrapper */
-		lpCheckboxContainer.setAttribute("id",options.inputNameValue+"-cbc");
-		lpCheckboxContainer.setAttribute("class","_ltr-cbc");
-		options.elementContainer.appendChild(lpCheckboxContainer);
-		options.lpCheckboxContainer = lpCheckboxContainer;
-
-		this.emit("letterpressContainerCreated",letterpressContainer);
-	};
-
-	/**
-	 * create letterpress html
-	 * @param {string} id name for platter selector id
-	 */
-	this.setDataObject = function(obj){
-		if(obj instanceof Array ===false){
-			throw new Error("object must be an array of objects");
-		}
-		else{
-			options.sourcedata = obj;
-		}
-	};
-
-	/**
-	 * create letterpress html
-	 * @param {string} id name for platter selector id
-	 */
-	this.setPreloadDataObject = function(obj){
-		if(obj instanceof Array ===false){
-			throw new Error("object must be an array of objects");
-		}
-		else{
-			options.presetdata = obj;
-			for(var y in options.presetdata){
-				this.createTag(options.presetdata[y][options.nameLabel],options.presetdata[y][options.valueLabel],null,true);
-			}
-		}
-	};
-
-	/**
-	 * creates select dropdown with tags from source data
-	 * @param {string} id name for platter selector id
-	 */
-	this.updateSelectOptionsHTML = function(){
-		var selectOptionHTML ='',
-			searchRegEx = new RegExp('^'+options.searchquery, "i");
-		options.numOfOptions = 0;
-		options.lastddcount = options.currentddcount;
-
-
-		selectOptionHTML += '<option value="SELECT" selected=seleted disabled=disabled>Select</option>';
-		for(var x in options.sourcedata){
-			if(options.sourcedata[x][options.valueLabel].match(searchRegEx) && options.searchquery.length >0){
-				selectOptionHTML += '<option value="'+options.sourcedata[x][options.nameLabel]+'" label="'+options.sourcedata[x][options.valueLabel]+'">'+options.sourcedata[x][options.valueLabel]+'</option>';
-				options.numOfOptions++;
-			}
-		}
-		if(!options.disablenewtags){
-			selectOptionHTML += '<option value="NEWTAG">Create Tag</option>';
-		}
-		else{
-			if(options.numOfOptions===0){
-				selectOptionHTML += '<option value="NEWTAG" disabled="disabled" >No available options</option>';
-			}
-		}
-		options.selectContainer.innerHTML = selectOptionHTML;
-		options.currentddcount = options.selectContainer.length;
-		this.emit("updatedSelectOptions");
-	};
-
-	/**
-	 * create letterpress html
-	 * @param {string} id name for platter selector id
-	 */
-	this.createTag = function(id,value,err,keeppreviousfocus){
-		if(err){
-			throw err;
-		}
-		else if(!value || !id){
-			if(options.debug){
-				throw new Error('Must have both an id and value');
-			}
-		}
-		else{
-			var searchterm = options.searchquery,
-				liToInsert = document.createElement('li'),
-				checkboxToInsert = document.createElement('input');
-			options.searchquery = '';
-			options.element.value = '';
-			if(keeppreviousfocus!==true){
-				classie.removeClass(options.selectContainer,"show");
-			}
-
-			liToInsert.id="lp-li_"+id;
-			liToInsert.setAttribute("title",value);
-			liToInsert.innerHTML='<span class="lp-s-removeTag" data-id="'+id+'" title="click # to remove">#</span> '+value;
-			classie.addClass(liToInsert,"addedTag");
-
-			checkboxToInsert.id="lp-cbx_"+id;
-			checkboxToInsert.name=options.inputNameValue;
-			checkboxToInsert.value=id;
-			checkboxToInsert.type="checkbox";
-			checkboxToInsert.setAttribute("checked","checked");
-			checkboxToInsert.innerHTML=value;
-			if(keeppreviousfocus!==true && options.ulTagContainer.innerHTML.match(id)){
-				// console.log("already added");
-				this.emit("duplicateTag",id);
-			}
-			else{
-				try{
-					// options.element.parentNode.insertBefore(liToInsert,options.element);
-					options.ulTagContainer.appendChild(liToInsert);
-					options.lpCheckboxContainer.appendChild(checkboxToInsert);
-					classie.addClass(liToInsert,"showli");
-				}
-				catch(e){
-					if(options.debug){
-						console.log("error",e);
-					}
-				}
-				if(keeppreviousfocus!==true){
-					options.element.focus();
-					this.updateSelectOptionsHTML();
-				}
-				this.emit("createdTag",id);
-			}
-		}
-	}.bind(this);
-
-	this.removeTag = function(id){
-		domhelper.removeElement(document.getElementById('lp-cbx_'+id));
-		domhelper.removeElement(document.getElementById('lp-li_'+id));
-		this.emit("removedTag",id);
-	}.bind(this);
-
-	this.attachEventListeners = function(){
-		options.element.addEventListener("keyup", letterpressInputKeydownEventHandler,false);
-		options.selectContainer.addEventListener("blur", letterpressSelectBlurEventHandler,false);
-		options.selectContainer.addEventListener("change",letterpressSelectChangeEventHandler,false);
-		options.selectContainer.addEventListener("select",letterpressSelectChangeEventHandler,false);
-		options.selectContainer.addEventListener("keyup",letterpressSelectKeydownEventHandler,false);
-		options.selectContainer.addEventListener("click",letterpressClickSelect,false);
-		options.ulTagContainer.addEventListener("click",letterpressClickUL,false);
-	};
-
-	var letterpressInputKeydownEventHandler = function(e){
-		var etarget = e.target,
-			evt = document.createEvent("MouseEvents");
-			options.searchquery = etarget.value,
-		classie.addClass(options.selectContainer,"show");
-
-		this.updateSelectOptionsHTML();
-		if (e.keyCode === 13 ) { //enter key
-			if(options.numOfOptions>0){
-				evt.initMouseEvent("mousedown", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-				options.selectContainer.dispatchEvent(evt);
-			}
-			else{
-				options.createTagFunc(options.selectContainer.value,options.searchquery,function(id,val,err){
-					this.createTag(id,val,err);
-				}.bind(this));
-			}
-		}
-		else if(e.keyCode === 38 || e.keyCode === 40){// up = 38, // right = 39,// down = 40
-			evt.initMouseEvent("mousedown", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-			options.selectContainer.dispatchEvent(evt);
-		}
-	}.bind(this);
-
-	var letterpressSelectBlurEventHandler = function(e){
-		classie.removeClass(options.selectContainer,"show");
-	}.bind(this);
-
-	var letterpressSelectKeydownEventHandler = function(e){
-		if (e.keyCode === 13 ) {
-			options.element.focus();
-			// console.log("enter press on select drop down");
-		}
-	}.bind(this);
-
-	var letterpressSelectChangeEventHandler = function(e){
-		// console.log("select drop down value select",options.selectContainer.value);
-		var taglabel = (options.selectContainer.value ==='SELECT' || options.selectContainer.value ==='NEWTAG')? options.searchquery : document.querySelector('option[value="'+options.selectContainer.value+'"]').innerHTML;
-		options.createTagFunc(
-			options.selectContainer.value,
-			taglabel,
-			function(id,val,err){
-				this.createTag(id,val,err);
-			}.bind(this)
-		);
-	}.bind(this);
-
-	var letterpressSelectSelectEventHandler = function(e){
-		// console.log("select drop down value select", options.selectContainer.value);
-		options.createTagFunc(options.selectContainer.value,options.searchquery,function(id,val,err){
-			this.createTag(id,val,err);
-		}.bind(this));
-	}.bind(this);
-
-	var letterpressClickSelect = function(e){
-		// console.log("select clicked");
-	};
-
-	var letterpressClickUL = function(e){
-		var etarget = e.target;
-		if(classie.hasClass(etarget,"lp-s-removeTag")){
-			this.removeTag(etarget.getAttribute("data-id"));
-		}
-	}.bind(this);
-
-	function callCallBack(callback){
-		if(typeof callback ==='function'){
-			callback();
-		}
-	}
+	this.el = el;
+	this.options = extend({}, this.options);
+	extend(this.options, options);
+	this.showTab = this._show;
+	this._init();
 };
 
-util.inherits(letterpress,events.EventEmitter);
+util.inherits(componentTabs, events.EventEmitter);
 
-module.exports = letterpress;
-
-// If there is a window object, that at least has a document property,
-// define linotype
-if ( typeof window === "object" && typeof window.document === "object" ) {
-	window.letterpress = letterpress;
-}
-},{"classie":1,"domhelper":10,"events":3,"superagent":13,"util":7,"util-extend":12}],10:[function(require,module,exports){
-/*
- * domhelper
- * http://github.com/yawetse/domhelper
- *
- * Copyright (c) 2014 Yaw Joseph Etse. All rights reserved.
- */
-
-module.exports = require('./lib/domhelper');
-
-},{"./lib/domhelper":11}],11:[function(require,module,exports){
-/*
- * linotype
- * https://github.com/typesettin/linotype
- * @author yaw joseph etse
- * Copyright (c) 2014 Typesettin. All rights reserved.
- */
-
-'use strict';
-
-var classie = require('classie');
-// 	extend = require('util-extend'),
-// 	events = require('events'),
-// 	util = require('util');
-
+/** module default configuration */
+componentTabs.prototype.options = {
+	start: 0,
+	tabselector: 'nav > ul > li',
+	itemselector: '.content > section',
+	currenttabclass: 'tab-current',
+	currentitemclass: 'content-current'
+};
 /**
- * A module that adds simple dom utility functionality.
- * @author yaw joseph etse
- * @constructor
+ * initializes tabs and shows current tab.
+ * @emits tabsInitialized
  */
-
-var domhelper = {
-
-	/**
-	 * returns the highest zindex
-	 * @param {string} selector - query selector
-	 * @return {number} highest z-index
-	 * @public
-	 */
-	getHighIndex: function(selector){
-		if (!selector) {
-			selector = "*";
-		}
-
-		var elements = document.querySelectorAll(selector),
-			i = 0,
-			e, s,
-			max = elements.length,
-			found = [];
-
-		for (; i < max; i += 1) {
-			e = elements[i].style.zIndex;
-			s = elements[i].style.position;
-			if (e && s !== "static") {
-				found.push(parseInt(e, 10));
-			}
-		}
-
-		return found.length ? Math.max.apply(null, found) : 0;
-	},
-
-	/**
-	 * toggles class across nodelist/elementcollection
-	 * @param {object} elementCollection - html dom element
-	 * @param {object} element - html dom element
-	 * @param {string} name of class!
-	 * @public
-	 */
-	removeAllClassAndToggle: function(element,elementCollection,toggleClass){
-		//updating the active class
-		for(var h =0; h <elementCollection.length; h++){
-			classie.removeClass(elementCollection[h],toggleClass);
-		}
-		classie.addClass(element,toggleClass);
-	},
-	/**
-	 * removes element from dom
-	 * @param {object} elementCollection - html dom element
-	 * @public
-	 */
-	removeElement: function(element){
-		//updating the active class
-		element.parentNode.removeChild(element);
-	},
-	/**
-	 * converts idnex of node in nodelist
-	 * @param {object} nodelist - html dom element
-	 * @param {object} element - html dom element
-	 * @return {number} index of element in nodelist
-	 * @method
-	 */
-	nodeIndexOfNodeList: function(nodelist,element){
-		return domhelper.nodelistToArray(nodelist,true).indexOf(element.outerHTML);
-    },
-
-	/**
-	 * converts nodelists to arrays
-	 * @param {node} nl - html dom element
-	 * @return { array} array of html nodes
-	 * @method
-	 */
-	nodelistToArray: function(nl,useStrings){
-		var arr = [];
-		for (var i = 0, ref = arr.length = nl.length; i < ref; i++) {
-			arr[i] = (useStrings) ? nl[i].outerHTML : nl[i];
-		}
-		return arr;
-    },
-
-	/**
-	 * Returns cloaset DOM element.
-	 * @param {node} element - html dom element
-	 * @return {node} - closet node element
-	 * @method
-	 */
-    closetElement: function(element){
-		if(typeof element.length === 'number'){
-			return undefined;
-		}
-		var matches = domhelper.nodelistToArray(document.querySelectorAll(element.nodeName+'.'+element.className.trim().split(" ").join("."))),
-			cleanMatches = [];
-		// console.log("matches",matches.length,matches);
-
-		for (var x =0; x < matches.length; x++){
-			// console.log('x',x,'element',element,'matches[x]',matches[x],'isEqualNode',matches[x].isEqualNode(element),'compareDocumentPosition',element.compareDocumentPosition(matches[x]));
-			if(element.compareDocumentPosition(matches[x])<4 && !matches[x].isEqualNode(element)){
-				cleanMatches.push(matches[x]);
-			}
-		}
-
-		function compareNumbers(a, b) {
-			return a.compareDocumentPosition( b ) - b.compareDocumentPosition( a );
-		}
-		// console.log("matches cleaned",cleanMatches.length,cleanMatches);
-		// console.log("matches sorted",cleanMatches.sort(compareNumbers));
-		return cleanMatches[0];
-	},
-
-	/**
-	 * Hides DOM elements.
-	 * @method
-	 * @param {node} element - html dom element
-	 */
-	elementHideCss: function(element){
-		element.style.display="none";
-	},
-
-	/**
-	 * Shows DOM elements.
-	 * @method
-	 * @param {node} element - html dom element
-	 */
-	elementShowCss: function(element){
-		element.setAttribute('style',element.getAttribute('style').replace("display: none;"));
-	},
-
-	/**
-	 * Wraps inner elements
-	 * @method
-	 * @param {node} element - html dom element
-	 * @param {node} innerElement - element to wrap html dom element
-	 */
-	elementContentWrapInner: function(element,innerElement){
-		var wrapper = element,
-			w = innerElement,
-			len = element.childElementCount,
-			wrapper_clone = wrapper.cloneNode(true);
-
-		wrapper.innerHTML='';
-		wrapper.appendChild(w);
-		var newFirstChild = wrapper.firstChild;
-
-		newFirstChild.innerHTML=wrapper_clone.innerHTML;
-	},
-
-	/**
-	 * Wraps element with wrapper
-	 * @method
-	 * @param {node} element - html dom element
-	 * @param {node} wrapperElement - element to wrap html dom element
-	 */
-	elementWrap: function(element,wrapperElement){
-		var elementParent =element.parentNode,
-			element_clone = element.cloneNode(true);
-
-		elementParent.replaceChild(wrapperElement,element);
-		wrapperElement.appendChild(element);
-	},
-
-
-	/**
-	 * get scroll position of element
-	 * @method
-	 * @param {node} element - html dom element
-	 * @return {number} position of scroll
-	 */
-	getScrollTop: function(element){
-		// console.log(typeof element);
-		if(element === window && typeof window.pageYOffset!== 'undefined'){
-			//most browsers except IE before #9
-			return window.pageYOffset;
-		}
-		else if(typeof element ==="object"){
-			return element.scrollTop;
-		}
-		else {
-			var B= document.body; //IE 'quirks'
-			var D= document.documentElement; //IE with doctype
-			D= (D.clientHeight)? D: B;
-			return D.scrollTop;
-		}
-	},
-
-	/**
-	 * get scroll position of element
-	 * @method
-	 * @param {node} element - html dom element
-	 * @return {object} position element
-	 */
-	getPosition: function(element) {
-		var xPosition = 0;
-		var yPosition = 0;
-
-		while(element) {
-			xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
-			yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
-			element = element.offsetParent;
-		}
-		return { x: xPosition, y: yPosition, left: xPosition, top: yPosition };
-	},
-
-	/**
-	 * get element selector
-	 * @method
-	 * @param {node} element - html dom element
-	 * @return {string} query selector string
-	 */
-	getElementSelector: function(element){
-		var tagSelector = (element.tagName) ? element.tagName:'',
-			idSelector = (element.id) ? '#'+element.id+'':'',
-			classSelector='';
-		if(element.classList){
-			for(var x=0; x < element.classList.length; x++){
-				classSelector+='.'+element.classList[x]+"";
-			}
-		}
-		return tagSelector+idSelector+classSelector;
-	},
-
-	/**
-	 * get parent element
-	 * @method
-	 * @param {node} element - html dom element
-	 * @param {string} selector - selector
-	 * @param {string} selectorType - selector type (id or class)
-	 */
-	getParentElement: function(element,selector,selectorType){
-		if(element.tagName==='BODY' || element.tagName==='HTML' || selector==='body' || selector==='html' || selector===undefined){
-			// console.log('body selected');
-			return undefined;
-		}
-		else if( (selectorType==='id' && element.parentNode.id === selector) || element.parentNode.className.match(new RegExp(selector,'g'))){
-			// console.log("parent node");
-			return element.parentNode;
-
-			//new RegExp(pattern,modifiers)
-		}
-		else  {
-			// console.log("look up higher");
-			return domhelper.getParentElement(element.parentNode,selector,selectorType);
-		}
-	},
-
-	getPreviousElements: function(element,returnArray){
-		if(element.previousElementSibling){
-			returnArray.push(element.previousElementSibling);
-			return domhelper.getPreviousElements(element.previousElementSibling,returnArray);
-		}
-		else{
-			return returnArray;
-		}
-	},
-
-
-	getNextElements: function(element,returnArray){
-		if(element.nextElementSibling){
-			returnArray.push(element.nextElementSibling);
-			return domhelper.getNextElements(element.nextElementSibling,returnArray);
-		}
-		else{
-			return returnArray;
-		}
-	},
-
-	insertAllBefore: function(element,elementsToInsert){
-		var parentElement = element.parentNode;
-		// console.log("parentElement",parentElement,"element",element,"elementsToInsert",elementsToInsert);
-		if(elementsToInsert.length){
-			for(var x =0; x<elementsToInsert.length; x++){
-				// console.log(x,"elementsToInsert[x]",elementsToInsert[x])
-				parentElement.insertBefore(elementsToInsert[x],element);
-			}
-		}
-		else{
-			parentElement.insertBefore(elementsToInsert,element);
-		}
-	},
-
-	insertAllAfter: function(element,elementsToInsert){
-		var parentElement = element.parentNode;
-		var nextSibling = element.nextSibling;
-		// console.log("parentElement",parentElement,"element",element,"elementsToInsert",elementsToInsert);
-		if(elementsToInsert.length){
-			for(var x =0; x<elementsToInsert.length; x++){
-				// console.log(x,"elementsToInsert[x]",elementsToInsert[x])
-				// elementsToInsert[x].style.background="green";
-				parentElement.insertBefore(elementsToInsert[x],nextSibling);
-			}
-		}
-		else{
-			parentElement.insertBefore(elementsToInsert,nextSibling);
-		}
-	},
-
-	unwrapElement: function(element){
-		var parentNodeElem = element.parentNode;
-		if(parentNodeElem.nodeName !== "BODY"){
-			var parentParentNodeElem = parentNodeElem.parentNode;
-			parentParentNodeElem.innerHTML='';
-			parentParentNodeElem.appendChild(element);
-		}
-	},
-	onWindowLoaded: function(callback){
-		var readyStateCheckInterval = setInterval(function() {
-		    if (document.readyState === "complete") {
-		        callback();
-		        clearInterval(readyStateCheckInterval);
-		    }
-		}, 10);
+componentTabs.prototype._init = function () {
+	// tabs elemes
+	this.tabs = [].slice.call(this.el.querySelectorAll(this.options.tabselector));
+	// content items
+	this.items = [].slice.call(this.el.querySelectorAll(this.options.itemselector));
+	// current index
+	this.current = -1;
+	// show current content item
+	this._show();
+	// init events
+	this._initEvents();
+	if (this.options.callback) {
+		this.options.callback();
 	}
+	this.emit('tabsInitialized');
 
 };
+/**
+ * handle tab click events.
+ */
+componentTabs.prototype._initEvents = function () {
+	var self = this;
 
-module.exports = domhelper;
+	this.tabs.forEach(function (tab, idx) {
+		tab.addEventListener('click', function (ev) {
+			ev.preventDefault();
+			self._show(idx);
+		});
+	});
+	this.emit('tabsEventsInitialized');
+};
+/**
+ * Sets up a new lintotype component.
+ * @param {number} idx tab to show
+ * @emits tabsShowIndex
+ */
+componentTabs.prototype._show = function (idx) {
+	if (this.current >= 0) {
+		classie.remove(this.tabs[this.current],this.options.currenttabclass);
+		classie.remove(this.items[this.current],this.options.currentitemclass);
+	}
+	// change current
+	this.current = idx !== undefined ? idx : this.options.start >= 0 && this.options.start < this.items.length ? this.options.start : 0;
+	classie.add(this.tabs[this.current],this.options.currenttabclass);
+	classie.add(this.items[this.current],this.options.currentitemclass);
+	this.emit('tabsShowIndex', this.current);
+};
+module.exports = componentTabs;
 
-// If there is a window object, that at least has a document property,
-// define linotype
-if ( typeof window === "object" && typeof window.document === "object" ) {
-	window.domhelper = domhelper;
-}
-},{"classie":1}],12:[function(require,module,exports){
+},{"classie":1,"events":3,"util":7,"util-extend":10}],10:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -1870,7 +1228,7 @@ function extend(origin, add) {
   return origin;
 }
 
-},{}],13:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -2921,7 +2279,7 @@ request.put = function(url, data, fn){
 
 module.exports = request;
 
-},{"emitter":14,"reduce":15}],14:[function(require,module,exports){
+},{"emitter":12,"reduce":13}],12:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -3087,7 +2445,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],15:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 
 /**
  * Reduce `arr` with `fn`.
@@ -3112,11 +2470,10 @@ module.exports = function(arr, fn, initial){
   
   return curr;
 };
-},{}],16:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent'),
-	letterpress = require('letterpressjs'),
 	updatemedia = require('./updatemedia'),
 	themeModal,
 	searchThemeInput,
@@ -3127,26 +2484,33 @@ var request = require('superagent'),
 	installedtablebody,
 	uploadButton,
 	hideConsoleOutput,
-	consoleOutput;
+	consoleOutput,
+	tabelement,
+	componentTab1,
+	ComponentTabs = require('periodicjs.component.tabs');
 
-window.addEventListener("load", function (e) {
-	searchThemeInput = document.getElementById("search-theme_input");
-	searchThemeButton = document.getElementById("search-theme_button");
-	searchGithubResultsTable = document.getElementById("theme-search-results");
-	searchGithubResultsTableBody = document.getElementById("theme-search-results-tbody");
-	themeModal = document.getElementById("view-theme-info-modal");
-	consoleOutput = document.getElementById("theme-console-output");
-	installedtablebody = document.getElementById("installed-theme-tablebody");
-	installedtable = document.getElementById("installed-theme-table");
-	hideConsoleOutput = document.getElementById("hide-theme-console");
-	uploadButton = document.getElementById("upload-theme_button");
-	searchThemeInput.addEventListener("keypress", searchInputKeypress, false);
-	searchThemeButton.addEventListener("click", searchThemeFromGithub, false);
-	searchGithubResultsTable.addEventListener("click", searchTblClick, false);
-	themeModal.addEventListener("click", thememodalClick, false);
-	installedtable.addEventListener("click", installedTableClick, false);
-	hideConsoleOutput.addEventListener("click", hideConsoleOutputClick, false);
-	uploadButton.addEventListener("change", uploadMediaFiles, false);
+window.addEventListener('load', function (e) {
+	tabelement = document.getElementById('tabs');
+	if (tabelement) {
+		componentTab1 = new ComponentTabs(tabelement);
+	}
+	searchThemeInput = document.getElementById('search-theme_input');
+	searchThemeButton = document.getElementById('search-theme_button');
+	searchGithubResultsTable = document.getElementById('theme-search-results');
+	searchGithubResultsTableBody = document.getElementById('theme-search-results-tbody');
+	themeModal = document.getElementById('view-theme-info-modal');
+	consoleOutput = document.getElementById('theme-console-output');
+	installedtablebody = document.getElementById('installed-theme-tablebody');
+	installedtable = document.getElementById('installed-theme-table');
+	hideConsoleOutput = document.getElementById('hide-theme-console');
+	uploadButton = document.getElementById('upload-theme_button');
+	searchThemeInput.addEventListener('keypress', searchInputKeypress, false);
+	searchThemeButton.addEventListener('click', searchThemeFromGithub, false);
+	searchGithubResultsTable.addEventListener('click', searchTblClick, false);
+	themeModal.addEventListener('click', thememodalClick, false);
+	installedtable.addEventListener('click', installedTableClick, false);
+	hideConsoleOutput.addEventListener('click', hideConsoleOutputClick, false);
+	uploadButton.addEventListener('change', uploadMediaFiles, false);
 });
 
 var uploadMediaFiles = function (e) {
@@ -3169,7 +2533,7 @@ var uploadMediaFiles = function (e) {
 						}
 					}
 				};
-				document.getElementById("theme-console").style.display = "block";
+				document.getElementById('theme-console').style.display = 'block';
 				getConsoleOutput(res.body, null, null, null, {
 					getRequest: '/p-admin/theme/upload/log/' + doc.themename + '/' + doc.time,
 					themename: doc.themename,
@@ -3181,58 +2545,58 @@ var uploadMediaFiles = function (e) {
 };
 
 var hideConsoleOutputClick = function (e) {
-	document.getElementById("theme-console").style.display = "none";
+	document.getElementById('theme-console').style.display = 'none';
 };
 
 var installedTableClick = function (e) {
 	var eTarget = e.target;
 
-	if (eTarget.getAttribute("class") && eTarget.getAttribute("class").match("enable-theme-button")) {
-		// ribbonNotification.showRibbon( 'switching',4000,'default');
+	if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('enable-theme-button')) {
+		// window.ribbonNotification.showRibbon( 'switching',4000,'default');
 		request
-			.get(eTarget.getAttribute("data-href"))
+			.get(eTarget.getAttribute('data-href'))
 			.query({
-				format: "json"
+				format: 'json'
 			})
 			.set('Accept', 'application/json')
 			.end(function (error, res) {
 				if (error) {
-					ribbonNotification.showRibbon(error.message, 4000, 'error');
+					window.ribbonNotification.showRibbon(error.message, 4000, 'error');
 				}
-				else if (res.body.result === "success") {
-					if (res.body.data.msg === "theme disabled") {
-						ribbonNotification.showRibbon(res.body.data.msg, 4000, 'warn');
+				else if (res.body.result === 'success') {
+					if (res.body.data.msg === 'theme disabled') {
+						window.ribbonNotification.showRibbon(res.body.data.msg, 4000, 'warn');
 						eTarget.innerHTML = 'enable';
-						eTarget.setAttribute("data-href", "/p-admin/theme/" + res.body.data.ext + "/enable");
-						eTarget.setAttribute("class", "_pea-button  enable-theme-button");
-						//<a data-href="/p-admin/theme/<%= theme.name %>/enable" class="_pea-button enable-theme-button">enable</a>		
+						eTarget.setAttribute('data-href', '/p-admin/theme/' + res.body.data.ext + '/enable');
+						eTarget.setAttribute('class', '_pea-button  enable-theme-button');
+						//<a data-href='/p-admin/theme/<%= theme.name %>/enable' class='_pea-button enable-theme-button'>enable</a>		
 					}
 					else {
-						ribbonNotification.showRibbon(res.body.data.msg, 4000, 'success');
+						window.ribbonNotification.showRibbon(res.body.data.msg, 4000, 'success');
 						var themeButtons = document.querySelectorAll('.switch-theme-button');
 						for (var x in themeButtons) {
 							if (typeof themeButtons[x] === 'object') {
 								themeButtons[x].setAttribute('class', '_pea-button switch-theme-button enable-theme-button');
-								themeButtons[x].innerHTML = "switch";
+								themeButtons[x].innerHTML = 'switch';
 							}
 						}
 						eTarget.innerHTML = 'active';
-						eTarget.setAttribute("class", "_pea-button switch-theme-button _pea-color-info");
-						//<a data-href="/p-admin/theme/<%= theme.name %>/disable" class="_pea-button _pea-color-warn enable-theme-button">disable</a>				
+						eTarget.setAttribute('class', '_pea-button switch-theme-button _pea-color-info');
+						//<a data-href='/p-admin/theme/<%= theme.name %>/disable' class='_pea-button _pea-color-warn enable-theme-button'>disable</a>				
 					}
 				}
 				else {
-					ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
+					window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
 				}
 			});
 	}
-	else if (eTarget.getAttribute("class") && eTarget.getAttribute("class").match("delete-theme-button")) {
-		// ribbonNotification.showRibbon( 'deleting',1000,'default');
+	else if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('delete-theme-button')) {
+		// window.ribbonNotification.showRibbon( 'deleting',1000,'default');
 		request
-			.post(eTarget.getAttribute("data-href"))
+			.post(eTarget.getAttribute('data-href'))
 			.query({
-				format: "json",
-				_csrf: eTarget.getAttribute("data-token")
+				format: 'json',
+				_csrf: eTarget.getAttribute('data-token')
 			})
 			.set('Accept', 'application/json')
 			.end(function (error, res) {
@@ -3240,14 +2604,14 @@ var installedTableClick = function (e) {
 					error = res.error;
 				}
 				if (error) {
-					ribbonNotification.showRibbon(error.message, 4000, 'error');
+					window.ribbonNotification.showRibbon(error.message, 4000, 'error');
 				}
 				else if (res.body.result === 'error') {
-					ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
+					window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
 				}
 				else {
-					document.getElementById("theme-console").style.display = "block";
-					getConsoleOutput(res.body, eTarget.getAttribute("data-themename"), res.body.data.themename, 'remove');
+					document.getElementById('theme-console').style.display = 'block';
+					getConsoleOutput(res.body, eTarget.getAttribute('data-themename'), res.body.data.themename, 'remove');
 				}
 			});
 
@@ -3260,18 +2624,18 @@ var searchThemeFromGithub = function () {
 	request
 		.get('https://api.github.com/search/repositories')
 		.query({
-			q: 'periodicjs.theme.' + document.getElementById("search-theme_input").value
+			q: 'periodicjs.theme.' + document.getElementById('search-theme_input').value
 		})
 		.set('Accept', 'application/json')
 		.end(function (error, res) {
 			if (error) {
-				ribbonNotification.showRibbon(error.message, 4000, 'error');
+				window.ribbonNotification.showRibbon(error.message, 4000, 'error');
 			}
 			else if (!res.body.items) {
-				ribbonNotification.showRibbon("could not search github", 4000, 'error');
+				window.ribbonNotification.showRibbon('could not search github', 4000, 'error');
 			}
 			else {
-				searchGithubResultsTable.style.display = "table";
+				searchGithubResultsTable.style.display = 'table';
 				searchGithubResultsTableBody.innerHTML = buildSearchThemeResultTable(res.body.items);
 			}
 		});
@@ -3301,14 +2665,14 @@ var searchTblClick = function (e) {
 
 	// console.log("search table click");
 
-	if (eTarget.getAttribute("class") && eTarget.getAttribute("class").match('view-theme')) {
-		themeModal.querySelector('.title').innerHTML = eTarget.getAttribute("data-exttitle").replace('periodicjs.theme.', '');
-		themeModal.querySelector('.desc').innerHTML = eTarget.getAttribute("data-desc");
+	if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('view-theme')) {
+		themeModal.querySelector('.title').innerHTML = eTarget.getAttribute('data-exttitle').replace('periodicjs.theme.', '');
+		themeModal.querySelector('.desc').innerHTML = eTarget.getAttribute('data-desc');
 		repoversionlist = themeModal.querySelector('.versions');
 		repoversionlist.innerHTML = '<li>loading versions...</li>';
-		fullreponame = eTarget.getAttribute("data-gitname");
+		fullreponame = eTarget.getAttribute('data-gitname');
 
-		// console.log("themeModal",themeModal);
+		// console.log('themeModal',themeModal);
 		silkscreenModal.showSilkscreen('Install Theme', themeModal, null, 14);
 
 		request
@@ -3316,7 +2680,7 @@ var searchTblClick = function (e) {
 			.set('Accept', 'application/json')
 			.end(function (error, res) {
 				if (error) {
-					ribbonNotification.showRibbon(error.message, 4000, 'error');
+					window.ribbonNotification.showRibbon(error.message, 4000, 'error');
 				}
 				else {
 					themeModal.querySelector('.versions').innerHTML = '';
@@ -3334,15 +2698,15 @@ var searchTblClick = function (e) {
 
 var thememodalClick = function (e) {
 	var eTarget = e.target;
-	if (eTarget.getAttribute("class") === 'install-theme-link') {
+	if (eTarget.getAttribute('class') === 'install-theme-link') {
 		silkscreenModal.hideSilkscreen();
 
 		request
 			.get('/p-admin/theme/install')
 			.query({
-				name: eTarget.getAttribute("data-repo"),
-				version: eTarget.getAttribute("data-version"),
-				format: "json"
+				name: eTarget.getAttribute('data-repo'),
+				version: eTarget.getAttribute('data-version'),
+				format: 'json'
 			})
 			.set('Accept', 'application/json')
 			.end(function (error, res) {
@@ -3350,11 +2714,11 @@ var thememodalClick = function (e) {
 					error = res.error;
 				}
 				if (error) {
-					ribbonNotification.showRibbon(error.message, 4000, 'error');
+					window.ribbonNotification.showRibbon(error.message, 4000, 'error');
 				}
 				else {
-					document.getElementById("theme-console").style.display = "block";
-					getConsoleOutput(res.body, eTarget.getAttribute("data-repo").split('/')[1]);
+					document.getElementById('theme-console').style.display = 'block';
+					getConsoleOutput(res.body, eTarget.getAttribute('data-repo').split('/')[1]);
 				}
 			});
 	}
@@ -3390,33 +2754,33 @@ var getConsoleOutput = function (responsebody, fullrepo, extname, operation, opt
 				}
 
 				if (error) {
-					ribbonNotification.showRibbon(error.message || res.text, 8000, 'error');
-					// console.log("error in ajax for file log data");
+					window.ribbonNotification.showRibbon(error.message || res.text, 8000, 'error');
+					// console.log('error in ajax for file log data');
 					clearTimeout(t);
 				}
 				else {
 					if (cnt > 20) {
-						console.log("made 20 req stop ajax");
+						console.log('made 20 req stop ajax');
 						clearTimeout(t);
 					}
 					// console.log(cnt);
 					// console.log(res.text);
 					if (res.text !== lastres) {
-						otf = document.createElement("pre");
+						otf = document.createElement('pre');
 						otf.innerHTML = res.text;
 						consoleOutput.appendChild(otf);
 						consoleOutput.scrollTop = consoleOutput.scrollHeight;
 					}
 					if (res.text.match('====!!ERROR!!====') || res.text.match('====##END##====')) {
 						if (res.text.match('====##END##====')) {
-							ribbonNotification.showRibbon(fullrepo + ' installed', 8000, 'success');
+							window.ribbonNotification.showRibbon(fullrepo + ' installed', 8000, 'success');
 							if (!installedtable.innerHTML.match(fullrepo)) {
 								var installedTheme = document.createElement('tr');
 								installedTheme.innerHTML = '<td><a href="/p-admin/theme/' + fullrepo + '">' + fullrepo + '</a><div><small>Refresh page for updated UI</small</div></td>' + '<td></td>' + '<td class="_pea-text-right"><a data-themename="' + fullrepo + '" data-href="/p-admin/theme/' + fullrepo + '/enable" class="_pea-button switch-theme-button enable-theme-button">switch</a>' + '</td>';
 								installedtablebody.appendChild(installedTheme);
 							}
 							else {
-								console.log("already installed", repo, time);
+								console.log('already installed', repo, time);
 							}
 							cleanupLogFile(repo, time, 'install', options);
 						}
@@ -3424,7 +2788,7 @@ var getConsoleOutput = function (responsebody, fullrepo, extname, operation, opt
 					}
 					else if (res.text.match('====!!ERROR!!====') || res.text.match('====##REMOVED-END##====')) {
 
-						ribbonNotification.showRibbon(fullrepo + ' removed', 4000, 'warn');
+						window.ribbonNotification.showRibbon(fullrepo + ' removed', 4000, 'warn');
 						var removeThemeElement = document.getElementById('tr-theme-' + extname);
 						removeThemeElement.parentNode.removeChild(removeThemeElement);
 						cleanupLogFile(repo, time, 'remove');
@@ -3441,7 +2805,7 @@ var getConsoleOutput = function (responsebody, fullrepo, extname, operation, opt
 		request
 			.get('/p-admin/theme/cleanup/log/' + repo + '/' + time)
 			.query({
-				format: "json",
+				format: 'json',
 				mode: mode,
 				makenice: makenice
 			})
@@ -3452,13 +2816,13 @@ var getConsoleOutput = function (responsebody, fullrepo, extname, operation, opt
 				}
 
 				if (error) {
-					ribbonNotification.showRibbon(error.message || res.text, 8000, 'error');
+					window.ribbonNotification.showRibbon(error.message || res.text, 8000, 'error');
 				}
 			});
 	}
 };
 
-},{"./updatemedia":17,"letterpressjs":8,"superagent":13}],17:[function(require,module,exports){
+},{"./updatemedia":15,"periodicjs.component.tabs":8,"superagent":11}],15:[function(require,module,exports){
 'use strict';
 
 var updatemedia = function (element, mediadoc, additem) {
@@ -3558,4 +2922,4 @@ updatemedia.uploadFile = function (mediafilesresult, file, options) {
 
 module.exports = updatemedia;
 
-},{}]},{},[16]);
+},{}]},{},[14]);

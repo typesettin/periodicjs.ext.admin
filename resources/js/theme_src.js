@@ -1,7 +1,6 @@
 'use strict';
 
 var request = require('superagent'),
-	letterpress = require('letterpressjs'),
 	updatemedia = require('./updatemedia'),
 	themeModal,
 	searchThemeInput,
@@ -12,26 +11,33 @@ var request = require('superagent'),
 	installedtablebody,
 	uploadButton,
 	hideConsoleOutput,
-	consoleOutput;
+	consoleOutput,
+	tabelement,
+	componentTab1,
+	ComponentTabs = require('periodicjs.component.tabs');
 
-window.addEventListener("load", function (e) {
-	searchThemeInput = document.getElementById("search-theme_input");
-	searchThemeButton = document.getElementById("search-theme_button");
-	searchGithubResultsTable = document.getElementById("theme-search-results");
-	searchGithubResultsTableBody = document.getElementById("theme-search-results-tbody");
-	themeModal = document.getElementById("view-theme-info-modal");
-	consoleOutput = document.getElementById("theme-console-output");
-	installedtablebody = document.getElementById("installed-theme-tablebody");
-	installedtable = document.getElementById("installed-theme-table");
-	hideConsoleOutput = document.getElementById("hide-theme-console");
-	uploadButton = document.getElementById("upload-theme_button");
-	searchThemeInput.addEventListener("keypress", searchInputKeypress, false);
-	searchThemeButton.addEventListener("click", searchThemeFromGithub, false);
-	searchGithubResultsTable.addEventListener("click", searchTblClick, false);
-	themeModal.addEventListener("click", thememodalClick, false);
-	installedtable.addEventListener("click", installedTableClick, false);
-	hideConsoleOutput.addEventListener("click", hideConsoleOutputClick, false);
-	uploadButton.addEventListener("change", uploadMediaFiles, false);
+window.addEventListener('load', function (e) {
+	tabelement = document.getElementById('tabs');
+	if (tabelement) {
+		componentTab1 = new ComponentTabs(tabelement);
+	}
+	searchThemeInput = document.getElementById('search-theme_input');
+	searchThemeButton = document.getElementById('search-theme_button');
+	searchGithubResultsTable = document.getElementById('theme-search-results');
+	searchGithubResultsTableBody = document.getElementById('theme-search-results-tbody');
+	themeModal = document.getElementById('view-theme-info-modal');
+	consoleOutput = document.getElementById('theme-console-output');
+	installedtablebody = document.getElementById('installed-theme-tablebody');
+	installedtable = document.getElementById('installed-theme-table');
+	hideConsoleOutput = document.getElementById('hide-theme-console');
+	uploadButton = document.getElementById('upload-theme_button');
+	searchThemeInput.addEventListener('keypress', searchInputKeypress, false);
+	searchThemeButton.addEventListener('click', searchThemeFromGithub, false);
+	searchGithubResultsTable.addEventListener('click', searchTblClick, false);
+	themeModal.addEventListener('click', thememodalClick, false);
+	installedtable.addEventListener('click', installedTableClick, false);
+	hideConsoleOutput.addEventListener('click', hideConsoleOutputClick, false);
+	uploadButton.addEventListener('change', uploadMediaFiles, false);
 });
 
 var uploadMediaFiles = function (e) {
@@ -54,7 +60,7 @@ var uploadMediaFiles = function (e) {
 						}
 					}
 				};
-				document.getElementById("theme-console").style.display = "block";
+				document.getElementById('theme-console').style.display = 'block';
 				getConsoleOutput(res.body, null, null, null, {
 					getRequest: '/p-admin/theme/upload/log/' + doc.themename + '/' + doc.time,
 					themename: doc.themename,
@@ -66,58 +72,58 @@ var uploadMediaFiles = function (e) {
 };
 
 var hideConsoleOutputClick = function (e) {
-	document.getElementById("theme-console").style.display = "none";
+	document.getElementById('theme-console').style.display = 'none';
 };
 
 var installedTableClick = function (e) {
 	var eTarget = e.target;
 
-	if (eTarget.getAttribute("class") && eTarget.getAttribute("class").match("enable-theme-button")) {
-		// ribbonNotification.showRibbon( 'switching',4000,'default');
+	if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('enable-theme-button')) {
+		// window.ribbonNotification.showRibbon( 'switching',4000,'default');
 		request
-			.get(eTarget.getAttribute("data-href"))
+			.get(eTarget.getAttribute('data-href'))
 			.query({
-				format: "json"
+				format: 'json'
 			})
 			.set('Accept', 'application/json')
 			.end(function (error, res) {
 				if (error) {
-					ribbonNotification.showRibbon(error.message, 4000, 'error');
+					window.ribbonNotification.showRibbon(error.message, 4000, 'error');
 				}
-				else if (res.body.result === "success") {
-					if (res.body.data.msg === "theme disabled") {
-						ribbonNotification.showRibbon(res.body.data.msg, 4000, 'warn');
+				else if (res.body.result === 'success') {
+					if (res.body.data.msg === 'theme disabled') {
+						window.ribbonNotification.showRibbon(res.body.data.msg, 4000, 'warn');
 						eTarget.innerHTML = 'enable';
-						eTarget.setAttribute("data-href", "/p-admin/theme/" + res.body.data.ext + "/enable");
-						eTarget.setAttribute("class", "_pea-button  enable-theme-button");
-						//<a data-href="/p-admin/theme/<%= theme.name %>/enable" class="_pea-button enable-theme-button">enable</a>		
+						eTarget.setAttribute('data-href', '/p-admin/theme/' + res.body.data.ext + '/enable');
+						eTarget.setAttribute('class', '_pea-button  enable-theme-button');
+						//<a data-href='/p-admin/theme/<%= theme.name %>/enable' class='_pea-button enable-theme-button'>enable</a>		
 					}
 					else {
-						ribbonNotification.showRibbon(res.body.data.msg, 4000, 'success');
+						window.ribbonNotification.showRibbon(res.body.data.msg, 4000, 'success');
 						var themeButtons = document.querySelectorAll('.switch-theme-button');
 						for (var x in themeButtons) {
 							if (typeof themeButtons[x] === 'object') {
 								themeButtons[x].setAttribute('class', '_pea-button switch-theme-button enable-theme-button');
-								themeButtons[x].innerHTML = "switch";
+								themeButtons[x].innerHTML = 'switch';
 							}
 						}
 						eTarget.innerHTML = 'active';
-						eTarget.setAttribute("class", "_pea-button switch-theme-button _pea-color-info");
-						//<a data-href="/p-admin/theme/<%= theme.name %>/disable" class="_pea-button _pea-color-warn enable-theme-button">disable</a>				
+						eTarget.setAttribute('class', '_pea-button switch-theme-button _pea-color-info');
+						//<a data-href='/p-admin/theme/<%= theme.name %>/disable' class='_pea-button _pea-color-warn enable-theme-button'>disable</a>				
 					}
 				}
 				else {
-					ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
+					window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
 				}
 			});
 	}
-	else if (eTarget.getAttribute("class") && eTarget.getAttribute("class").match("delete-theme-button")) {
-		// ribbonNotification.showRibbon( 'deleting',1000,'default');
+	else if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('delete-theme-button')) {
+		// window.ribbonNotification.showRibbon( 'deleting',1000,'default');
 		request
-			.post(eTarget.getAttribute("data-href"))
+			.post(eTarget.getAttribute('data-href'))
 			.query({
-				format: "json",
-				_csrf: eTarget.getAttribute("data-token")
+				format: 'json',
+				_csrf: eTarget.getAttribute('data-token')
 			})
 			.set('Accept', 'application/json')
 			.end(function (error, res) {
@@ -125,14 +131,14 @@ var installedTableClick = function (e) {
 					error = res.error;
 				}
 				if (error) {
-					ribbonNotification.showRibbon(error.message, 4000, 'error');
+					window.ribbonNotification.showRibbon(error.message, 4000, 'error');
 				}
 				else if (res.body.result === 'error') {
-					ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
+					window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
 				}
 				else {
-					document.getElementById("theme-console").style.display = "block";
-					getConsoleOutput(res.body, eTarget.getAttribute("data-themename"), res.body.data.themename, 'remove');
+					document.getElementById('theme-console').style.display = 'block';
+					getConsoleOutput(res.body, eTarget.getAttribute('data-themename'), res.body.data.themename, 'remove');
 				}
 			});
 
@@ -145,18 +151,18 @@ var searchThemeFromGithub = function () {
 	request
 		.get('https://api.github.com/search/repositories')
 		.query({
-			q: 'periodicjs.theme.' + document.getElementById("search-theme_input").value
+			q: 'periodicjs.theme.' + document.getElementById('search-theme_input').value
 		})
 		.set('Accept', 'application/json')
 		.end(function (error, res) {
 			if (error) {
-				ribbonNotification.showRibbon(error.message, 4000, 'error');
+				window.ribbonNotification.showRibbon(error.message, 4000, 'error');
 			}
 			else if (!res.body.items) {
-				ribbonNotification.showRibbon("could not search github", 4000, 'error');
+				window.ribbonNotification.showRibbon('could not search github', 4000, 'error');
 			}
 			else {
-				searchGithubResultsTable.style.display = "table";
+				searchGithubResultsTable.style.display = 'table';
 				searchGithubResultsTableBody.innerHTML = buildSearchThemeResultTable(res.body.items);
 			}
 		});
@@ -186,14 +192,14 @@ var searchTblClick = function (e) {
 
 	// console.log("search table click");
 
-	if (eTarget.getAttribute("class") && eTarget.getAttribute("class").match('view-theme')) {
-		themeModal.querySelector('.title').innerHTML = eTarget.getAttribute("data-exttitle").replace('periodicjs.theme.', '');
-		themeModal.querySelector('.desc').innerHTML = eTarget.getAttribute("data-desc");
+	if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('view-theme')) {
+		themeModal.querySelector('.title').innerHTML = eTarget.getAttribute('data-exttitle').replace('periodicjs.theme.', '');
+		themeModal.querySelector('.desc').innerHTML = eTarget.getAttribute('data-desc');
 		repoversionlist = themeModal.querySelector('.versions');
 		repoversionlist.innerHTML = '<li>loading versions...</li>';
-		fullreponame = eTarget.getAttribute("data-gitname");
+		fullreponame = eTarget.getAttribute('data-gitname');
 
-		// console.log("themeModal",themeModal);
+		// console.log('themeModal',themeModal);
 		silkscreenModal.showSilkscreen('Install Theme', themeModal, null, 14);
 
 		request
@@ -201,7 +207,7 @@ var searchTblClick = function (e) {
 			.set('Accept', 'application/json')
 			.end(function (error, res) {
 				if (error) {
-					ribbonNotification.showRibbon(error.message, 4000, 'error');
+					window.ribbonNotification.showRibbon(error.message, 4000, 'error');
 				}
 				else {
 					themeModal.querySelector('.versions').innerHTML = '';
@@ -219,15 +225,15 @@ var searchTblClick = function (e) {
 
 var thememodalClick = function (e) {
 	var eTarget = e.target;
-	if (eTarget.getAttribute("class") === 'install-theme-link') {
+	if (eTarget.getAttribute('class') === 'install-theme-link') {
 		silkscreenModal.hideSilkscreen();
 
 		request
 			.get('/p-admin/theme/install')
 			.query({
-				name: eTarget.getAttribute("data-repo"),
-				version: eTarget.getAttribute("data-version"),
-				format: "json"
+				name: eTarget.getAttribute('data-repo'),
+				version: eTarget.getAttribute('data-version'),
+				format: 'json'
 			})
 			.set('Accept', 'application/json')
 			.end(function (error, res) {
@@ -235,11 +241,11 @@ var thememodalClick = function (e) {
 					error = res.error;
 				}
 				if (error) {
-					ribbonNotification.showRibbon(error.message, 4000, 'error');
+					window.ribbonNotification.showRibbon(error.message, 4000, 'error');
 				}
 				else {
-					document.getElementById("theme-console").style.display = "block";
-					getConsoleOutput(res.body, eTarget.getAttribute("data-repo").split('/')[1]);
+					document.getElementById('theme-console').style.display = 'block';
+					getConsoleOutput(res.body, eTarget.getAttribute('data-repo').split('/')[1]);
 				}
 			});
 	}
@@ -275,33 +281,33 @@ var getConsoleOutput = function (responsebody, fullrepo, extname, operation, opt
 				}
 
 				if (error) {
-					ribbonNotification.showRibbon(error.message || res.text, 8000, 'error');
-					// console.log("error in ajax for file log data");
+					window.ribbonNotification.showRibbon(error.message || res.text, 8000, 'error');
+					// console.log('error in ajax for file log data');
 					clearTimeout(t);
 				}
 				else {
 					if (cnt > 20) {
-						console.log("made 20 req stop ajax");
+						console.log('made 20 req stop ajax');
 						clearTimeout(t);
 					}
 					// console.log(cnt);
 					// console.log(res.text);
 					if (res.text !== lastres) {
-						otf = document.createElement("pre");
+						otf = document.createElement('pre');
 						otf.innerHTML = res.text;
 						consoleOutput.appendChild(otf);
 						consoleOutput.scrollTop = consoleOutput.scrollHeight;
 					}
 					if (res.text.match('====!!ERROR!!====') || res.text.match('====##END##====')) {
 						if (res.text.match('====##END##====')) {
-							ribbonNotification.showRibbon(fullrepo + ' installed', 8000, 'success');
+							window.ribbonNotification.showRibbon(fullrepo + ' installed', 8000, 'success');
 							if (!installedtable.innerHTML.match(fullrepo)) {
 								var installedTheme = document.createElement('tr');
 								installedTheme.innerHTML = '<td><a href="/p-admin/theme/' + fullrepo + '">' + fullrepo + '</a><div><small>Refresh page for updated UI</small</div></td>' + '<td></td>' + '<td class="_pea-text-right"><a data-themename="' + fullrepo + '" data-href="/p-admin/theme/' + fullrepo + '/enable" class="_pea-button switch-theme-button enable-theme-button">switch</a>' + '</td>';
 								installedtablebody.appendChild(installedTheme);
 							}
 							else {
-								console.log("already installed", repo, time);
+								console.log('already installed', repo, time);
 							}
 							cleanupLogFile(repo, time, 'install', options);
 						}
@@ -309,7 +315,7 @@ var getConsoleOutput = function (responsebody, fullrepo, extname, operation, opt
 					}
 					else if (res.text.match('====!!ERROR!!====') || res.text.match('====##REMOVED-END##====')) {
 
-						ribbonNotification.showRibbon(fullrepo + ' removed', 4000, 'warn');
+						window.ribbonNotification.showRibbon(fullrepo + ' removed', 4000, 'warn');
 						var removeThemeElement = document.getElementById('tr-theme-' + extname);
 						removeThemeElement.parentNode.removeChild(removeThemeElement);
 						cleanupLogFile(repo, time, 'remove');
@@ -326,7 +332,7 @@ var getConsoleOutput = function (responsebody, fullrepo, extname, operation, opt
 		request
 			.get('/p-admin/theme/cleanup/log/' + repo + '/' + time)
 			.query({
-				format: "json",
+				format: 'json',
 				mode: mode,
 				makenice: makenice
 			})
@@ -337,7 +343,7 @@ var getConsoleOutput = function (responsebody, fullrepo, extname, operation, opt
 				}
 
 				if (error) {
-					ribbonNotification.showRibbon(error.message || res.text, 8000, 'error');
+					window.ribbonNotification.showRibbon(error.message || res.text, 8000, 'error');
 				}
 			});
 	}

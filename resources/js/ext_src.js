@@ -12,7 +12,10 @@ var request = require('superagent'),
 	installedtablebody,
 	uploadButton,
 	hideConsoleOutput,
-	consoleOutput;
+	consoleOutput,
+	tabelement,
+	componentTab1,
+	ComponentTabs = require('periodicjs.component.tabs');
 
 
 
@@ -327,6 +330,10 @@ var extmodalClick = function (e) {
 	}
 };
 window.addEventListener('load', function () {
+	tabelement = document.getElementById('tabs');
+	if (tabelement) {
+		componentTab1 = new ComponentTabs(tabelement);
+	}
 	searchExtInput = document.getElementById('search-ext_input');
 	searchExtButton = document.getElementById('search-ext_button');
 	searchGithubResultsTable = document.getElementById('ext-search-results');
