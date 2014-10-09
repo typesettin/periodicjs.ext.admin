@@ -1231,6 +1231,16 @@ function extend(origin, add) {
 },{}],11:[function(require,module,exports){
 'use strict';
 
+// var request = require('superagent');
+var updatestatus,
+	themesettingsConfiguration,
+	themesettingsReadOnly,
+	appsettingsConfiguration,
+	appsettingsReadOnly,
+	tabelement,
+	componentTab1,
+	ComponentTabs = require('periodicjs.component.tabs');
+
 var jsonFormElements = function (options) {
 	var returnhtml = '',
 		jsonobject = options.jsonobject,
@@ -1308,22 +1318,6 @@ var jsonFormElements = function (options) {
 	return returnhtml;
 };
 
-module.exports = jsonFormElements;
-
-},{}],12:[function(require,module,exports){
-'use strict';
-
-// var request = require('superagent');
-var updatestatus,
-	themesettingsConfiguration,
-	themesettingsReadOnly,
-	appsettingsConfiguration,
-	appsettingsReadOnly,
-	tabelement,
-	componentTab1,
-	ComponentTabs = require('periodicjs.component.tabs'),
-	jsonFormElements = require('./jsonformelements');
-
 var jumptotab = function () {
 	var jumptosection = window.location.href.split('#')[1];
 	if (tabelement) {
@@ -1384,4 +1378,4 @@ window.updateAppResponse = function () {
 	window.ribbonNotification.showRibbon('This is coming soon', 4000, 'warn');
 };
 
-},{"./jsonformelements":11,"periodicjs.component.tabs":8}]},{},[12]);
+},{"periodicjs.component.tabs":8}]},{},[11]);

@@ -2589,7 +2589,7 @@ if (typeof window === "object" && typeof window.document === "object") {
 
 },{"classie":1,"events":3,"util":7,"util-extend":14}],14:[function(require,module,exports){
 module.exports=require(10)
-},{"/Users/yawetse/Developer/test/periodic150/periodicjs/node_modules/periodicjs.ext.admin/node_modules/ribbonjs/node_modules/util-extend/extend.js":10}],15:[function(require,module,exports){
+},{"/Users/yawetse/Developer/github/promise/promise-web-application/periodicjs/node_modules/periodicjs.ext.admin/node_modules/ribbonjs/node_modules/util-extend/extend.js":10}],15:[function(require,module,exports){
 /**
  * Module dependencies.
  */

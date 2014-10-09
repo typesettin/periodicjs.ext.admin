@@ -7,84 +7,104 @@
 	<input type="hidden" name="_csrf" value=<%= locals.token %> >
 	<div class="_pea-container _pea-theme">
 		<div class="_pea-row">
-			<div class="_pea-col-span6">
-				<h2>Application Settings</h2>
-				<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updateappsettings">
-					<div class="_pea-document">
-						<div class="_pea-row">
-							<p>Updating settings updates <a class="_pea-button">content/config/config.json</a> and restarts your application. Your theme can be changed by updating <a href="/p-admin/themes">theme settings</a>.</p>
-							<h3>Configuration Options</h3>
-							<p class="extra-padding">
-								<div id="appsettings-config"></div>
-							</p>
-							<h3>Read Only</h3>
-							<p class="extra-padding">
-								<div id="appsettings-readonly"></div>
-							</p>
+			<div class="_pea-col-span12">
+				<div id="update-status" class="_pea-document _pea-form" style="display:none;">
+					<div class="_pea-row">
+						<h3><a name="update"></a>Upgrade Application</h3>
+						<div id="upgrade-needed">
+							<p class="extra-padding"><span class="_pea-color-error">WARNING: Make sure you back up before upgrading, once completed your application will automatically restart (if you're running the application with PM2, npm start or npm run nd).</span></p>
+							<p class="extra-padding">Create a back up of your <a class="_pea-button">content</a> directory before upgrading.</p>
+							<a class="_pea-button _pea-col-span12">
+							$ cd .. #this should be the directory you installed periodicjs into, e.g. /var/www/mywebsite (this folder has periodicjs) </br>
+							$ npm install periodicjs@latest --upgrade</a>	
 
-							<p class="_pea-text-center">
-									<button type="submit" class=" _pea-button _pea-color-info " style="font-size: 110%;">Update Application Settings</button>
-							</p>
+							<!-- <p class="_pea-text-center">
+									<a data-href="/p-admin/settings/updateapp" class=" _pea-button _pea-color-inverse _pea-dialog-delete" data-successfunction="updateAppResponse" data-donotnotify="true" style="font-size: 110%;">Upgrade Application</a>
+							</p> -->
 						</div>
 					</div>
-				</form>
-					<div id="update-status" class="_pea-document _pea-form" style="display:none;">
-						<div class="_pea-row">
-							<h3><a name="update"></a>Upgrade Application</h3>
-							<div id="upgrade-needed">
-								<p class="extra-padding"><span class="_pea-color-error">WARNING: Make sure you back up before upgrading, once completed your application will automatically restart (if you're running the application with PM2, npm start or npm run nd).</span></p>
-								<p class="extra-padding">Create a back up of your <a class="_pea-button">content</a> directory before upgrading. This is a short cut to running npm install from the command line.</p>
-								<a class="_pea-button _pea-col-span12">
-								$ cd .. </br>
-								$ npm install periodicjs@latest --upgrade</a>	
-
-								<p class="_pea-text-center">
-										<a data-href="/p-admin/settings/updateapp" class=" _pea-button _pea-color-inverse _pea-dialog-delete" data-successfunction="updateAppResponse" data-donotnotify="true" style="font-size: 110%;">Upgrade Application</a>
-								</p>
-							</div>
-						</div>
-					</div>
-					<div class="_pea-document _pea-form">
-						<div class="_pea-row">
-							<h3>Restart Application</h3>
-							<p class="extra-padding"><span class="_pea-color-error">WARNING: Any HTTP POST requests may throw an error, until you refresh the page if you are using CSRF(Cross Site Request Forgery).</span></p>
-							<p class="extra-padding">Using this method to restart the application, updates <a class="_pea-button">content/extensions/restart.json</a>. 
-							<p class="extra-padding">This only works if you're running the application with PM2 (or npm start or npm run nd).</p> 
-							<p class="_pea-text-center">
-									<a data-href="/p-admin/settings/restart" class=" _pea-button _pea-color-inverse _pea-dialog-delete" data-successfunction="restartAppResponse" data-donotnotify="true" style="font-size: 110%;">Restart Application</a>
-							</p>
-						</div>
-					</div>
+				</div>
 			</div>
-			<div class="_pea-col-span5 _pea-pull-right">
-				<h2>Theme Settings</h2>
-				<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updatethemesettings">
-					<input type="hidden" name="_csrf" value=<%= locals.token %> >
-					<div class="_pea-document">
-						<div class="_pea-row">
-							<p>Updates <a class="_pea-button">content/themes/<%= appsettings.readonly.theme %>/periodicjs.theme.json</a> and restarts your application.</p>
-							<h3>Configuration Options</h3>
-							<p class="extra-padding">
-								<div id="themesettings-config"></div>
-							</p>
-							<h3>Read Only</h3>
-							<p class="extra-padding">
-								<div id="themesettings-readonly"></div>
-							</p>
-							<p class="_pea-text-center">
-									<button type="submit" class=" _pea-button _pea-color-info " style="font-size: 110%;">Update Theme Settings</button>
-							</p>
-						</div>
+		</div>
+		<div class="_pea-row">
+			<div class="_pea-col-span12">
+				<div id="tabs" class="tabs">
+					<nav>
+						<ul class="_pea-col-span12">
+							<li class="_pea-col-span3 _pea-no-margin">Application Settings</li>
+							<li class="_pea-col-span3 _pea-no-margin">Theme Settings</li>
+							<li class="_pea-col-span3 _pea-no-margin">Restart Application</li>
+							<li class="_pea-col-span3 _pea-no-margin">Help</li>
+						</ul>
+					</nav>
+					<div class="content">
+						<section class="_pea-no-padding">
+							<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updateappsettings">
+								<div class="_pea-document">
+									<div class="_pea-row">
+										<p>Updating settings updates <a class="_pea-button">content/config/config.json</a> and restarts your application. Your theme can be changed by updating <a href="/p-admin/themes">theme settings</a>.</p>
+										<h3>Configuration Options</h3>
+										<p class="extra-padding">
+											<div id="appsettings-config"></div>
+										</p>
+										<h3>Read Only</h3>
+										<p class="extra-padding">
+											<div id="appsettings-readonly"></div>
+										</p>
+
+										<p class="_pea-text-center">
+												<button type="submit" class=" _pea-button _pea-color-info " style="font-size: 110%;">Update Application Settings</button>
+										</p>
+									</div>
+								</div>
+							</form>
+						</section>
+						<section class="_pea-no-padding">
+							<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updatethemesettings">
+								<input type="hidden" name="_csrf" value=<%= locals.token %> >
+								<div class="_pea-document">
+									<div class="_pea-row">
+										<p>Updates <a class="_pea-button">content/themes/<%= appsettings.readonly.theme %>/periodicjs.theme.json</a> and restarts your application.</p>
+										<h3>Configuration Options</h3>
+										<p class="extra-padding">
+											<div id="themesettings-config"></div>
+										</p>
+										<h3>Read Only</h3>
+										<p class="extra-padding">
+											<div id="themesettings-readonly"></div>
+										</p>
+										<p class="_pea-text-center">
+												<button type="submit" class=" _pea-button _pea-color-info " style="font-size: 110%;">Update Theme Settings</button>
+										</p>
+									</div>
+								</div>
+							</form>
+						</section>
+						<section class="_pea-no-padding">
+							<div class="_pea-document _pea-form">
+								<div class="_pea-row">
+									<h3>Restart Application</h3>
+									<p class="extra-padding"><span class="_pea-color-error">WARNING: Any HTTP POST requests may throw an error, until you refresh the page if you are using CSRF(Cross Site Request Forgery).</span></p>
+									<p class="extra-padding">Using this method to restart the application, updates <a class="_pea-button">content/extensions/restart.json</a>. 
+									<p class="extra-padding">This only works if you're running the application with PM2 (or npm start or npm run nd).</p> 
+									<p class="_pea-text-center">
+											<a data-href="/p-admin/settings/restart" class=" _pea-button _pea-color-inverse _pea-dialog-delete" data-successfunction="restartAppResponse" data-donotnotify="true" style="font-size: 110%;">Restart Application</a>
+									</p>
+								</div>
+							</div>
+						</section>
+						<section class="_pea-no-padding">
+							<div class="_pea-document">
+								<div class="_pea-row">
+									<h3>Full Documentation</h3>
+									<p>Periodic is a extremely flexible and modular by design.</p>
+									<p>Overriding, extending, customizing existing and new functionality is highly encouraged.</p>
+									<p>Please read the <a href="https://github.com/typesettin/periodicjs/wiki" target="_blank">full documentation on github</a> and help build a better platform.</p>
+								</div>
+							</div>
+						</section>
 					</div>
-				</form>
-					<div class="_pea-document">
-						<div class="_pea-row">
-							<h3>Full Documentation</h3>
-							<p>Periodic is a extremely flexible and modular by design.</p>
-							<p>Overriding, extending, customizing existing and new functionality is highly encouraged.</p>
-							<p>Please read the <a href="https://github.com/typesettin/periodicjs/wiki" target="_blank">full documentation on github</a> and help build a better platform.</p>
-						</div>
-					</div>
+				</div>
 			</div>
 		</div>
 	</div>
