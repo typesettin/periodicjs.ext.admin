@@ -183,52 +183,47 @@ var load_extension_settings = function (req, res, next) {
 	var loadconfigfiles = function (callback) {
 		var configfilesJSON = [];
 		fs.readdir(ext_installed_config_file_path, function (err, configfiles) {
-			if (err) {
-				callback(err);
+			if (configfiles && configfiles.length > 0) {
+				async.each(configfiles, function (configFile, cb) {
+					if (path.extname(configFile) === '.json') {
+						fs.readJson(path.resolve(ext_installed_config_file_path, configFile), function (err, data) {
+							if (err) {
+								cb(err);
+							}
+							else {
+								configfilesJSON.push({
+									name: configFile,
+									filedata: data
+								});
+								cb(null);
+							}
+						});
+					}
+					else {
+						fs.readFile(path.resolve(ext_installed_config_file_path, configFile), 'utf8', function (err, data) {
+							if (err) {
+								cb(err);
+							}
+							else {
+								configfilesJSON.push({
+									name: configFile,
+									filedata: data
+								});
+								cb(null);
+							}
+						});
+					}
+				}, function (err) {
+					if (err) {
+						callback(err);
+					}
+					else {
+						callback(null, configfilesJSON);
+					}
+				});
 			}
 			else {
-				if (configfiles && configfiles.length > 0) {
-					async.each(configfiles, function (configFile, cb) {
-						if (path.extname(configFile) === '.json') {
-							fs.readJson(path.resolve(ext_installed_config_file_path, configFile), function (err, data) {
-								if (err) {
-									cb(err);
-								}
-								else {
-									configfilesJSON.push({
-										name: configFile,
-										filedata: data
-									});
-									cb(null);
-								}
-							});
-						}
-						else {
-							fs.readFile(path.resolve(ext_installed_config_file_path, configFile), 'utf8', function (err, data) {
-								if (err) {
-									cb(err);
-								}
-								else {
-									configfilesJSON.push({
-										name: configFile,
-										filedata: data
-									});
-									cb(null);
-								}
-							});
-						}
-					}, function (err) {
-						if (err) {
-							callback(err);
-						}
-						else {
-							callback(null, configfilesJSON);
-						}
-					});
-				}
-				else {
-					callback(null, configfilesJSON);
-				}
+				callback(null, configfilesJSON);
 			}
 		});
 	};
@@ -255,7 +250,53 @@ var load_extension_settings = function (req, res, next) {
 				next();
 			}
 		});
+};
 
+var update_ext_filedata = function (req, res) {
+	var updateConfigFileData = CoreUtilities.removeEmptyObjectValues(req.body),
+		extconffile = path.resolve(process.cwd(), 'content/config/extensions/', updateConfigFileData.extname, updateConfigFileData.filename),
+		jsonParseError;
+	delete updateConfigFileData._csrf;
+
+	try {
+		updateConfigFileData.filedata = (path.extname(updateConfigFileData.filename) === '.json') ? JSON.parse(updateConfigFileData.filedata) : updateConfigFileData.filedata;
+	}
+	catch (e) {
+		jsonParseError = e;
+	}
+
+	fs.writeJson(extconffile, updateConfigFileData.filedata, function (err) {
+		if (err) {
+			CoreController.handleDocumentQueryErrorResponse({
+				err: err,
+				res: res,
+				req: req
+			});
+		}
+		else if (jsonParseError) {
+			CoreController.handleDocumentQueryErrorResponse({
+				err: 'JSON Parse Error: ' + jsonParseError,
+				res: res,
+				req: req
+			});
+		}
+		else {
+			CoreController.handleDocumentQueryRender({
+				req: req,
+				res: res,
+				redirecturl: '/p-admin/extension/' + updateConfigFileData.extname,
+				responseData: {
+					result: 'success',
+					data: 'updated config file and restarted application'
+				},
+				callback: function () {
+					CoreUtilities.restart_app({
+						restartfile: restartfile
+					});
+				}
+			});
+		}
+	});
 };
 
 var load_app_settings = function (req, res, next) {
@@ -285,7 +326,6 @@ var load_app_settings = function (req, res, next) {
 	req.controllerData.appsettings = appsettings;
 	next();
 };
-
 
 var load_theme_settings = function (req, res, next) {
 	var themesettings = {
@@ -498,6 +538,7 @@ var controller = function (resources) {
 
 	return {
 		load_extension_settings: load_extension_settings,
+		update_ext_filedata: update_ext_filedata,
 		load_app_settings: load_app_settings,
 		load_theme_settings: load_theme_settings,
 		restart_app: restart_app,

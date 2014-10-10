@@ -1241,6 +1241,7 @@ window.addEventListener('load', function () {
 	if (tabelement) {
 		componentTab1 = new ComponentTabs(tabelement);
 	}
+	window.ajaxFormEventListers('._pea-ajax-form');
 });
 
 },{"./jsonformelements":12,"periodicjs.component.tabs":8}],12:[function(require,module,exports){

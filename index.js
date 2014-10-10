@@ -171,6 +171,8 @@ module.exports = function (periodic) {
 	settingsRouter.post('/updateappsettings', adminSettingsController.update_app_settings);
 	settingsRouter.post('/updatethemesettings', adminSettingsController.update_theme_settings);
 
+	settingsRouter.post('/updateextfiledata', adminSettingsController.update_ext_filedata);
+
 	/**
 	 * periodic routes
 	 */

@@ -30,16 +30,26 @@
 			      </ul>
 		      </nav>
 		      <div class="content">
-		      	<% for(var x in extconfigfiles){
+		      	<% extconfigfiles.forEach(function(confFileData){
 		      		%>
 			        <section>
 								<div class="_pea-document">
-									<pre class="code-output">
-										<%- extconfigfiles[x].data %>	
-									</pre>
+								<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updateextfiledata">
+									<div class="_pea-row _pea-container-forminput">
+										<input type="hidden" name="_csrf" value=<%= locals.token %> >
+										<input type="hidden" name="extname" value="<%= extension.name %>" />
+										<input type="hidden" name="filename" value="<%=confFileData.name %>" />
+										<textarea name="filedata"  class="textarea-tall noFormSubmit _pea-col-span12" ><%if(confFileData.name.match(/.json/gi)){%><%- JSON.stringify(confFileData.filedata,null,4) %>
+										<%}else{%><%- confFileData.filedata %>
+										<%}%></textarea>
+									</div>
+									<div class="_pea-row _pea-text-center">
+										<button type="submit" name="save_button" class="_pea-button _pea-color-success" style="font-size:1.5em;"/>Save</button>
+									</div>
+								</form>
 								</div>
 							</section>
-		      	<% } %>
+		      	<% }); %>
 		        <section>
 							<div class="_pea-document">
 								<h2>Read only</h2>

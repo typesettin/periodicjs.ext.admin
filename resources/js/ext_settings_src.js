@@ -10,4 +10,5 @@ window.addEventListener('load', function () {
 	if (tabelement) {
 		componentTab1 = new ComponentTabs(tabelement);
 	}
+	window.ajaxFormEventListers('._pea-ajax-form');
 });
