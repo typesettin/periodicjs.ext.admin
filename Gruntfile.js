@@ -88,6 +88,18 @@ module.exports = function (grunt) {
 				}]
 			}
 		},
+		less: {
+			development: {
+				options: {
+					sourceMap: true,
+					yuicompress: true,
+					compress: true
+				},
+				files: {
+					'public/stylesheets/admin.css': 'resources/less/admin.less'
+				}
+			}
+		},
 		copy: {
 			main: {
 				cwd: 'public',
@@ -104,9 +116,10 @@ module.exports = function (grunt) {
 					'index.js',
 					'controller/**/*.js',
 					'resources/**/*.js',
+					'resources/**/*.less',
 					'test/**/*.js',
 				],
-				tasks: ['lint', 'packagejs', 'copy', /*'doc',*/ 'test'],
+				tasks: ['lint', 'packagejs', 'copy', 'less', 'test'],
 				options: {
 					interrupt: true
 				}

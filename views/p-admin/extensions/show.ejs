@@ -34,35 +34,39 @@
 		      		%>
 			        <section>
 								<div class="_pea-document">
-								<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updateextfiledata">
-									<div class="_pea-row _pea-container-forminput">
-										<input type="hidden" name="_csrf" value=<%= locals.token %> >
-										<input type="hidden" name="extname" value="<%= extension.name %>" />
-										<input type="hidden" name="filename" value="<%=confFileData.name %>" />
-										<textarea name="filedata"  class="textarea-tall noFormSubmit _pea-col-span12" ><%if(confFileData.name.match(/.json/gi)){%><%- JSON.stringify(confFileData.filedata,null,4) %>
-										<%}else{%><%- confFileData.filedata %>
-										<%}%></textarea>
-									</div>
-									<div class="_pea-row _pea-text-center">
-										<button type="submit" name="save_button" class="_pea-button _pea-color-success" style="font-size:1.5em;"/>Save</button>
-									</div>
-								</form>
+									<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updateextfiledata">
+										<div class="_pea-row _pea-container-forminput">
+											<input type="hidden" name="_csrf" value=<%= locals.token %> >
+											<input type="hidden" name="extname" value="<%= extension.name %>" />
+											<input type="hidden" name="filename" value="<%=confFileData.name %>" />
+											<%if(confFileData.name.match(/.json/gi)){%>
+												<textarea name="filedata"  class="textarea-tall noFormSubmit codemirroreditor jsonEditor _pea-col-span12" ><%- JSON.stringify(confFileData.filedata,null,4) %></textarea>
+											<%}
+											else if(confFileData.name.match(/.js/gi)){%>
+												<textarea name="filedata"  class="textarea-tall noFormSubmit codemirroreditor jsEditor _pea-col-span12" ><%- confFileData.filedata %></textarea>
+											<%}
+											else{%>
+												<textarea name="filedata"  class="textarea-tall noFormSubmit codemirroreditor _pea-col-span12" ><%- confFileData.filedata %></textarea>
+											<%}%>
+										</div>
+										<div class="_pea-row _pea-text-center">
+											<button type="submit" name="save_button" class="_pea-button _pea-color-success" style="font-size:1.5em;"/>Save</button>
+										</div>
+									</form>
 								</div>
 							</section>
 		      	<% }); %>
 		        <section>
 							<div class="_pea-document">
 								<h2>Read only</h2>
-								<pre class="code-output">
-			<%- JSON.stringify(extdata.packagefile,null,4) %>
+								<pre class="code-output"><%- JSON.stringify(extdata.packagefile,null,4) %>
 								</pre>
 							</div>
 		        </section>
 		        <section>
 							<div class="_pea-document">
 								<h2>Read only</h2>
-								<pre class="code-output">
-			<%- JSON.stringify(extdata.periodicfile,null,4) %>
+								<pre class="code-output"><%- JSON.stringify(extdata.periodicfile,null,4) %>
 								</pre>
 							</div>
 		        </section>
