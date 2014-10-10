@@ -266,39 +266,76 @@ var update_ext_filedata = function (req, res) {
 	}
 
 	//writefunction =  (path.extname(updateConfigFileData)==='.json') ? fs.writeJson : fs.outputFile;
+	if (path.extname(updateConfigFileData) === '.json') {
+		fs.writeJson(extconffile, updateConfigFileData.filedata, function (err) {
+			if (err) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: err,
+					res: res,
+					req: req
+				});
+			}
+			else if (jsonParseError) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: 'JSON Parse Error: ' + jsonParseError,
+					res: res,
+					req: req
+				});
+			}
+			else {
+				CoreController.handleDocumentQueryRender({
+					req: req,
+					res: res,
+					redirecturl: '/p-admin/extension/' + updateConfigFileData.extname,
+					responseData: {
+						result: 'success',
+						data: 'updated config file and restarted application'
+					},
+					callback: function () {
+						CoreUtilities.restart_app({
+							restartfile: restartfile
+						});
+					}
+				});
+			}
+		});
+	}
+	else {
+		fs.outputFile(extconffile, updateConfigFileData.filedata, function (err) {
+			if (err) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: err,
+					res: res,
+					req: req
+				});
+			}
+			else if (jsonParseError) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: 'JSON Parse Error: ' + jsonParseError,
+					res: res,
+					req: req
+				});
+			}
+			else {
+				CoreController.handleDocumentQueryRender({
+					req: req,
+					res: res,
+					redirecturl: '/p-admin/extension/' + updateConfigFileData.extname,
+					responseData: {
+						result: 'success',
+						data: 'updated config file and restarted application'
+					},
+					callback: function () {
+						CoreUtilities.restart_app({
+							restartfile: restartfile
+						});
+					}
+				});
+			}
+		});
+	}
 
-	fs.writeJson(extconffile, updateConfigFileData.filedata, function (err) {
-		if (err) {
-			CoreController.handleDocumentQueryErrorResponse({
-				err: err,
-				res: res,
-				req: req
-			});
-		}
-		else if (jsonParseError) {
-			CoreController.handleDocumentQueryErrorResponse({
-				err: 'JSON Parse Error: ' + jsonParseError,
-				res: res,
-				req: req
-			});
-		}
-		else {
-			CoreController.handleDocumentQueryRender({
-				req: req,
-				res: res,
-				redirecturl: '/p-admin/extension/' + updateConfigFileData.extname,
-				responseData: {
-					result: 'success',
-					data: 'updated config file and restarted application'
-				},
-				callback: function () {
-					CoreUtilities.restart_app({
-						restartfile: restartfile
-					});
-				}
-			});
-		}
-	});
+
 };
 
 var load_app_settings = function (req, res, next) {

@@ -34,7 +34,7 @@
 		      		%>
 			        <section>
 								<div class="_pea-document">
-									<form id="editfileform-<%= index%>" data-form-index="<%index%>" class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updateextfiledata">
+									<form id="editfileform-<%= index%>" data-form-index="<%=index%>" data-beforesubmitfunction="getCMValue" class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updateextfiledata">
 										<div class="_pea-row _pea-container-forminput">
 											<input type="hidden" name="_csrf" value=<%= locals.token %> >
 											<input type="hidden" name="extname" value="<%= extension.name %>" />

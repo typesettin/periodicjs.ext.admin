@@ -11784,6 +11784,15 @@ window.addEventListener('load', function () {
 
 window.addEventListener('resize', styleWindowResizeEventHandler, false);
 
+window.getCMValue = function (e) {
+	var submittingForm = e.target;
+	var cmformindex = submittingForm.getAttribute('data-form-index');
+	document.querySelector('#edittextform-' + cmformindex).innerHTML = codeMirrors[cmformindex].getValue();
+
+	console.log(document.querySelector('#edittextform-' + cmformindex));
+	//console.log(submittingForm.document.querySelector('textarea'));
+};
+
 },{"../../node_modules/codemirror/addon/comment/comment":3,"../../node_modules/codemirror/addon/comment/continuecomment":4,"../../node_modules/codemirror/addon/edit/matchbrackets":5,"../../node_modules/codemirror/addon/fold/brace-fold":6,"../../node_modules/codemirror/addon/fold/comment-fold":7,"../../node_modules/codemirror/addon/fold/foldcode":8,"../../node_modules/codemirror/addon/fold/foldgutter":9,"../../node_modules/codemirror/addon/fold/indent-fold":10,"../../node_modules/codemirror/mode/css/css":12,"../../node_modules/codemirror/mode/htmlembedded/htmlembedded":13,"../../node_modules/codemirror/mode/javascript/javascript":15,"./jsonformelements":26,"classie":1,"codemirror":11,"periodicjs.component.tabs":22}],26:[function(require,module,exports){
 'use strict';
 

@@ -91,3 +91,12 @@ window.addEventListener('load', function () {
 });
 
 window.addEventListener('resize', styleWindowResizeEventHandler, false);
+
+window.getCMValue = function (e) {
+	var submittingForm = e.target;
+	var cmformindex = submittingForm.getAttribute('data-form-index');
+	document.querySelector('#edittextform-' + cmformindex).innerHTML = codeMirrors[cmformindex].getValue();
+
+	console.log(document.querySelector('#edittextform-' + cmformindex));
+	//console.log(submittingForm.document.querySelector('textarea'));
+};
