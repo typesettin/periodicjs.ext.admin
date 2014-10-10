@@ -1,7 +1,11 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
+<%
+	var numtabs = 2 + extconfigfiles.length;
+	var tabspan = (numtabs>12)?  1 :  parseInt(12/numtabs);
+%>
 	<div class="_pea-container">
-		<div class="_pea_row">
+		<div class="_pea-row">
 			<div class="_pea-col-span12">
 				<h2><%= extension.name %>
 					<small class="_pea-form">
@@ -14,31 +18,51 @@
 					</small>
 				</h2>
 			</div>
+			<article class="_pea-col-span12">
+				<div id="tabs" class="tabs">
+		      <nav>
+			      <ul class="_pea-col-span12">
+			      	<% for(var x in extconfigfiles){
+			      		%><li  class="_pea-col-span<%= tabspan %>"><%- extconfigfiles[x].name %></li><%
+			      		} %>
+			      	<li class="_pea-col-span<%= tabspan %>">package.json</li>
+			      	<li class="_pea-col-span<%= tabspan %>">periodicjs.ext.json</li>
+			      </ul>
+		      </nav>
+		      <div class="content">
+		      	<% for(var x in extconfigfiles){
+		      		%>
+			        <section>
+								<div class="_pea-document">
+									<pre class="code-output">
+										<%- extconfigfiles[x].data %>	
+									</pre>
+								</div>
+							</section>
+		      	<% } %>
+		        <section>
+							<div class="_pea-document">
+								<h2>Read only</h2>
+								<pre class="code-output">
+			<%- JSON.stringify(extdata.packagefile,null,4) %>
+								</pre>
+							</div>
+		        </section>
+		        <section>
+							<div class="_pea-document">
+								<h2>Read only</h2>
+								<pre class="code-output">
+			<%- JSON.stringify(extdata.periodicfile,null,4) %>
+								</pre>
+							</div>
+		        </section>
+	        </div>
+        </div>
+      </article>
 		</div>
-		<div class="_pea-row">
-			<div class="_pea-col-span12">
-				<div class="_pea-row _pea-container-forminput _pea-text-left _pea-form">
-					<h3>package.json </h3>
-				</div>
-				<div class="_pea-document">
-					<pre class="code-output">
-<%- JSON.stringify(extdata.packagefile,null,4) %>
-					</pre>
-				</div>
-			</div>
-		</div>
-		<div class="_pea-row">
-			<div class="_pea-col-span12">
-				<div class="_pea-row _pea-container-forminput _pea-text-left _pea-form">
-					<h3>periodicjs.ext.json </h3>
-				</div>
-				<div class="_pea-document">
-					<pre class="code-output">
-<%- JSON.stringify(extdata.periodicfile,null,4) %>
-					</pre>
-				</div>
-			</div>
-		</div>
+	</div>
+	<div>
+		<%- JSON.stringify(extconfigfiles) %>
 	</div>
 	<div style="display:none">
 		<div id="view-ext-info-modal">

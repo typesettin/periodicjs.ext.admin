@@ -1231,15 +1231,20 @@ function extend(origin, add) {
 },{}],11:[function(require,module,exports){
 'use strict';
 
-// var request = require('superagent');
-var updatestatus,
-	themesettingsConfiguration,
-	themesettingsReadOnly,
-	appsettingsConfiguration,
-	appsettingsReadOnly,
-	tabelement,
+var tabelement,
 	componentTab1,
-	ComponentTabs = require('periodicjs.component.tabs');
+	ComponentTabs = require('periodicjs.component.tabs'),
+	jsonFormElements = require('./jsonformelements');
+
+window.addEventListener('load', function () {
+	tabelement = document.getElementById('tabs');
+	if (tabelement) {
+		componentTab1 = new ComponentTabs(tabelement);
+	}
+});
+
+},{"./jsonformelements":12,"periodicjs.component.tabs":8}],12:[function(require,module,exports){
+'use strict';
 
 var jsonFormElements = function (options) {
 	var returnhtml = '',
@@ -1318,64 +1323,6 @@ var jsonFormElements = function (options) {
 	return returnhtml;
 };
 
-var jumptotab = function () {
-	var jumptosection = window.location.href.split('#')[1];
-	if (tabelement) {
-		switch (jumptosection) {
-		case 'theme-settings':
-			componentTab1.showTab(1);
-			break;
-		case 'restart-application':
-			componentTab1.showTab(2);
-			break;
-		}
-	}
-};
+module.exports = jsonFormElements;
 
-window.addEventListener('load', function () {
-	updatestatus = document.getElementById('update-status');
-	tabelement = document.getElementById('tabs');
-	window.checkPeriodicVersion(function (err, periodicversion) {
-		if (periodicversion.status === 'needupdate') {
-			updatestatus.style.display = 'block';
-		}
-	});
-	window.ajaxFormEventListers('._pea-ajax-form');
-
-	themesettingsConfiguration = document.getElementById('themesettings-config');
-	themesettingsReadOnly = document.getElementById('themesettings-readonly');
-	appsettingsConfiguration = document.getElementById('appsettings-config');
-	appsettingsReadOnly = document.getElementById('appsettings-readonly');
-	if (tabelement) {
-		componentTab1 = new ComponentTabs(tabelement);
-	}
-	appsettingsConfiguration.innerHTML = jsonFormElements({
-		jsonobject: window.appsettings.configuration,
-		idnameprepend: 'asc'
-	});
-	appsettingsReadOnly.innerHTML = jsonFormElements({
-		jsonobject: window.appsettings.readonly,
-		readonly: true,
-		idnameprepend: 'asro'
-	});
-	themesettingsConfiguration.innerHTML = jsonFormElements({
-		jsonobject: window.themesettings.configuration,
-		idnameprepend: 'tsc'
-	});
-	themesettingsReadOnly.innerHTML = jsonFormElements({
-		jsonobject: window.themesettings.readonly,
-		readonly: true,
-		idnameprepend: 'tsro'
-	});
-	jumptotab();
-});
-
-window.restartAppResponse = function () {
-	window.ribbonNotification.showRibbon('Application restarted', 4000, 'info');
-};
-
-window.updateAppResponse = function () {
-	window.ribbonNotification.showRibbon('This is coming soon', 4000, 'warn');
-};
-
-},{"periodicjs.component.tabs":8}]},{},[11]);
+},{}]},{},[11]);

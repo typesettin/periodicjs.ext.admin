@@ -80,7 +80,7 @@ module.exports = function (periodic) {
 	extensionAdminRouter.get('/:id/enable', adminController.loadExtensions, adminController.loadExtension, extController.enable);
 	extensionAdminRouter.post('/upload', mediaassetController.upload, extController.upload_install);
 	extensionAdminRouter.post('/:id/delete', adminController.loadExtension, extController.remove);
-	extensionAdminRouter.get('/:id', adminController.loadExtension, adminController.extension_show);
+	extensionAdminRouter.get('/:id', adminController.loadExtension, adminSettingsController.load_extension_settings, adminController.extension_show);
 	/**
 	 * admin/theme manager routes
 	 */

@@ -764,7 +764,6 @@ var extension_show = function (req, res) {
 		extPackageConf = ExtensionCore.getExtensionPackageJsonFilePath(extname),
 		extPeriodicConf = ExtensionCore.getExtensionPeriodicConfFilePath(extname);
 
-
 	// an example using an object instead of an array
 	async.parallel({
 			packagefile: function (callback) {
@@ -796,11 +795,12 @@ var extension_show = function (req, res) {
 							responseData: {
 								pagedata: {
 									title: req.controllerData.extension.name + ' - Extension',
-									// headerjs: ["/extensions/periodicjs.ext.admin/javascripts/extshow.js"],
+									headerjs: ['/extensions/periodicjs.ext.admin/js/ext_settings.min.js'],
 									extensions: CoreUtilities.getAdminMenu()
 								},
 								extdata: results,
 								extension: req.controllerData.extension,
+								extconfigfiles: req.controllerData.extconfigfiles,
 								user: req.user
 							}
 						});

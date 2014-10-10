@@ -2,7 +2,7 @@
 
 var path = require('path'),
 	// request = require('superagent'),
-	// semver = require('semver'),
+	async = require('async'),
 	fs = require('fs-extra'),
 	str2json = require('string-to-json'),
 	merge = require('utils-merge'),
@@ -38,6 +38,7 @@ var sendEmail = function (options, callback) {
 	mailoptions.text = options.text;
 	mailtransport.sendMail(mailoptions, callback);
 };
+
 var sendSettingEmail = function (options, callback) {
 	var settingemailoptions = options;
 	settingemailoptions.subject = (options.subject) ? options.subject : appSettings.name + ' -Admin Email Notification';
@@ -46,7 +47,6 @@ var sendSettingEmail = function (options, callback) {
 	// console.log('settingemailoptions',settingemailoptions);
 	sendEmail(settingemailoptions, callback);
 };
-
 
 var restart_app = function (req, res) {
 	CoreUtilities.restart_app({
@@ -103,6 +103,161 @@ var update_app = function (req, res) {
 	});
 };
 
+/**
+ * load the extensions configuration files from the installed config folder in content/config/extensions/[extension]/[config files]
+ * @param  {object}   req
+ * @param  {object}   res
+ * @param  {Function} next
+ */
+var load_extension_settings = function (req, res, next) {
+	var extname = req.params.id,
+		ext_default_config_file_path = path.resolve(process.cwd(), 'node_modules/', extname, 'config'),
+		ext_installed_config_file_path = path.resolve(process.cwd(), 'content/config/extensions/', extname),
+		missing_conf_files = [],
+		installed_conf_files = [];
+
+	/**
+	 * get both installed files, and the default files in ext conf directory, if missin files, add them to missing conf files array
+	 * @param  {Function} callback async.parallel callback
+	 * @return {Array}            array of missing conf files
+	 */
+	var getextensionconfigfiles = function (callback) {
+		async.parallel({
+				defaultExtConfFiles: function (cb) {
+					fs.readdir(ext_default_config_file_path, function (err, file) {
+						cb(null, file);
+					});
+				},
+				installedExtConfFiles: function (cb) {
+					fs.readdir(ext_installed_config_file_path, function (err, file) {
+						cb(null, file);
+					});
+				}
+			},
+			function (err, result) {
+				console.log('err', err, 'result', result);
+				try {
+					if (result.defaultExtConfFiles && result.defaultExtConfFiles.length > 0) {
+						missing_conf_files = result.defaultExtConfFiles;
+						if (result.installedExtConfFiles && result.installedExtConfFiles.length > 0) {
+							for (var c in missing_conf_files) {
+								for (var d in result.installedExtConfFiles) {
+									if (missing_conf_files[c] === result.installedExtConfFiles[d]) {
+										installed_conf_files.push(missing_conf_files.splice(c, 1)[0]);
+									}
+								}
+							}
+						}
+					}
+					callback(null, missing_conf_files);
+				}
+				catch (e) {
+					callback(e, null);
+				}
+			});
+	};
+
+	/**
+	 * copy missing files if any are missing
+	 * @param  {array}   missingExtConfFiles array of missing files
+	 * @param  {Function} callback            async callback
+	 */
+	var copymissingconfigfiles = function (missingExtConfFiles, callback) {
+		if (missingExtConfFiles && missingExtConfFiles.length > 0) {
+			async.each(missingExtConfFiles, function (file, cb) {
+				fs.copy(path.resolve(ext_default_config_file_path, file), path.resolve(ext_installed_config_file_path, file), cb);
+			}, function (err) {
+				callback(err);
+			});
+		}
+		else {
+			callback(null);
+		}
+	};
+
+	/**
+	 * load config files into array of filejson
+	 * @param  {Function} callback async callbackk
+	 * @return {array}            array of file data objects
+	 */
+	var loadconfigfiles = function (callback) {
+		var configfilesJSON = [];
+		fs.readdir(ext_installed_config_file_path, function (err, configfiles) {
+			if (err) {
+				callback(err);
+			}
+			else {
+				if (configfiles && configfiles.length > 0) {
+					async.each(configfiles, function (configFile, cb) {
+						if (path.extname(configFile) === '.json') {
+							fs.readJson(path.resolve(ext_installed_config_file_path, configFile), function (err, data) {
+								if (err) {
+									cb(err);
+								}
+								else {
+									configfilesJSON.push({
+										name: configFile,
+										filedata: data
+									});
+									cb(null);
+								}
+							});
+						}
+						else {
+							fs.readFile(path.resolve(ext_installed_config_file_path, configFile), 'utf8', function (err, data) {
+								if (err) {
+									cb(err);
+								}
+								else {
+									configfilesJSON.push({
+										name: configFile,
+										filedata: data
+									});
+									cb(null);
+								}
+							});
+						}
+					}, function (err) {
+						if (err) {
+							callback(err);
+						}
+						else {
+							callback(null, configfilesJSON);
+						}
+					});
+				}
+				else {
+					callback(null, configfilesJSON);
+				}
+			}
+		});
+	};
+
+	req.controllerData = (req.controllerData) ? req.controllerData : {};
+
+
+	async.waterfall([
+			getextensionconfigfiles,
+			copymissingconfigfiles,
+			loadconfigfiles
+		],
+		function (err, result) {
+			if (err) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: err,
+					res: res,
+					req: req
+				});
+			}
+			else {
+				// console.log('err', err, 'result', result);
+				req.controllerData.extconfigfiles = result;
+				next();
+			}
+		});
+
+};
+
 var load_app_settings = function (req, res, next) {
 	var appsettings = {
 		readonly: {
@@ -130,6 +285,8 @@ var load_app_settings = function (req, res, next) {
 	req.controllerData.appsettings = appsettings;
 	next();
 };
+
+
 var load_theme_settings = function (req, res, next) {
 	var themesettings = {
 		readonly: {
@@ -340,6 +497,7 @@ var controller = function (resources) {
 	});
 
 	return {
+		load_extension_settings: load_extension_settings,
 		load_app_settings: load_app_settings,
 		load_theme_settings: load_theme_settings,
 		restart_app: restart_app,

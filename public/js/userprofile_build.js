@@ -1485,7 +1485,7 @@ module.exports = letterpress;
 if ( typeof window === "object" && typeof window.document === "object" ) {
 	window.letterpress = letterpress;
 }
-},{"classie":1,"domhelper":10,"events":3,"superagent":16,"util":7,"util-extend":12}],10:[function(require,module,exports){
+},{"classie":1,"domhelper":10,"events":3,"superagent":15,"util":7,"util-extend":20}],10:[function(require,module,exports){
 /*
  * domhelper
  * http://github.com/yawetse/domhelper
@@ -1836,41 +1836,6 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
 	window.domhelper = domhelper;
 }
 },{"classie":1}],12:[function(require,module,exports){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-module.exports = extend;
-function extend(origin, add) {
-  // Don't do anything if add isn't an object
-  if (!add || typeof add !== 'object') return origin;
-
-  var keys = Object.keys(add);
-  var i = keys.length;
-  while (i--) {
-    origin[keys[i]] = add[keys[i]];
-  }
-  return origin;
-}
-
-},{}],13:[function(require,module,exports){
 /*
  * component.tabs
  * http://github.amexpub.com/modules/component.tabs
@@ -1882,7 +1847,7 @@ function extend(origin, add) {
 
 module.exports = require('./lib/component.tabs');
 
-},{"./lib/component.tabs":14}],14:[function(require,module,exports){
+},{"./lib/component.tabs":13}],13:[function(require,module,exports){
 /*
  * component.tabs
  * http://github.amexpub.com/modules
@@ -1982,9 +1947,42 @@ componentTabs.prototype._show = function (idx) {
 };
 module.exports = componentTabs;
 
-},{"classie":1,"events":3,"util":7,"util-extend":15}],15:[function(require,module,exports){
-module.exports=require(12)
-},{"/Users/yawetse/Developer/github/promise/promise-web-application/periodicjs/node_modules/periodicjs.ext.admin/node_modules/letterpressjs/node_modules/util-extend/extend.js":12}],16:[function(require,module,exports){
+},{"classie":1,"events":3,"util":7,"util-extend":14}],14:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+module.exports = extend;
+function extend(origin, add) {
+  // Don't do anything if add isn't an object
+  if (!add || typeof add !== 'object') return origin;
+
+  var keys = Object.keys(add);
+  var i = keys.length;
+  while (i--) {
+    origin[keys[i]] = add[keys[i]];
+  }
+  return origin;
+}
+
+},{}],15:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -3035,7 +3033,7 @@ request.put = function(url, data, fn){
 
 module.exports = request;
 
-},{"emitter":17,"reduce":18}],17:[function(require,module,exports){
+},{"emitter":16,"reduce":17}],16:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -3201,7 +3199,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 
 /**
  * Reduce `arr` with `fn`.
@@ -3226,7 +3224,7 @@ module.exports = function(arr, fn, initial){
   
   return curr;
 };
-},{}],19:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 var updatemedia = function (element, mediadoc, additem) {
@@ -3326,7 +3324,7 @@ updatemedia.uploadFile = function (mediafilesresult, file, options) {
 
 module.exports = updatemedia;
 
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 var letterpress = require('letterpressjs'),
@@ -3403,4 +3401,6 @@ window.addEventListener('load', function () {
 	mediafilesresult.addEventListener('click', updatemedia.handleMediaButtonClick, false);
 });
 
-},{"./updatemedia":19,"letterpressjs":8,"periodicjs.component.tabs":13}]},{},[20]);
+},{"./updatemedia":18,"letterpressjs":8,"periodicjs.component.tabs":12}],20:[function(require,module,exports){
+module.exports=require(14)
+},{"/Users/yawetse/Developer/github/galanetal/savorband-cms/periodicjs/node_modules/periodicjs.ext.admin/node_modules/periodicjs.component.tabs/node_modules/util-extend/extend.js":14}]},{},[19]);
