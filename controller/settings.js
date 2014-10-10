@@ -252,6 +252,11 @@ var load_extension_settings = function (req, res, next) {
 		});
 };
 
+/**
+ * save data from config page post
+ * @param  {object} req
+ * @param  {object} res
+ */
 var update_ext_filedata = function (req, res) {
 	var updateConfigFileData = CoreUtilities.removeEmptyObjectValues(req.body),
 		extconffile = path.resolve(process.cwd(), 'content/config/extensions/', updateConfigFileData.extname, updateConfigFileData.filename),
@@ -265,8 +270,8 @@ var update_ext_filedata = function (req, res) {
 		jsonParseError = e;
 	}
 
-	//writefunction =  (path.extname(updateConfigFileData)==='.json') ? fs.writeJson : fs.outputFile;
-	if (path.extname(updateConfigFileData) === '.json') {
+	if (path.extname(updateConfigFileData.filename) === '.json') {
+		logger.warn('write json');
 		fs.writeJson(extconffile, updateConfigFileData.filedata, function (err) {
 			if (err) {
 				CoreController.handleDocumentQueryErrorResponse({
@@ -301,6 +306,7 @@ var update_ext_filedata = function (req, res) {
 		});
 	}
 	else {
+		logger.warn('write file');
 		fs.outputFile(extconffile, updateConfigFileData.filedata, function (err) {
 			if (err) {
 				CoreController.handleDocumentQueryErrorResponse({
@@ -334,8 +340,6 @@ var update_ext_filedata = function (req, res) {
 			}
 		});
 	}
-
-
 };
 
 var load_app_settings = function (req, res, next) {

@@ -7,13 +7,13 @@
 	<div class="_pea-container">
 		<div class="_pea-row">
 			<div class="_pea-col-span12">
-				<h2><%= extension.name %>
-					<small class="_pea-form">
+				<h2><a href="/p-admin/extensions">Extension</a> &rsaquo; <%= extension.name %>
+					<small class="_pea-form  _pea-pull-right">
 						<%if(extension.enabled){%>
-							<a href="/p-admin/extension/<%= extension.name %>/disable" class="_pea-button _pea-color-warn enable-ext-button">disable</a>
+							<a href="/p-admin/extension/<%= extension.name %>/disable" class="_pea-button _pea-color-warn enable-ext-button">disable extension</a>
 						<%}
 						else{%>
-							<a href="/p-admin/extension/<%= extension.name %>/enable" class="_pea-button enable-ext-button">enable</a>
+							<a href="/p-admin/extension/<%= extension.name %>/enable" class="_pea-button enable-ext-button">enable extension</a>
 						<%}%>
 					</small>
 				</h2>
