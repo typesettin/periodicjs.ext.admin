@@ -30,23 +30,23 @@
 			      </ul>
 		      </nav>
 		      <div class="content">
-		      	<% extconfigfiles.forEach(function(confFileData){
+		      	<% extconfigfiles.forEach(function(confFileData,index){
 		      		%>
 			        <section>
 								<div class="_pea-document">
-									<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updateextfiledata">
+									<form id="editfileform-<%= index%>" data-form-index="<%index%>" class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updateextfiledata">
 										<div class="_pea-row _pea-container-forminput">
 											<input type="hidden" name="_csrf" value=<%= locals.token %> >
 											<input type="hidden" name="extname" value="<%= extension.name %>" />
 											<input type="hidden" name="filename" value="<%=confFileData.name %>" />
 											<%if(confFileData.name.match(/.json/gi)){%>
-												<textarea name="filedata"  class="textarea-tall noFormSubmit codemirroreditor jsonEditor _pea-col-span12" ><%- JSON.stringify(confFileData.filedata,null,4) %></textarea>
+												<textarea  id="edittextform-<%= index%>" data-textarea-index="<%index%>" name="filedata"  class="textarea-tall noFormSubmit codemirroreditor jsonEditor _pea-col-span12" ><%- JSON.stringify(confFileData.filedata,null,4) %></textarea>
 											<%}
 											else if(confFileData.name.match(/.js/gi)){%>
-												<textarea name="filedata"  class="textarea-tall noFormSubmit codemirroreditor jsEditor _pea-col-span12" ><%- confFileData.filedata %></textarea>
+												<textarea id="edittextform-<%= index%>" data-textarea-index="<%index%>"  name="filedata"  class="textarea-tall noFormSubmit codemirroreditor jsEditor _pea-col-span12" ><%- confFileData.filedata %></textarea>
 											<%}
 											else{%>
-												<textarea name="filedata"  class="textarea-tall noFormSubmit codemirroreditor _pea-col-span12" ><%- confFileData.filedata %></textarea>
+												<textarea id="edittextform-<%= index%>" data-textarea-index="<%index%>"  name="filedata"  class="textarea-tall noFormSubmit codemirroreditor _pea-col-span12" ><%- confFileData.filedata %></textarea>
 											<%}%>
 										</div>
 										<div class="_pea-row _pea-text-center">
@@ -74,9 +74,6 @@
         </div>
       </article>
 		</div>
-	</div>
-	<div>
-		<%- JSON.stringify(extconfigfiles) %>
 	</div>
 	<div style="display:none">
 		<div id="view-ext-info-modal">

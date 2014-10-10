@@ -11726,10 +11726,10 @@ var styleWindowResizeEventHandler = function () {
 };
 
 var codemirrortab = function (tabindex) {
-	console.log('tabindex', tabindex, codeMirrorJSEditorsElements);
+	// console.log('tabindex', tabindex, codeMirrorJSEditorsElements);
 	if (!codeMirrors[tabindex]) {
-		console.log('coolr', tabindex);
-		console.log('codeMirrorJSEditorsElements[tabindex]', codeMirrorJSEditorsElements[tabindex]);
+		// console.log('coolr', tabindex);
+		// console.log('codeMirrorJSEditorsElements[tabindex]', codeMirrorJSEditorsElements[tabindex]);
 		if (classie.has(codeMirrorJSEditorsElements[tabindex], 'jsonEditor')) {
 			codeMirrors[tabindex] = CodeMirror.fromTextArea(codeMirrorJSEditorsElements[tabindex], {
 				lineNumbers: true,

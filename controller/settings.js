@@ -135,7 +135,7 @@ var load_extension_settings = function (req, res, next) {
 				}
 			},
 			function (err, result) {
-				console.log('err', err, 'result', result);
+				//console.log('err', err, 'result', result);
 				try {
 					if (result.defaultExtConfFiles && result.defaultExtConfFiles.length > 0) {
 						missing_conf_files = result.defaultExtConfFiles;
@@ -264,6 +264,8 @@ var update_ext_filedata = function (req, res) {
 	catch (e) {
 		jsonParseError = e;
 	}
+
+	//writefunction =  (path.extname(updateConfigFileData)==='.json') ? fs.writeJson : fs.outputFile;
 
 	fs.writeJson(extconffile, updateConfigFileData.filedata, function (err) {
 		if (err) {
