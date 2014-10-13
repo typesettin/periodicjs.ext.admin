@@ -7,7 +7,7 @@ var path = require('path'),
 	fs = require('fs-extra'),
 	moment = require('moment'),
 	Utilities = require('periodicjs.core.utilities'),
-	ControllerHelper = require('periodicjs.core.controllerhelper'),
+	ControllerHelper = require('periodicjs.core.controller'),
 	Extensions = require('periodicjs.core.extensions'),
 	ExtensionCore = new Extensions({
 		extensionFilePath: path.resolve(process.cwd(), './content/extensions/extensions.json')
@@ -24,6 +24,12 @@ var path = require('path'),
 	Contenttype,
 	logger;
 
+
+/**
+ * load contenttype data
+ * @param  {object} contenttypes load default contentypes
+ * @param  {Function} callbackk async callback
+ */
 var loadDefaultContentTypes = function (contentypes, callback) {
 	var query = {
 		_id: {
@@ -37,6 +43,11 @@ var loadDefaultContentTypes = function (contentypes, callback) {
 		callback: callback
 	});
 };
+/**
+ * get the default content type from stored db defaults
+ * @param  {object} contenttypesetting - name of default setting
+ * @param  {Function} callbackk async callback
+ */
 var getDefaultContentTypes = function (contentypesetting, callback) {
 	CoreController.loadModel({
 		docid: contentypesetting,
@@ -55,6 +66,12 @@ var getDefaultContentTypes = function (contentypesetting, callback) {
 	});
 };
 
+/**
+ * admin ext home page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/index',
@@ -80,6 +97,12 @@ var index = function (req, res) {
 	);
 };
 
+/**
+ * application settings and theme settings page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var settings_index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/settings/index',
@@ -108,6 +131,12 @@ var settings_index = function (req, res) {
 	);
 };
 
+/**
+ * settings faq page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var settings_faq = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/settings/faq',
@@ -132,6 +161,12 @@ var settings_faq = function (req, res) {
 	);
 };
 
+/**
+ * send test mail page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var mail_index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/mailer/index',
@@ -156,6 +191,12 @@ var mail_index = function (req, res) {
 	);
 };
 
+/**
+ * list items page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var items_index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/items/index',
@@ -184,6 +225,12 @@ var items_index = function (req, res) {
 	);
 };
 
+/**
+ * new item page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var item_new = function (req, res) {
 
 	CoreController.getPluginViewDefaultTemplate({
@@ -227,6 +274,12 @@ var item_new = function (req, res) {
 	);
 };
 
+/**
+ * edit item page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var item_edit = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/items/edit',
@@ -285,6 +338,12 @@ var item_edit = function (req, res) {
 	);
 };
 
+/**
+ * list collections page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var collections_index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/collections/index',
@@ -311,6 +370,12 @@ var collections_index = function (req, res) {
 	);
 };
 
+/**
+ * new collection page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var collection_new = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/collections/new',
@@ -350,6 +415,12 @@ var collection_new = function (req, res) {
 	);
 };
 
+/**
+ * edit collection page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var collection_edit = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/collections/edit',
@@ -410,6 +481,12 @@ var collection_edit = function (req, res) {
 	);
 };
 
+/**
+ * list assets page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var assets_index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/assets/index',
@@ -437,6 +514,12 @@ var assets_index = function (req, res) {
 	);
 };
 
+/**
+ * show asset page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var asset_show = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/assets/show',
@@ -462,6 +545,12 @@ var asset_show = function (req, res) {
 	);
 };
 
+/**
+ * list content types page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var contenttypes_index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/contenttypes/index',
@@ -489,6 +578,12 @@ var contenttypes_index = function (req, res) {
 	);
 };
 
+/**
+ * show content type page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var contenttype_show = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/contenttypes/show',
@@ -517,6 +612,12 @@ var contenttype_show = function (req, res) {
 	);
 };
 
+/**
+ * list tags page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var tags_index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/tags/index',
@@ -544,6 +645,12 @@ var tags_index = function (req, res) {
 	);
 };
 
+/**
+ * show selected tag page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var tag_show = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/tags/show',
@@ -572,6 +679,12 @@ var tag_show = function (req, res) {
 	);
 };
 
+/**
+ * get tag parent page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var tag_parent = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/tags/show_parent',
@@ -599,6 +712,12 @@ var tag_parent = function (req, res) {
 	);
 };
 
+/**
+ * list categories page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var categories_index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/categories/index',
@@ -626,6 +745,12 @@ var categories_index = function (req, res) {
 	);
 };
 
+/**
+ * show category information
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var category_show = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/categories/show',
@@ -654,6 +779,12 @@ var category_show = function (req, res) {
 	);
 };
 
+/**
+ * get get category parent page page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var category_parent = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/categories/show_parent',
@@ -681,6 +812,12 @@ var category_parent = function (req, res) {
 	);
 };
 
+/**
+ * get extension data from selected extension package json
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var loadExtension = function (req, res, next) {
 	var extname = req.params.id,
 		extFilePath = path.resolve(process.cwd(), 'content/extensions/extensions.json'),
@@ -712,6 +849,12 @@ var loadExtension = function (req, res, next) {
 	});
 };
 
+/**
+ * load extensions that are enabled and installed
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var loadExtensions = function (req, res, next) {
 	req.controllerData = (req.controllerData) ? req.controllerData : {};
 
@@ -733,6 +876,12 @@ var loadExtensions = function (req, res, next) {
 		});
 };
 
+/**
+ * list installed extensions
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var extensions_index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/extensions/index',
@@ -759,6 +908,12 @@ var extensions_index = function (req, res) {
 	);
 };
 
+/**
+ * show selected extension page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var extension_show = function (req, res) {
 	var extname = req.params.id,
 		extPackageConf = ExtensionCore.getExtensionPackageJsonFilePath(extname),
@@ -810,6 +965,13 @@ var extension_show = function (req, res) {
 		});
 };
 
+/**
+ * loads list of installed themes by reading content/themes directory
+ * @param  {object} req
+ * @param  {object} res
+ * @param {object} next async callback
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var loadThemes = function (req, res, next) {
 	var themedir = path.resolve(process.cwd(), 'content/themes/'),
 		returnFiles = [];
@@ -839,6 +1001,12 @@ var loadThemes = function (req, res, next) {
 	});
 };
 
+/**
+ * list installed themes and install new themes page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var themes_index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/themes/index',
@@ -865,11 +1033,16 @@ var themes_index = function (req, res) {
 		}
 	);
 };
+/**
+ * get theme page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var theme_show = function (req, res) {
 	var themename = req.params.id,
-		Themes = require(path.join(process.cwd(), 'app/lib/themes')),
-		themeRouteConf = Themes.getThemeRouteFilePath(themename),
-		themePackageConf = Themes.getThemePeriodicConfFilePath(themename);
+		themeRouteConf = path.join(process.cwd(), 'content/themes', themename, 'routes.js'),
+		themePackageConf = path.join(process.cwd(), 'content/themes', themename, 'periodicjs.theme.json');
 
 	// an example using an object instead of an array
 	async.parallel({
@@ -916,6 +1089,12 @@ var theme_show = function (req, res) {
 			}
 		});
 };
+/**
+ * select theme name from req parameter
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var loadTheme = function (req, res, next) {
 	var selectedTheme = req.params.id;
 
@@ -932,6 +1111,12 @@ var loadTheme = function (req, res, next) {
 	}
 };
 
+/**
+ * shows list of users page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var users_index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/users/index',
@@ -956,6 +1141,12 @@ var users_index = function (req, res) {
 	);
 };
 
+/**
+ * shows user profile page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var users_show = function (req, res) {
 	var allow_edit = false,
 		params = req.params;
@@ -1000,6 +1191,12 @@ var users_show = function (req, res) {
 	);
 };
 
+/**
+ * create a new user page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var users_new = function (req, res) {
 	var allow_edit = false;
 
@@ -1030,8 +1227,8 @@ var users_new = function (req, res) {
 
 /**
  * make sure a user is authenticated, if not logged in, send them to login page and return them to original resource after login
- * @param  {object} req 
- * @param  {object} res 
+ * @param  {object} req
+ * @param  {object} res
  * @return {Function} next() callback
  */
 var users_edit = function (req, res) {

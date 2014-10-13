@@ -18,6 +18,10 @@ var path = require('path'),
 	logger,
 	restartfile = path.join(process.cwd(), '/content/extensions/restart.json'),
 	CoreMailer = require('periodicjs.core.mailer'),
+	Extensions = require('periodicjs.core.extensions'),
+	ExtensionCore = new Extensions({
+		extensionFilePath: path.resolve(process.cwd(), './content/extensions/extensions.json')
+	}),
 	changedemailtemplate,
 	emailtransport;
 
@@ -59,11 +63,10 @@ var sendSettingEmail = function (options, callback) {
 	sendEmail(settingemailoptions, callback);
 };
 
-
 /**
  * restarts application response handler and send notification email
- * @param  {object} req 
- * @param  {object} res 
+ * @param  {object} req
+ * @param  {object} res
  * @return {object} reponds with an error page or sends user to authenicated in resource
  */
 var restart_app = function (req, res) {
@@ -111,8 +114,8 @@ var restart_app = function (req, res) {
 
 /**
  * placeholder response for updating application
- * @param  {object} req 
- * @param  {object} res 
+ * @param  {object} req
+ * @param  {object} res
  * @return {object} reponds with an error page or sends user to authenicated in resource
  */
 var update_app = function (req, res) {
@@ -136,68 +139,7 @@ var update_app = function (req, res) {
 var load_extension_settings = function (req, res, next) {
 	var extname = req.params.id,
 		ext_default_config_file_path = path.resolve(process.cwd(), 'node_modules/', extname, 'config'),
-		ext_installed_config_file_path = path.resolve(process.cwd(), 'content/config/extensions/', extname),
-		missing_conf_files = [],
-		installed_conf_files = [];
-
-	/**
-	 * get both installed files, and the default files in ext conf directory, if missin files, add them to missing conf files array
-	 * @param  {Function} callback async.parallel callback
-	 * @return {Array}            array of missing conf files
-	 */
-	var getextensionconfigfiles = function (callback) {
-		async.parallel({
-				defaultExtConfFiles: function (cb) {
-					fs.readdir(ext_default_config_file_path, function (err, file) {
-						cb(null, file);
-					});
-				},
-				installedExtConfFiles: function (cb) {
-					fs.readdir(ext_installed_config_file_path, function (err, file) {
-						cb(null, file);
-					});
-				}
-			},
-			function (err, result) {
-				//console.log('err', err, 'result', result);
-				try {
-					if (result.defaultExtConfFiles && result.defaultExtConfFiles.length > 0) {
-						missing_conf_files = result.defaultExtConfFiles;
-						if (result.installedExtConfFiles && result.installedExtConfFiles.length > 0) {
-							for (var c in missing_conf_files) {
-								for (var d in result.installedExtConfFiles) {
-									if (missing_conf_files[c] === result.installedExtConfFiles[d]) {
-										installed_conf_files.push(missing_conf_files.splice(c, 1)[0]);
-									}
-								}
-							}
-						}
-					}
-					callback(null, missing_conf_files);
-				}
-				catch (e) {
-					callback(e, null);
-				}
-			});
-	};
-
-	/**
-	 * copy missing files if any are missing
-	 * @param  {array}   missingExtConfFiles array of missing files
-	 * @param  {Function} callback            async callback
-	 */
-	var copymissingconfigfiles = function (missingExtConfFiles, callback) {
-		if (missingExtConfFiles && missingExtConfFiles.length > 0) {
-			async.each(missingExtConfFiles, function (file, cb) {
-				fs.copy(path.resolve(ext_default_config_file_path, file), path.resolve(ext_installed_config_file_path, file), cb);
-			}, function (err) {
-				callback(err);
-			});
-		}
-		else {
-			callback(null);
-		}
-	};
+		ext_installed_config_file_path = path.resolve(process.cwd(), 'content/config/extensions/', extname);
 
 	/**
 	 * load config files into array of filejson
@@ -256,8 +198,14 @@ var load_extension_settings = function (req, res, next) {
 
 
 	async.waterfall([
-			getextensionconfigfiles,
-			copymissingconfigfiles,
+			function (cb) {
+				cb(null, {
+					ext_default_config_file_path: ext_default_config_file_path,
+					ext_installed_config_file_path: ext_installed_config_file_path
+				});
+			},
+			ExtensionCore.getExtensionConfigFiles,
+			ExtensionCore.copyMissingConfigFiles,
 			loadconfigfiles
 		],
 		function (err, result) {
@@ -366,6 +314,13 @@ var update_ext_filedata = function (req, res) {
 	}
 };
 
+/**
+ * load app configuration information
+ * @param  {object} req
+ * @param  {object} res
+ * @param {object} next async callback
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var load_app_settings = function (req, res, next) {
 	var appsettings = {
 		readonly: {
@@ -394,6 +349,13 @@ var load_app_settings = function (req, res, next) {
 	next();
 };
 
+/**
+ * load theme configuration information
+ * @param  {object} req
+ * @param  {object} res
+ * @param {object} next async callback
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var load_theme_settings = function (req, res, next) {
 	var themesettings = {
 		readonly: {
@@ -415,6 +377,13 @@ var load_theme_settings = function (req, res, next) {
 	next();
 };
 
+/**
+ * form upload handler to update app settings, and sends notification email
+ * @param  {object} req
+ * @param  {object} res
+ * @param {object} next async callback
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var update_app_settings = function (req, res) {
 	var updatedAppSettings = CoreUtilities.removeEmptyObjectValues(req.body),
 		appsettingsfile = path.join(process.cwd(), 'content/config/config.json');
@@ -493,6 +462,13 @@ var update_app_settings = function (req, res) {
 	});
 };
 
+/**
+ * form upload handler to update theme settings, and sends notification email
+ * @param  {object} req
+ * @param  {object} res
+ * @param {object} next async callback
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var update_theme_settings = function (req, res) {
 	var updatedThemeSettings = CoreUtilities.removeEmptyObjectValues(req.body),
 		themesettingsfile = path.join(process.cwd(), 'content/themes', appSettings.theme, 'periodicjs.theme.json');
