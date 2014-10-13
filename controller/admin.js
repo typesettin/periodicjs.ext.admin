@@ -1076,7 +1076,7 @@ var theme_show = function (req, res) {
 							responseData: {
 								pagedata: {
 									title: req.controllerData.theme.name + ' - Theme',
-									// headerjs: ["/extensions/periodicjs.ext.admin/javascripts/theme.js"],
+									headerjs: ['/extensions/periodicjs.ext.admin/js/theme_show.min.js'],
 									extensions: CoreUtilities.getAdminMenu()
 								},
 								themedata: results,

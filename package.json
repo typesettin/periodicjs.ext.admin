@@ -67,10 +67,10 @@
     "uglify-js": "^2.4.15",
     "uglifyify": "^2.5.0"
   },
-  "_id": "periodicjs.ext.admin@1.8.41",
-  "_shasum": "620d99dccacf2aa26e631060ccf7222ca8a4d9bb",
-  "_from": "periodicjs.ext.admin@1.8.41",
-  "_resolved": "https://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.8.41.tgz",
+  "_id": "periodicjs.ext.admin@1.90.20",
+  "_shasum": "e2082378d7191b2703d758aedcccd9a5c5ef15de",
+  "_from": "periodicjs.ext.admin@1.90.20",
+  "_resolved": "https://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.90.20.tgz",
   "gitHead": "23466172484b2277c691c4f2684dfdb1cb92cb23",
   "bugs": {
     "url": "https://github.com/typesettin/periodicjs.ext.admin/issues"
@@ -88,8 +88,8 @@
     }
   ],
   "dist": {
-    "shasum": "620d99dccacf2aa26e631060ccf7222ca8a4d9bb",
-    "tarball": "http://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.8.41.tgz"
+    "shasum": "e2082378d7191b2703d758aedcccd9a5c5ef15de",
+    "tarball": "http://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.90.20.tgz"
   },
   "directories": {},
   "readme": "ERROR: No README data found!"

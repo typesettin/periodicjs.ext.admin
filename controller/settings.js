@@ -225,6 +225,96 @@ var load_extension_settings = function (req, res, next) {
 };
 
 /**
+ * save data from theme page post
+ * @param  {object} req
+ * @param  {object} res
+ */
+var update_theme_filedata = function (req, res) {
+	var updateThemeFileData = CoreUtilities.removeEmptyObjectValues(req.body),
+		themeconffile = path.resolve(process.cwd(), 'content/themes/', updateThemeFileData.themename, updateThemeFileData.filename),
+		jsonParseError;
+	delete updateThemeFileData._csrf;
+
+	try {
+		updateThemeFileData.filedata = (path.extname(updateThemeFileData.filename) === '.json') ? JSON.parse(updateThemeFileData.filedata) : updateThemeFileData.filedata;
+	}
+	catch (e) {
+		jsonParseError = e;
+	}
+
+	if (path.extname(updateThemeFileData.filename) === '.json') {
+		logger.warn('write json');
+		fs.writeJson(themeconffile, updateThemeFileData.filedata, function (err) {
+			if (err) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: err,
+					res: res,
+					req: req
+				});
+			}
+			else if (jsonParseError) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: 'JSON Parse Error: ' + jsonParseError,
+					res: res,
+					req: req
+				});
+			}
+			else {
+				CoreController.handleDocumentQueryRender({
+					req: req,
+					res: res,
+					redirecturl: '/p-admin/theme/' + updateThemeFileData.themename,
+					responseData: {
+						result: 'success',
+						data: 'updated theme file and restarted application'
+					},
+					callback: function () {
+						CoreUtilities.restart_app({
+							restartfile: restartfile
+						});
+					}
+				});
+			}
+		});
+	}
+	else {
+		logger.warn('write file');
+		fs.outputFile(themeconffile, updateThemeFileData.filedata, function (err) {
+			if (err) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: err,
+					res: res,
+					req: req
+				});
+			}
+			else if (jsonParseError) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: 'JSON Parse Error: ' + jsonParseError,
+					res: res,
+					req: req
+				});
+			}
+			else {
+				CoreController.handleDocumentQueryRender({
+					req: req,
+					res: res,
+					redirecturl: '/p-admin/theme/' + updateThemeFileData.themename,
+					responseData: {
+						result: 'success',
+						data: 'updated theme file and restarted application'
+					},
+					callback: function () {
+						CoreUtilities.restart_app({
+							restartfile: restartfile
+						});
+					}
+				});
+			}
+		});
+	}
+};
+
+/**
  * save data from config page post
  * @param  {object} req
  * @param  {object} res
@@ -600,6 +690,7 @@ var controller = function (resources) {
 	return {
 		load_extension_settings: load_extension_settings,
 		update_ext_filedata: update_ext_filedata,
+		update_theme_filedata: update_theme_filedata,
 		load_app_settings: load_app_settings,
 		load_theme_settings: load_theme_settings,
 		restart_app: restart_app,

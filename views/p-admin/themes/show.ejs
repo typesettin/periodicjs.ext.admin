@@ -2,56 +2,62 @@
 <% include ../../shared/nav %>
 	<div class="_pea-container">
 		<div class="_pea_row">
-			<div class="_pea-col-span12">
-				<h2><%= theme.name %>
-					<small class="_pea-form">
-						<%if(theme.name === theme.activetheme){%>
-							<!-- <a href="/p-admin/theme/<%= theme.name %>/disable" class="_pea-button _pea-color-warn enable-ext-button">disable</a> -->
-							<a class="_pea-button switch-theme-button _pea-color-info">active</a>
-						<%}
-						else{%>
-							<!-- <a href="/p-admin/theme/<%= theme.name %>/enable" class="_pea-button enable-ext-button">switch</a> -->
-							<a href="/p-admin/theme/<%= theme.name %>/enable" class="_pea-button switch-theme-button enable-theme-button">switch</a>
-						<%}%>
-					</small>
-				</h2>
-			</div>
+			<h2><a href="/p-admin/themes">Themes</a> &rsaquo; <%= theme.name %>
+				<small class="_pea-form _pea-pull-right">
+					<%if(theme.name === theme.activetheme){%>
+						<!-- <a href="/p-admin/theme/<%= theme.name %>/disable" class="_pea-button _pea-color-warn enable-ext-button">disable</a> -->
+						<a class="_pea-button switch-theme-button _pea-color-info">active</a>
+					<%}
+					else{%>
+						<!-- <a href="/p-admin/theme/<%= theme.name %>/enable" class="_pea-button enable-ext-button">switch</a> -->
+						<a href="/p-admin/theme/<%= theme.name %>/enable" class="_pea-button switch-theme-button enable-theme-button">switch</a>
+					<%}%>
+				</small>
+			</h2>
 		</div>
 		<div class="_pea-row">
 			<div class="_pea-col-span12">
-				<div class="_pea-row _pea-container-forminput _pea-text-left _pea-form">
-					<h3>periodicjs.theme.json</h3>
-				</div>
-				<div class="_pea-document">
-					<pre class="code-output">
-<%- JSON.stringify(themedata.packagefile,null,4) %>
-					</pre>
-				</div>
+				<article class="_pea-col-span12">
+					<div id="tabs" class="tabs">
+				      <nav>
+					      <ul class="_pea-col-span12">
+					      	<li class="_pea-col-span6">periodicjs.theme.json</li>
+					      	<li class="_pea-col-span6">routes.js</li>
+					      </ul>
+				      </nav>
+				      <div class="content">
+				        <section>
+									<div class="_pea-document">
+										<form id="editfileform-0" data-form-index="0" data-beforesubmitfunction="getCMValue" class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/themefiledata">
+											<div class="_pea-row _pea-container-forminput">
+												<input type="hidden" name="_csrf" value=<%= locals.token %> >
+												<input type="hidden" name="themename" value="<%= theme.name %>" />
+												<input type="hidden" name="filename" value="periodicjs.theme.json" />
+												<textarea  id="edittextform-0" data-textarea-index="0" name="filedata"  class="textarea-tall noFormSubmit codemirroreditor jsonEditor _pea-col-span12" ><%- JSON.stringify(themedata.packagefile,null,4) %></textarea>
+											</div>
+											<div class="_pea-row _pea-text-center">
+												<button type="submit" name="save_button" class="_pea-button _pea-color-success" style="font-size:1.5em;"/>Save</button>
+											</div>
+										</form>
+									</div>
+				        </section>
+				        <section>
+									<div class="_pea-document">
+										<h2>Read Only</h2>
+										<form id="editfileform-1" data-form-index="1" data-beforesubmitfunction="getCMValue" class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/themefiledata">
+											<div class="_pea-row _pea-container-forminput">
+												<input type="hidden" name="_csrf" value=<%= locals.token %> >
+												<input type="hidden" name="themename" value="<%= theme.name %>" />
+												<input type="hidden" name="filename" value="routes.js" />
+												<textarea id="edittextform-1" data-textarea-index="1"  name="filedata"  class="textarea-tall noFormSubmit codemirroreditor jsEditor _pea-col-span12" ><%- themedata.routefile %></textarea>
+											</div>
+										</form>
+									</div>
+				        </section>
+			        </div>
+		      </div>
+	      </article>
 			</div>
-		</div>
-		<div class="_pea-row">
-			<div class="_pea-col-span12">
-				<div class="_pea-row _pea-container-forminput _pea-text-left _pea-form">
-					<h3>routes.js </h3>
-				</div>
-				<div class="_pea-document">
-					<pre class="code-output">
-<%- themedata.routefile %>
-					</pre>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div style="display:none">
-		<div id="view-ext-info-modal">
-			<h1 class="title" style="word-wrap: break-word;">Extension name</h1>
-			<p class="desc">description</p>
-			<p>
-				<ul class="versions">
-					<li>install <a class="install-ext-version">latest<a></li>
-					<li>install 0.0.1</li>
-				</ul>
-			</p>
 		</div>
 	</div>
 <% include ../../shared/footer %>
