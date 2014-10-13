@@ -1134,6 +1134,8 @@ var users_index = function (req, res) {
 						extensions: CoreUtilities.getAdminMenu()
 					},
 					users: req.controllerData.users,
+					userscount: req.controllerData.userscount,
+					userpages: Math.ceil(req.controllerData.userscount / req.query.limit),
 					user: req.user
 				}
 			});

@@ -1,29 +1,45 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
+<% 
+	var  getsortlink= function(field,label){
+		var order = (request.query.sort && request.query.sort.search("-") === 0) ? '' : '-' ;
+		var orderlink = (request.query.sort) ? 
+			'?'+locals.viewhelper.getQueryString(request.query).replace('sort='+request.query.sort,'sort='+order+field) 
+			: '?'+locals.viewhelper.getQueryString(request.query)+'&sort='+order+field;
+		%>
+		<a href="  <%= orderlink %>"><%= label %></a>
+		<%
+	}
+%>
+<input type="hidden" name="_csrf" value=<%= locals.token %> >
+<form class="_pea-form" method="get">
 	<div class="_pea-container">
 		<div class="_pea-row _pea-form">
-			<div class="_pea-col-span6">
+			<div class="_pea-col-span6 _pea-text-big-em">
 				<a href="/p-admin/user/new" class="_pea-button _pea-color-info">Create New User</a>
 				<a href="/p-admin/userroles" class="_pea-button _pea-color-success">Edit User Access</a>
 			</div>
 			<div class="_pea-col-span6 _pea-text-right">
-				<form class="_pea-form" method="get">
-					<input type="text" placeholder="search" class="_pea-col-span10" name="search"/>
-					<input type="submit" name="searchbutton" value="search" class="_pea-col-span2"  />
-				</form>
+				<input type="text" placeholder="search" class="_pea-col-span10  _pea-text-big" name="search"/>
+				<input type="submit" name="searchbutton" value="search" class="_pea-col-span2  _pea-text-big"  />
 			</div>
 		</div>
 		<div class="_pea-row">
 			<div class="_pea-col-span12">
 				<div class="_pea-document">
 					<table class="_pea-table _pea-form">
+						<thead style="">
+							<% editlistingprops = true %>
+							<% include _pagination_user %>
+						</thead>
 						<thead>
 							<tr class="_pea-text-left">
-								<th>User</th>
+								<th><% getsortlink('username','User') %></th>
 								<th>Activated</th>
 								<th>Account type</th>
 								<th>User Roles</th>
-								<th></th>
+								<th style="width:6em"><% getsortlink('createdat','Date') %></th>
+								<th style="width:6em"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -32,17 +48,23 @@
 										<tr>
 											<td> <a href="/p-admin/user/<%= user.username %>"> <%= user.username %> </a></td>
 											<td>
-													<a class="_pea-button _pea-text-small"><%= user.activated %></a>
+													<a href="/p-admin/users?filter_activated=<%= user.activated %>" class="_pea-button _pea-text-small"><%= user.activated %></a>
 											</td>
 											<td>
-													<a class="_pea-button _pea-text-small"><%= user.accounttype %></a>
+													<a href="/p-admin/users?filter_accounttype=<%= user.accounttype %>" class="_pea-button _pea-text-small"><%= user.accounttype %></a>
 											</td>
 											<td>
 												<%if(user.userroles && user.userroles && user.userroles.length>0){
 													user.userroles.forEach(function(userrole){%>
-														<span class="_pea-button _pea-text-small"><%= userrole.title %></span>
+														<a href="/p-admin/users?filter_userroles=<%= userrole.name %>" class="_pea-button _pea-text-small"><%= userrole.title %></a>
 													<%});
 												}%>
+											</td>
+											<td>
+												<small>
+													<% var disDate = new Date(user.createdat) %>
+													<%- disDate %>
+												</small>
 											</td>
 											<td class="_pea-text-right">
 												<a href="/p-admin/user/<%= user.username%>" class="_pea-button _pea-color-success">edit</a>
@@ -55,18 +77,14 @@
 									<tr><td colspan="6" class="_pea-text-center">No Users!</td></tr>
 								<%} %>
 						</tbody>
-						<tfoot>
-							<tr class="_pea-text-left">
-								<th>User</th>
-								<th>Activated</th>
-								<th>Account type</th>
-								<th>User Roles</th>
-								<th></th>
-							</tr>
+						<tfoot style="">
+							<% editlistingprops = false %>
+							<% include _pagination_user %>
 						</tfoot>
 					</table>
 				</div>
 			</div>
 		</div>
 	</div>
+</form>
 <% include ../../shared/footer %>

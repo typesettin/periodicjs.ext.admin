@@ -75,7 +75,7 @@ module.exports = function (periodic) {
 	adminRouter.get('/assets', mediaassetController.loadAssetWithCount, mediaassetController.loadAssetWithDefaultLimit, mediaassetController.loadAssets, adminController.assets_index);
 	adminRouter.get('/extensions', adminController.loadExtensions, adminController.extensions_index);
 	adminRouter.get('/themes', adminController.loadThemes, adminController.themes_index);
-	adminRouter.get('/users', uacController.loadUacUsers, adminController.users_index);
+	adminRouter.get('/users', userController.loadUsersWithCount, userController.loadUsersWithDefaultLimit, uacController.loadUacUsers, adminController.users_index);
 	adminRouter.get('/mailer', adminController.mail_index);
 	adminRouter.get('/check_periodic_version', adminController.check_periodic_version);
 	/**
