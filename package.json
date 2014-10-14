@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.admin",
   "description": "Admin for periodicjs",
-  "version": "1.90.21",
+  "version": "1.90.26",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
@@ -21,7 +21,7 @@
     "postuninstall": "node uninstall.js"
   },
   "keywords": [
-    "periodicjs"
+    "periodicjs","content management system","cms","wordpress","drupal","ghost"
   ],
   "dependencies": {
     "async": "0.9.0",
@@ -31,7 +31,7 @@
     "letterpressjs": "0.0.3",
     "periodicjs.component.tabs": "^1.1.0",
     "periodicjs.core.controller": "~1.90.10",
-    "periodicjs.core.extensions": "~1.90.10",
+    "periodicjs.core.extensions": "~1.90.16",
     "periodicjs.core.mailer": "~1.90.15",
     "periodicjs.core.utilities": "~1.90.10",
     "ribbonjs": "0.1.3",
@@ -42,10 +42,10 @@
     "utils-merge": "1.0.0"
   },
   "peerDependencies": {
-    "periodicjs.ext.mailer": "~1.90.20",
-    "periodicjs.ext.login": "~1.90.20",
-    "periodicjs.ext.scheduled_content": "~1.90.20",
-    "periodicjs.ext.user_access_control": "~1.90.21"
+    "periodicjs.ext.mailer": "~1.90.26",
+    "periodicjs.ext.login": "~1.90.26",
+    "periodicjs.ext.scheduled_content": "~1.90.26",
+    "periodicjs.ext.user_access_control": "~1.90.26"
   },
   "devDependencies": {
     "browserify": "~4.2.1",
