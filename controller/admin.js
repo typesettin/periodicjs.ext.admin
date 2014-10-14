@@ -133,13 +133,21 @@ var getHomepageStats = function(req,res,next){
 
 		},
 		themesCount:function(cb){
-			var themedir = path.resolve(process.cwd(), 'content/themes/');
+			var themedir = path.resolve(process.cwd(), 'content/themes/'),
+				returnFiles = [];
 			fs.readdir(themedir, function (err, files) {
 				if (err) {
 					cb(err,null);
 				}
 				else {
-					cb(null,files.length);
+					if (files) {
+						for (var x = 0; x < files.length; x++) {
+							if (files[x].match('periodicjs.theme')) {
+								returnFiles.push(files[x]);
+							}
+						}
+					}
+					cb(null,returnFiles.length);
 				}
 			});
 		},
