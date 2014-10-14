@@ -1,0 +1,44 @@
+<% include ../../shared/header %>
+<% include ../../shared/nav %>
+	<div class="_pea-container _pea-theme">
+		<div class="_pea-row">
+			<div class="_pea-col-span6">
+				<h1>What's new</h1>
+				<div class="_pea-row">
+
+				<% markdownpages.forEach( function(mdhtml){%>
+					<div class="_pea-col-span12">
+						<div class="_pea-document">
+							<%- mdhtml %>
+						</div>
+					</div>
+				<%} );%>
+				</div>
+					<div class="_pea-document">
+						<div class="_pea-row">
+							<h3>More Updates</h3>
+								<p class="extra-padding">Check out the <a href="https://github.com/typesettin/periodicjs/tree/master/releases" target="_blank">release history on github.</a></p>
+						</div>
+					</div>
+			</div>
+			<div class="_pea-col-span5 _pea-pull-right">
+				<h1>Quick Stats</h1>
+				<div class="_pea-document">
+					<div class="_pea-row">
+						<!-- <h3>Your Instance</h3> -->
+						<div class="_pea-row">
+							<div class="_pea-col-span4"><strong>Installed Themes:</strong></div><div class="_pea-col-span8"><%- contentcounts.themesCount%></div>
+							<div class="_pea-col-span4"><strong>Installed Extensions:</strong></div><div class="_pea-col-span8"><%- contentcounts.extensionsCount%></div>
+							<div class="_pea-col-span4"><strong>Content Items:</strong></div><div class="_pea-col-span8"><%- contentcounts.itemsCount%></div>
+							<div class="_pea-col-span4"><strong>Content Collections:</strong></div><div class="_pea-col-span8"><%- contentcounts.collectionsCount%></div>
+							<div class="_pea-col-span4"><strong>Content Assets:</strong></div><div class="_pea-col-span8"><%- contentcounts.assetsCount%></div>
+							<div class="_pea-col-span4"><strong>Content Tags:</strong></div><div class="_pea-col-span8"><%- contentcounts.tagsCount%></div>
+							<div class="_pea-col-span4"><strong>Content Categories:</strong></div><div class="_pea-col-span8"><%- contentcounts.categoriesCount%></div>
+							<div class="_pea-col-span4"><strong>Content Types:</strong></div><div class="_pea-col-span8"><%- contentcounts.contenttypesCount%></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<% include ../../shared/footer %>

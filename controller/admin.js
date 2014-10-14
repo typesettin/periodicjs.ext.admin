@@ -9,6 +9,7 @@ var path = require('path'),
 	Utilities = require('periodicjs.core.utilities'),
 	ControllerHelper = require('periodicjs.core.controller'),
 	Extensions = require('periodicjs.core.extensions'),
+	marked = require('marked'),
 	ExtensionCore = new Extensions({
 		extensionFilePath: path.resolve(process.cwd(), './content/extensions/extensions.json')
 	}),
@@ -67,14 +68,137 @@ var getDefaultContentTypes = function (contentypesetting, callback) {
 };
 
 /**
+ * load the markdown release data
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
+var getMarkdownReleases = function(req,res,next){
+	var markdownpages =[],
+		markdownfiles=[];
+	req.controllerData = (req.controllerData) ? req.controllerData : {};
+
+	fs.readdir(path.join(process.cwd(),'releases'),function(err,files){
+		if(err){	
+			logger.error(err);
+			req.controllerData.markdownpages=markdownpages;
+			next();
+		}
+		else{
+			if(files.length>0){
+				files.reverse();
+				markdownfiles = files.slice(0,5);
+			}
+			async.each(
+				markdownfiles,
+				function(file,cb){
+					fs.readFile( path.join(process.cwd(),'releases',file), 'utf8', function(err, data) {
+						markdownpages.push( marked( data ) );
+						cb(err);
+				    // console.log(data); //hello!
+				  });
+				},
+				function(err){
+					if(err){
+						logger.error(err);
+						req.controllerData.markdownpages=markdownpages;
+						next();
+					}
+					else{
+						// console.log('markdownpages',markdownpages);
+						req.controllerData.markdownpages=markdownpages;
+						next();
+					}
+			});
+		}
+	});
+};
+
+var getHomepageStats = function(req,res,next){
+	req.controllerData = (req.controllerData) ? req.controllerData : {};
+
+	async.parallel({
+		extensionsCount:function(cb){
+			ExtensionCore.getExtensions({
+				periodicsettings: appSettings
+			},
+			function (err, extensions) {
+				if (err) {
+					cb(err,null);
+				}
+				else {
+					cb(null,extensions.length);
+				}
+			});
+
+		},
+		themesCount:function(cb){
+			var themedir = path.resolve(process.cwd(), 'content/themes/');
+			fs.readdir(themedir, function (err, files) {
+				if (err) {
+					cb(err,null);
+				}
+				else {
+					cb(null,files.length);
+				}
+			});
+		},
+		itemsCount:function(cb){
+			Item.count({}, function( err, count){
+				cb(err, count);
+			});
+		},
+		collectionsCount:function(cb){
+			Collection.count({}, function( err, count){
+				cb(err, count);
+			});
+		},
+		assetsCount:function(cb){
+			mongoose.model('Asset').count({}, function( err, count){
+				cb(err, count);
+			});
+		},
+		contenttypesCount:function(cb){
+			Contenttype.count({}, function( err, count){
+				cb(err, count);
+			});
+		},
+		tagsCount:function(cb){
+			mongoose.model('Tag').count({}, function( err, count){
+				cb(err, count);
+			});
+		},
+		categoriesCount:function(cb){
+			mongoose.model('Category').count({}, function( err, count){
+				cb(err, count);
+			});
+		},
+		usersCount:function(cb){
+			User.count({}, function( err, count){
+				cb(err, count);
+			});
+		}
+	},function(err,results){
+		if(err){
+			logger.error(err);
+		}
+		console.log('results',results);
+		req.controllerData.contentcounts = results;
+		next();
+	});
+};
+
+/**
  * admin ext home page
  * @param  {object} req
  * @param  {object} res
  * @return {object} reponds with an error page or sends user to authenicated in resource
  */
 var index = function (req, res) {
+	res.header('Cache-Control', 'public, max-age=7200');
+
 	CoreController.getPluginViewDefaultTemplate({
-			viewname: 'p-admin/index',
+			viewname: 'p-admin/home/index',
 			themefileext: appSettings.templatefileextension,
 			extname: 'periodicjs.ext.admin'
 		},
@@ -89,7 +213,8 @@ var index = function (req, res) {
 						title: 'admin',
 						extensions: CoreUtilities.getAdminMenu()
 					},
-					items: null,
+					markdownpages: req.controllerData.markdownpages,
+					contentcounts: req.controllerData.contentcounts,
 					user: req.user
 				}
 			});
@@ -1346,6 +1471,8 @@ var controller = function (resources) {
 
 	return {
 		index: index,
+		getMarkdownReleases:getMarkdownReleases,
+		getHomepageStats:getHomepageStats,
 		settings_index: settings_index,
 		settings_faq: settings_faq,
 		mail_index: mail_index,

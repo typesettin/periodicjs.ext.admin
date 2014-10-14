@@ -64,9 +64,7 @@ module.exports = function (periodic) {
 	 * admin routes
 	 */
 	// adminRouter.get('/', adminController.settings_index);
-	adminRouter.get('/', function (req, res) {
-		res.redirect('/p-admin/user/' + req.user.username);
-	});
+	adminRouter.get('/', adminController.getMarkdownReleases , adminController.getHomepageStats, adminController.index);
 	adminRouter.get('/items', itemController.loadItemsWithCount, itemController.loadItemsWithDefaultLimit, itemController.loadItems, adminController.items_index);
 	adminRouter.get('/collections', collectionController.loadCollectionsWithCount, collectionController.loadCollectionsWithDefaultLimit, collectionController.loadCollections, adminController.collections_index);
 	adminRouter.get('/contenttypes', contenttypeController.loadContenttypeWithCount, contenttypeController.loadContenttypeWithDefaultLimit, contenttypeController.loadContenttypes, adminController.contenttypes_index);

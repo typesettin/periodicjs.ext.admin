@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.admin",
   "description": "Admin for periodicjs",
-  "version": "1.90.26",
+  "version": "1.90.27",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
