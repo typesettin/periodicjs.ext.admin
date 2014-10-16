@@ -70,7 +70,7 @@
 													<a href="/p-admin/collections?filter_authors=<%= author.username %>"><%= author.username %></a>,
 													<%});
 												}
-												else{%>
+												else if(collection.primaryauthor){%>
 												<a href="/p-admin/collections?filter_authors=<%= collection.primaryauthor.username %>"><%= collection.primaryauthor.username %></a>
 												<%}%>
 											</td>
