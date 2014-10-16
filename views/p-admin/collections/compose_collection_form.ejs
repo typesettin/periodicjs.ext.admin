@@ -18,12 +18,12 @@
 					<table class="_pea-table _pea-form">
 					<tbody id="collection-table-items">
 					<%if(collection && collection.items){ %>
-						<% collection.items.forEach(function(docresult){
+						<% collection.items.forEach(function(docresult,index){
 							if(docresult.item){
 								%>
 								<tr id="tr-docid-<%= docresult.item._id%>">
 									<td class="_pea-col-span9">
-										<input style="display:none;"  name="items" type="checkbox" value='{"order":<%=docresult.order%>,"item":"<%=docresult.item._id%>"}' checked="checked"></input>
+										<input style="display:none;"  name="items" type="checkbox" value='{"order":<%-(index*10)%>,"item":"<%=docresult.item._id%>"}' checked="checked"></input>
 										<%= docresult.item.title %>
 										<div><small>
 											<%
