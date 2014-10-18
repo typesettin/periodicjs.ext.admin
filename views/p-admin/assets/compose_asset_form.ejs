@@ -9,16 +9,15 @@
 				var genericdocdeletefunction = "backToAssetLanding"; 
 				var genericdocTitle = "Asset"; 
 			%>
-	
-			<% include ../../shared/asset_preview %>		
+			<% include ../../shared/compose_content %>			
+			<% include ../../shared/asset_taxonmy %>
+			<% include ../../shared/content_attributes %>
+		</div>
+		<div class="_pea-col-span5 _pea-pull-right">
+			<% include ../../shared/asset_preview %>
 			<% if(genericdoc){%>
 				<% include ../../shared/asset_delete %>
 			<%}%>
-		</div>
-		<div class="_pea-col-span5 _pea-pull-right">
-			<% include ../../shared/asset_taxonmy %>
-			<% include ../../shared/compose_content %>
-			<% include ../../shared/content_attributes %>
 		</div>
 	</div>
 </div>

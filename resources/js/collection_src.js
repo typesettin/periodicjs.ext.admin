@@ -195,10 +195,10 @@ var generateSearchResult = function (documents) {
 	searchDocResults.innerHTML = docresulthtml;
 };
 
-var searchDocs = function (e) {
-	var etarget = e.target;
+var searchDocs = function () {
+	// var etarget = e.target;
 	request
-		.get('/item/search')
+		.get('/p-admin/item/search')
 		.set('Accept', 'application/json')
 		.query({
 			format: 'json',

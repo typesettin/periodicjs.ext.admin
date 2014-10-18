@@ -102,10 +102,11 @@ module.exports = function (periodic) {
 	themeAdminRouter.post('/:id/delete', themeController.remove);
 	themeAdminRouter.get('/:id', adminController.loadTheme, adminController.theme_show);
 	/**
-	 * admin/post manager routes
+	 * admin/item manager routes
 	 */
 	adminRouter.get('/item/new', adminController.item_new);
 	adminRouter.get('/item/edit/:id', itemController.loadFullItem, adminController.item_edit);
+	adminRouter.get('/item/search', adminController.setSearchLimitTo1000, itemController.loadItems, itemController.index);
 	itemRouter.post('/new', itemController.create);
 	itemRouter.post('/edit', itemController.update);
 	itemRouter.post('/:id/delete', itemController.loadItem, itemController.remove);
@@ -114,6 +115,7 @@ module.exports = function (periodic) {
 	 */
 	adminRouter.get('/collection/new', adminController.collection_new);
 	adminRouter.get('/collection/edit/:id', collectionController.loadCollection, adminController.collection_edit);
+	adminRouter.get('/collection/search', adminController.setSearchLimitTo1000, collectionController.loadCollections, collectionController.index);
 	collectionRouter.post('/new', collectionController.create);
 	collectionRouter.post('/edit', collectionController.update);
 	collectionRouter.post('/append/:id', collectionController.loadCollection, collectionController.append);

@@ -23,6 +23,7 @@ var path = require('path'),
 	Item, //Item
 	AppDBSetting,
 	Contenttype,
+	adminSettings,
 	logger;
 
 
@@ -114,6 +115,12 @@ var getMarkdownReleases = function (req, res, next) {
 	});
 };
 
+/**
+ * does a query to get content counts for all content types
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
 var getHomepageStats = function (req, res, next) {
 	req.controllerData = (req.controllerData) ? req.controllerData : {};
 
@@ -194,6 +201,17 @@ var getHomepageStats = function (req, res, next) {
 		req.controllerData.contentcounts = results;
 		next();
 	});
+};
+
+/**
+ * sets search limit
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
+var setSearchLimitTo1000 = function (req, res, next) {
+	req.query.limit = 1000;
+	next();
 };
 
 /**
@@ -398,6 +416,7 @@ var item_new = function (req, res) {
 							default_contentypes: defaultcontenttypes,
 							serverdate: moment().format('YYYY-MM-DD'),
 							servertime: moment().format('HH:mm'),
+							adminSettings: adminSettings,
 							user: req.user
 						}
 					});
@@ -461,6 +480,7 @@ var item_edit = function (req, res) {
 							item: req.controllerData.item,
 							serverdate: moment(req.controllerData.item.publishat).format('YYYY-MM-DD'),
 							servertime: moment(req.controllerData.item.publishat).format('HH:mm'),
+							adminSettings: adminSettings,
 							user: req.user
 						}
 					});
@@ -539,6 +559,7 @@ var collection_new = function (req, res) {
 							default_contentypes: defaultcontenttypes,
 							serverdate: moment().format('YYYY-MM-DD'),
 							servertime: moment().format('HH:mm'),
+							adminSettings: adminSettings,
 							user: req.user
 						}
 					});
@@ -604,6 +625,7 @@ var collection_edit = function (req, res) {
 							collection: req.controllerData.collection,
 							serverdate: moment(req.controllerData.collection.publishat).format('YYYY-MM-DD'),
 							servertime: moment(req.controllerData.collection.publishat).format('HH:mm'),
+							adminSettings: adminSettings,
 							user: req.user
 						}
 					});
@@ -671,6 +693,7 @@ var asset_show = function (req, res) {
 						extensions: CoreUtilities.getAdminMenu()
 					},
 					asset: req.controllerData.asset,
+					adminSettings: adminSettings,
 					user: req.user
 				}
 			});
@@ -1446,6 +1469,18 @@ var check_periodic_version = function (req, server_res) {
 		});
 };
 
+var loadAdminSettings = function () {
+	var appenvironment = appSettings.application.environment;
+	fs.readJson(path.join(process.cwd(), 'content/config/extensions/periodicjs.ext.admin/settings.json'), function (err, adminSettingJson) {
+		if (err) {
+			logger.error(err);
+		}
+		if (adminSettingJson && adminSettingJson[appenvironment]) {
+			adminSettings = adminSettingJson[appenvironment];
+		}
+	});
+};
+
 /**
  * admin controller
  * @module adminController
@@ -1469,6 +1504,7 @@ var controller = function (resources) {
 	mongoose = resources.mongoose;
 	appSettings = resources.settings;
 	dbSettings = resources.db;
+	loadAdminSettings();
 	CoreController = new ControllerHelper(resources);
 	CoreUtilities = new Utilities(resources);
 	Item = mongoose.model('Item');
@@ -1479,6 +1515,7 @@ var controller = function (resources) {
 
 	return {
 		index: index,
+		setSearchLimitTo1000: setSearchLimitTo1000,
 		getMarkdownReleases: getMarkdownReleases,
 		getHomepageStats: getHomepageStats,
 		settings_index: settings_index,

@@ -1,5 +1,16 @@
 {
 	"development":{
-		"can_access_admin":110
+		"can_access_admin_privilege":110,
+		"autosave_compose_contenttypes":true,
+		"autosave_compose_tags":true,
+		"autosave_compose_categories":true,
+		"autosave_compose_assets":true
+	},
+	"production":{
+		"can_access_admin_privilege":110,
+		"autosave_compose_contenttypes":true,
+		"autosave_compose_tags":true,
+		"autosave_compose_categories":true,
+		"autosave_compose_assets":true
 	}
 }

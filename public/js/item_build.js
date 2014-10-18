@@ -3118,6 +3118,14 @@ module.exports = function(arr, fn, initial){
 var request = require('superagent'),
 	letterpress = require('letterpressjs'),
 	updatemedia = require('./updatemedia'),
+	ajaxFormToSubmit,
+	autoSaveItem = function (options) {
+		var autosaveval = options.autosave;
+
+		if (autosaveval && ajaxFormToSubmit) {
+			window.ajaxFormSubmit(null, ajaxFormToSubmit);
+		}
+	},
 	createPeriodicTag = function (id, val, callback, url, type) {
 		if ((id === 'NEWTAG' || id === 'SELECT') && val) {
 			request
@@ -3143,7 +3151,6 @@ var request = require('superagent'),
 								res.body.data.doc._id,
 								res.body.data.doc.title,
 								error);
-							// console.log("type",type);
 						}
 					}
 				});
@@ -3151,6 +3158,23 @@ var request = require('superagent'),
 		else if (id !== 'SELECT' || id !== 'NEWTAG') {
 			callback(id, val);
 		}
+		// console.log('autosaveval', autosaveval, 'type', type, 'window.adminSettings', window.adminSettings,'ajaxFormToSubmit',ajaxFormToSubmit);
+
+		var autosaveval = true;
+		switch (type) {
+		case 'tag':
+			autosaveval = window.adminSettings.autosave_compose_tags;
+			break;
+		case 'contenttype':
+			autosaveval = window.adminSettings.autosave_compose_contenttypes;
+			break;
+		case 'category':
+			autosaveval = window.adminSettings.autosave_compose_categories;
+			break;
+		}
+		autoSaveItem({
+			autosave: autosaveval
+		});
 	},
 	wysihtml5Editor,
 	tag_lp = new letterpress({
@@ -3158,7 +3182,7 @@ var request = require('superagent'),
 		sourcedata: '/tag/search.json',
 		sourcearrayname: 'tags',
 		createTagFunc: function (id, val, callback) {
-			createPeriodicTag(id, val, callback, '/tag/new/' + window.makeNiceName(document.querySelector('#padmin-tags').value) + '/?format=json&limit=200');
+			createPeriodicTag(id, val, callback, '/tag/new/' + window.makeNiceName(document.querySelector('#padmin-tags').value) + '/?format=json&limit=200', 'tag');
 		}
 	}),
 	cat_lp = new letterpress({
@@ -3166,7 +3190,7 @@ var request = require('superagent'),
 		sourcedata: '/category/search.json',
 		sourcearrayname: 'categories',
 		createTagFunc: function (id, val, callback) {
-			createPeriodicTag(id, val, callback, '/category/new/' + window.makeNiceName(document.querySelector('#padmin-tags').value) + '/?format=json&limit=200');
+			createPeriodicTag(id, val, callback, '/category/new/' + window.makeNiceName(document.querySelector('#padmin-tags').value) + '/?format=json&limit=200', 'category');
 		}
 	}),
 	athr_lp = new letterpress({
@@ -3181,6 +3205,9 @@ var request = require('superagent'),
 			}
 			else if (id !== 'SELECT' || id !== 'NEWTAG') {
 				callback(id, val);
+				autoSaveItem({
+					autosave: true
+				});
 			}
 		}
 	}),
@@ -3202,6 +3229,9 @@ var uploadMediaFiles = function (e) {
 		updateitemimage = function (mediadoc) {
 			// console.log(mediadoc);
 			updatemedia(mediafilesresult, mediadoc);
+			autoSaveItem({
+				autosave: window.adminSettings.autosave_compose_assets
+			});
 		};
 
 	// process all File objects
@@ -3215,9 +3245,6 @@ var uploadMediaFiles = function (e) {
 	}
 };
 
-
-window.cnt_lp = cnt_lp;
-
 window.backToItemLanding = function () {
 	window.location = '/p-admin/items';
 };
@@ -3227,6 +3254,7 @@ window.addEventListener('load', function () {
 	cat_lp.init();
 	athr_lp.init();
 	cnt_lp.init();
+	ajaxFormToSubmit = document.getElementById('edit-item-form');
 	if (typeof itemtags === 'object') {
 		tag_lp.setPreloadDataObject(window.itemtags);
 	}

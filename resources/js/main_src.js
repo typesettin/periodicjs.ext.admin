@@ -6,7 +6,6 @@ var formobj = require('./formtoobject'),
 	classie = require('classie'),
 	silkscreen = require('silkscreenjs'),
 	updatemedia = require('./updatemedia'),
-	semver = require('semver'),
 	mediafilessearchresult,
 	mediasearchresultarray,
 	mediafilesresult,
@@ -82,6 +81,8 @@ var ajaxFormSubmit = function (e, element) {
 		e.preventDefault();
 	}
 };
+
+window.ajaxFormSubmit = ajaxFormSubmit;
 
 var autoSubmitFormOnChange = function () {
 	var formElement = this.form;

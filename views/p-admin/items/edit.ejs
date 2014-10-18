@@ -5,6 +5,7 @@
 	<%- locals.viewhelper.passObjToClient(item.categories,"itemcategories") %>
 	<%- locals.viewhelper.passObjToClient(item.authors,"itemauthors") %>
 	<%- locals.viewhelper.passObjToClient(item.contenttypes,"itemcontenttypes") %>
+	<%- locals.viewhelper.passObjToClient(adminSettings,"adminSettings") %>	
 	</script>
 	<form class="_pea-form _pea-ajax-form " id="edit-item-form" name="edit-item-form" method="post" action="/item/edit" data-successfunction="updateContentTypes" onsubmit="return false;" enctype='multipart/form-data'>
 		<% include compose_item_form %>
