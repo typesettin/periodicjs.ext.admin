@@ -1,7 +1,6 @@
 'use strict';
 
-var wysihtml5Editor,
-	request = require('superagent'),
+var request = require('superagent'),
 	contentEntryModule = require('./contententry'),
 	contententry,
 	doctypename,
@@ -80,31 +79,9 @@ window.backToTagCategory = function () {
 	window.location = '/p-admin/categories';
 };
 
-window.updateContentTypes = function (AjaxDataResponse) {
+window.updateContentTypesWithChildren = function (AjaxDataResponse) {
 	// console.log("runing post update");
-	var contenttypeContainer = document.getElementById('doc-ct-attr'),
-		updatedDoc = AjaxDataResponse.doc,
-		contentTypeHtml = '';
-	for (var x in updatedDoc.contenttypes) {
-		var contentTypeData = updatedDoc.contenttypes[x];
-		contentTypeHtml += '<div>';
-		contentTypeHtml += '<h3 style="margin-top:0;">' + contentTypeData.title + '<small> <a href="/p-admin/contenttype/' + contentTypeData.name + '">(edit)</a></small></h3>';
-		if (contentTypeData.attributes) {
-			for (var y in contentTypeData.attributes) {
-				var attr = contentTypeData.attributes[y],
-					defaultVal = attr.defaultvalue || '';
-				if (updatedDoc.contenttypeattributes && updatedDoc.contenttypeattributes[contentTypeData.name] && updatedDoc.contenttypeattributes[contentTypeData.name][attr.name]) {
-					defaultVal = updatedDoc.contenttypeattributes[contentTypeData.name][attr.name];
-				}
-				contentTypeHtml += '<div class="_pea-row _pea-container-forminput">';
-				contentTypeHtml += '<label class="_pea-label _pea-col-span3"> ' + attr.title + ' </label>';
-				contentTypeHtml += '<input class="_pea-col-span9 noFormSubmit" type="text" placeholder="' + attr.title + '" value="' + defaultVal + '" name="contenttypeattributes.' + contentTypeData.name + '.' + attr.name + '">';
-				contentTypeHtml += '</div>';
-			}
-		}
-		contentTypeHtml += '</div>';
-	}
-	contenttypeContainer.innerHTML = contentTypeHtml;
+	window.updateContentTypes(AjaxDataResponse);
 	if (docid) {
 		getChildren();
 	}

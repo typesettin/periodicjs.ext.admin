@@ -4,7 +4,7 @@
 		<%- locals.viewhelper.passObjToClient(category.parent,"attributeparent") %>
 		<%- locals.viewhelper.passObjToClient(category.contenttypes,"attributecontenttypes") %>
 	</script>
-	<form class="_pea-form _pea-ajax-form noFormSubmit" id="edit-category-form" name="edit-category-form" method="post" action="/category/edit" data-successfunction="updateContentTypes" onsubmit="return false;" enctype='multipart/form-data'>
+	<form class="_pea-form _pea-ajax-form noFormSubmit" id="edit-category-form" name="edit-category-form" method="post" action="/category/edit" data-successfunction="updateContentTypesWithChildren" onsubmit="return false;" enctype='multipart/form-data'>
 		<% include compose_category_form %>
 	</form>
 <% include ../../shared/footer %>

@@ -4,7 +4,7 @@
 		<%- locals.viewhelper.passObjToClient(tag.parent,"attributeparent") %>
 		<%- locals.viewhelper.passObjToClient(tag.contenttypes,"attributecontenttypes") %>
 	</script>
-	<form class="_pea-form _pea-ajax-form noFormSubmit" id="edit-tag-form" name="edit-tag-form" method="post" action="/tag/edit" data-successfunction="updateContentTypes" onsubmit="return false;" enctype='multipart/form-data'>
+	<form class="_pea-form _pea-ajax-form noFormSubmit" id="edit-tag-form" name="edit-tag-form" method="post" action="/tag/edit" data-successfunction="updateContentTypesWithChildren" onsubmit="return false;" enctype='multipart/form-data'>
 		<% include compose_tag_form %>
 	</form>
 <% include ../../shared/footer %>
