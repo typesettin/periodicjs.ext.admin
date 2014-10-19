@@ -1,90 +1,18 @@
 'use strict';
 
 var request = require('superagent'),
-	letterpress = require('letterpressjs'),
-	updatemedia = require('./updatemedia'),
-	createPeriodicTag = function (id, val, callback, url, type) {
-		if ((id === 'NEWTAG' || id === 'SELECT') && val) {
-			request
-				.post(url)
-				.send({
-					title: val,
-					_csrf: document.querySelector('input[name=_csrf]').value
-				})
-				.set('Accept', 'application/json')
-				.end(function (error, res) {
-					if (res.error) {
-						error = res.error;
-					}
-					if (error) {
-						window.ribbonNotification.showRibbon(error.message, 4000, 'error');
-					}
-					else {
-						if (res.body.result === 'error') {
-							window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
-						}
-						else if (typeof res.body.data.doc._id === 'string') {
-							callback(
-								res.body.data.doc._id,
-								res.body.data.doc.title,
-								error);
-							// console.log('type', type);
-						}
-					}
-				});
-		}
-		else if (id !== 'SELECT' || id !== 'NEWTAG') {
-			callback(id, val);
-		}
-	},
-	wysihtml5Editor,
-	tag_lp = new letterpress({
-		idSelector: '#padmin-tags',
-		sourcedata: '/tag/search.json',
-		sourcearrayname: 'tags',
-		createTagFunc: function (id, val, callback) {
-			createPeriodicTag(id, val, callback, '/tag/new/' + window.makeNiceName(document.querySelector('#padmin-tags').value) + '/?format=json&limit=200');
-		}
-	}),
-	cat_lp = new letterpress({
-		idSelector: '#padmin-categories',
-		sourcedata: '/category/search.json',
-		sourcearrayname: 'categories',
-		createTagFunc: function (id, val, callback) {
-			createPeriodicTag(id, val, callback, '/category/new/' + window.makeNiceName(document.querySelector('#padmin-tags').value) + '/?format=json&limit=200');
-		}
-	}),
-	athr_lp = new letterpress({
-		idSelector: '#padmin-authors',
-		sourcedata: '/user/search.json',
-		sourcearrayname: 'users',
-		valueLabel: 'username',
-		disablenewtags: true,
-		createTagFunc: function (id, val, callback) {
-			if (id === 'NEWTAG' || id === 'SELECT') {
-				window.ribbonNotification.showRibbon('user does not exist', 4000, 'error');
-			}
-			else if (id !== 'SELECT' || id !== 'NEWTAG') {
-				callback(id, val);
-			}
-		}
-	}),
-	cnt_lp = new letterpress({
-		idSelector: '#padmin-contenttypes',
-		sourcedata: '/contenttype/search.json',
-		sourcearrayname: 'contenttypes',
-		createTagFunc: function (id, val, callback) {
-			createPeriodicTag(id, val, callback, '/contenttype/new/' + window.makeNiceName(document.querySelector('#padmin-contenttypes').value) + '/?format=json&limit=200', 'contenttype');
-		}
-	}),
+	contentEntryModule = require('./contententry'),
+	contententry,
+	tag_lp,
+	cat_lp,
+	athr_lp,
+	cnt_lp,
 	searchDocButton,
 	searchDocInputText,
 	searchDocResults,
 	collectionDocs,
 	collectionDocsResults,
-	collectionDocsItemTable,
-	mediafileinput,
-	mediafilesresult;
+	collectionDocsItemTable;
 
 
 var generateCollectionDoc = function (documentstoadd) {
@@ -222,26 +150,6 @@ var searchDocs = function () {
 		});
 };
 
-var uploadMediaFiles = function (e) {
-	// fetch FileList object
-	var files = e.target.files || e.dataTransfer.files,
-		f,
-		updateitemimage = function (mediadoc) {
-			// console.log(mediadoc);
-			updatemedia(mediafilesresult, mediadoc);
-		};
-
-	// process all File objects
-	for (var i = 0; i < files.length; i++) {
-		f = files[i];
-		// ParseFile(f);
-		// uploadFile(f);
-		updatemedia.uploadFile(mediafilesresult, f, {
-			callback: updateitemimage
-		});
-	}
-};
-
 window.cnt_lp = cnt_lp;
 
 window.backToCollectionLanding = function () {
@@ -249,6 +157,15 @@ window.backToCollectionLanding = function () {
 };
 
 window.addEventListener('load', function () {
+	contententry = new contentEntryModule({
+		ajaxFormToSubmit: document.getElementById('edit-collection-form'),
+		mediafileinput: document.getElementById('padmin-mediafiles'),
+		mediafilesresult: document.getElementById('media-files-result')
+	});
+	tag_lp = contententry.tag_lp({});
+	cnt_lp = contententry.cnt_lp({});
+	cat_lp = contententry.cat_lp({});
+	athr_lp = contententry.athr_lp({});
 	tag_lp.init();
 	cat_lp.init();
 	athr_lp.init();
@@ -266,22 +183,12 @@ window.addEventListener('load', function () {
 		cnt_lp.setPreloadDataObject(window.collectioncontenttypes);
 	}
 	window.ajaxFormEventListers('._pea-ajax-form');
-	wysihtml5Editor = new window.wysihtml5.Editor('wysihtml5-textarea', {
-		// id of textarea element
-		toolbar: 'wysihtml5-toolbar', // id of toolbar element
-		parserRules: window.wysihtml5ParserRules // defined in parser rules set 
-	});
 	searchDocButton = document.getElementById('searchdocumentsbutton');
 	searchDocInputText = document.getElementById('searchdocumentstext');
 	searchDocResults = document.getElementById('collection-item-searchresult');
 	collectionDocs = document.getElementById('collection-items');
 	collectionDocsResults = document.getElementById('collection-item-documents');
 	collectionDocsItemTable = document.getElementById('collection-table-items');
-
-	mediafileinput = document.getElementById('padmin-mediafiles');
-	mediafilesresult = document.getElementById('media-files-result');
-	mediafileinput.addEventListener('change', uploadMediaFiles, false);
-	mediafilesresult.addEventListener('click', updatemedia.handleMediaButtonClick, false);
 	searchDocButton.addEventListener('click', searchDocs, false);
 	collectionDocs.addEventListener('click', collectionDocsCLick, false);
 });

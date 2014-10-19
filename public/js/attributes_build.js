@@ -3117,42 +3117,8 @@ module.exports = function(arr, fn, initial){
 
 var wysihtml5Editor,
 	request = require('superagent'),
-	letterpress = require('letterpressjs'),
-	createPeriodicTag = function (id, val, callback, url, type) {
-		if ((id === 'NEWTAG' || id === 'SELECT') && val) {
-			request
-				.post(url)
-				.send({
-					title: val,
-					_csrf: document.querySelector('input[name=_csrf]').value
-				})
-				.set('Accept', 'application/json')
-				.end(function (error, res) {
-					if (res.error) {
-						error = res.error;
-					}
-					if (error) {
-						window.ribbonNotification.showRibbon(error.message, 4000, 'error');
-					}
-					else {
-						if (res.body.result === 'error') {
-							window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
-						}
-						else if (typeof res.body.data.doc._id === 'string') {
-							callback(
-								res.body.data.doc._id,
-								res.body.data.doc.title,
-								error);
-							// console.log("type",type);
-						}
-					}
-				});
-		}
-		else if (id !== 'SELECT' || id !== 'NEWTAG') {
-			callback(id, val);
-			// console.log('type', type);
-		}
-	},
+	contentEntryModule = require('./contententry'),
+	contententry,
 	doctypename,
 	doctypenamelink,
 	docid,
@@ -3263,33 +3229,18 @@ window.addEventListener('load', function () {
 	docid = document.querySelector('input[name=docid]');
 	doctypename = document.querySelector('input[name=doctypename]');
 	doctypenamelink = document.querySelector('input[name=doctypenamelink]');
+	contententry = new contentEntryModule({
+		ajaxFormToSubmit: document.getElementById('edit-' + doctypename.value + '-form')
+	});
 	if (document.querySelector('#padmin-parent')) {
-		parent_lp = new letterpress({
-			idSelector: '#padmin-parent',
-			sourcedata: '/' + doctypename.value + '/search.json',
-			sourcearrayname: doctypenamelink.value,
-			valueLabel: 'name',
-			disablenewtags: true,
-			createTagFunc: function (id, val, callback) {
-				if (id === 'NEWTAG' || id === 'SELECT') {
-					window.ribbonNotification.showRibbon('tag does not exist', 4000, 'error');
-				}
-				else if (id !== 'SELECT' || id !== 'NEWTAG') {
-					callback(id, val);
-				}
-			}
+		parent_lp = contententry.parent_lp({
+			doctypename: doctypename.value,
+			doctypenamelink: doctypenamelink.value,
 		});
 		parent_lp.init();
 	}
 	if (document.querySelector('#padmin-contenttypes')) {
-		cnt_lp = new letterpress({
-			idSelector: '#padmin-contenttypes',
-			sourcedata: '/contenttype/search.json',
-			sourcearrayname: 'contenttypes',
-			createTagFunc: function (id, val, callback) {
-				createPeriodicTag(id, val, callback, '/contenttype/new/' + window.makeNiceName(document.querySelector('#padmin-contenttypes').value) + '/?format=json&limit=200', 'contenttype');
-			}
-		});
+		cnt_lp = contententry.cnt_lp({});
 		cnt_lp.init();
 	}
 	if (typeof attributeparent === 'object') {
@@ -3299,6 +3250,37 @@ window.addEventListener('load', function () {
 		cnt_lp.setPreloadDataObject(window.attributecontenttypes);
 	}
 	window.ajaxFormEventListers('._pea-ajax-form');
+
+	if (docid) {
+		getChildren();
+	}
+});
+
+},{"./contententry":17,"superagent":13}],17:[function(require,module,exports){
+'use strict';
+
+var request = require('superagent'),
+	updatemedia = require('./updatemedia'),
+	letterpress = require('letterpressjs'),
+	wysihtml5Editor,
+	ajaxFormToSubmit,
+	mediafileinput,
+	mediafilesresult;
+
+var contententry = function (options) {
+	this.init(options);
+};
+
+contententry.prototype.init = function (options) {
+	ajaxFormToSubmit = options.ajaxFormToSubmit;
+	mediafileinput = options.mediafileinput;
+	mediafilesresult = options.mediafilesresult;
+	if (mediafileinput) {
+		mediafileinput.addEventListener('change', this.uploadMediaFiles, false);
+	}
+	if (mediafilesresult) {
+		mediafilesresult.addEventListener('click', updatemedia.handleMediaButtonClick, false);
+	}
 	if (document.querySelector('#wysihtml5-textarea')) {
 		wysihtml5Editor = new window.wysihtml5.Editor('wysihtml5-textarea', {
 			// id of textarea element
@@ -3306,10 +3288,308 @@ window.addEventListener('load', function () {
 			parserRules: window.wysihtml5ParserRules // defined in parser rules set 
 		});
 	}
+};
 
-	if (docid) {
-		getChildren();
+contententry.prototype.autoSaveItem = function (options) {
+	var autosaveval = options.autosave,
+		t;
+	t = setTimeout(function () {
+		if (autosaveval && ajaxFormToSubmit) {
+			window.ajaxFormSubmit(null, ajaxFormToSubmit);
+		}
+		clearTimeout(t);
+	}, 500);
+};
+
+contententry.prototype.createPeriodicTag = function (id, val, callback, url, type) {
+	if ((id === 'NEWTAG' || id === 'SELECT') && val) {
+		request
+			.post(url)
+			.send({
+				title: val,
+				_csrf: document.querySelector('input[name=_csrf]').value
+			})
+			.set('Accept', 'application/json')
+			.end(function (error, res) {
+				if (res.error) {
+					error = res.error;
+				}
+				if (error) {
+					window.ribbonNotification.showRibbon(error.message, 4000, 'error');
+				}
+				else {
+					if (res.body.result === 'error') {
+						window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
+					}
+					else if (typeof res.body.data.doc._id === 'string') {
+						callback(
+							res.body.data.doc._id,
+							res.body.data.doc.title,
+							error);
+					}
+				}
+			});
 	}
-});
+	else if (id !== 'SELECT' || id !== 'NEWTAG') {
+		callback(id, val);
+	}
+	// console.log('autosaveval', autosaveval, 'type', type, 'window.adminSettings', window.adminSettings,'ajaxFormToSubmit',ajaxFormToSubmit);
 
-},{"letterpressjs":8,"superagent":13}]},{},[16]);
+	var autosaveval = true,
+		autouploadsettings = window.adminSettings || {};
+	switch (type) {
+	case 'tag':
+		autosaveval = (autouploadsettings.autosave_compose_tags) || true;
+		break;
+	case 'contenttype':
+		autosaveval = (autouploadsettings.autosave_compose_contenttypes) || true;
+		break;
+	case 'category':
+		autosaveval = (autouploadsettings.autosave_compose_categories) || true;
+		break;
+	}
+
+	contententry.prototype.autoSaveItem({
+		autosave: autosaveval
+	});
+};
+
+contententry.prototype.parent_lp = function (configoptions) {
+	var options = configoptions || {},
+		idSelector = options.idSelector || '#padmin-parent',
+		sourcedata = '/' + options.doctypename + '/search.json',
+		sourcearrayname = options.doctypenamelink,
+		returnlp = new letterpress({
+			idSelector: idSelector,
+			sourcedata: sourcedata,
+			sourcearrayname: sourcearrayname,
+			createTagFunc: function (id, val, callback) {
+				if (id === 'NEWTAG' || id === 'SELECT') {
+					window.ribbonNotification.showRibbon(options.doctypename + ' does not exist', 4000, 'error');
+				}
+				else if (id !== 'SELECT' || id !== 'NEWTAG') {
+					callback(id, val);
+					this.autoSaveItem({
+						autosave: true
+					});
+				}
+			}.bind(this)
+		});
+
+	return returnlp;
+};
+
+
+contententry.prototype.athr_lp = function (configoptions) {
+	var options = configoptions || {},
+		idSelector = options.idSelector || '#padmin-authors',
+		sourcedata = options.sourcedata || '/user/search.json',
+		sourcearrayname = options.sourcearrayname || 'users',
+		returnlp = new letterpress({
+			idSelector: idSelector,
+			sourcedata: sourcedata,
+			sourcearrayname: sourcearrayname,
+			valueLabel: 'username',
+			disablenewtags: true,
+			createTagFunc: function (id, val, callback) {
+				if (id === 'NEWTAG' || id === 'SELECT') {
+					window.ribbonNotification.showRibbon('user does not exist', 4000, 'error');
+				}
+				else if (id !== 'SELECT' || id !== 'NEWTAG') {
+					callback(id, val);
+					this.autoSaveItem({
+						autosave: true
+					});
+				}
+
+			}.bind(this)
+		});
+
+	return returnlp;
+};
+
+contententry.prototype.cnt_lp = function (configoptions) {
+	var options = configoptions || {},
+		idSelector = options.idSelector || '#padmin-contenttypes',
+		sourcedata = options.sourcedata || '/contenttype/search.json',
+		sourcearrayname = options.sourcearrayname || 'contenttypes',
+		tagposturl = options.tagposturl || '/contenttype/new/' + window.makeNiceName(document.querySelector('#padmin-contenttypes').value) + '/?format=json&limit=200',
+		type = options.type || 'contenttype',
+		returnlp = new letterpress({
+			idSelector: idSelector,
+			sourcedata: sourcedata,
+			sourcearrayname: sourcearrayname,
+			createTagFunc: function (id, val, callback) {
+				this.createPeriodicTag(id, val, callback, tagposturl, type);
+			}.bind(this)
+		});
+
+	return returnlp;
+};
+
+contententry.prototype.cat_lp = function (configoptions) {
+	var options = configoptions || {},
+		idSelector = options.idSelector || '#padmin-categories',
+		sourcedata = options.sourcedata || '/category/search.json',
+		sourcearrayname = options.sourcearrayname || 'categories',
+		categoryposturl = options.categoryposturl || '/category/new/' + window.makeNiceName(document.querySelector('#padmin-categories').value) + '/?format=json&limit=200',
+		type = options.type || 'category',
+		returnlp = new letterpress({
+			idSelector: idSelector,
+			sourcedata: sourcedata,
+			sourcearrayname: sourcearrayname,
+			createTagFunc: function (id, val, callback) {
+				this.createPeriodicTag(id, val, callback, categoryposturl, type);
+			}.bind(this)
+		});
+
+	return returnlp;
+};
+
+contententry.prototype.tag_lp = function (configoptions) {
+	var options = configoptions || {},
+		idSelector = options.idSelector || '#padmin-tags',
+		sourcedata = options.sourcedata || '/tag/search.json',
+		sourcearrayname = options.sourcearrayname || 'tags',
+		tagposturl = options.tagposturl || '/tag/new/' + window.makeNiceName(document.querySelector('#padmin-tags').value) + '/?format=json&limit=200',
+		type = options.type || 'tag',
+		returnlp = new letterpress({
+			idSelector: idSelector,
+			sourcedata: sourcedata,
+			sourcearrayname: sourcearrayname,
+			createTagFunc: function (id, val, callback) {
+				this.createPeriodicTag(id, val, callback, tagposturl, type);
+			}.bind(this)
+		});
+
+	return returnlp;
+};
+
+contententry.prototype.uploadMediaFiles = function (e) {
+	// fetch FileList object
+	var files = e.target.files || e.dataTransfer.files,
+		autouploadsettings = window.adminSettings || {},
+		f,
+		updateitemimage = function (mediadoc) {
+			// console.log(mediadoc);
+			updatemedia(mediafilesresult, mediadoc);
+			contententry.prototype.autoSaveItem({
+				autosave: (autouploadsettings.autosave_compose_assets) || true
+			});
+		};
+
+	// process all File objects
+	for (var i = 0; i < files.length; i++) {
+		f = files[i];
+		// ParseFile(f);
+		// uploadFile(f);
+		updatemedia.uploadFile(mediafilesresult, f, {
+			callback: updateitemimage
+		});
+	}
+};
+
+
+module.exports = contententry;
+
+},{"./updatemedia":18,"letterpressjs":8,"superagent":13}],18:[function(require,module,exports){
+'use strict';
+
+var updatemedia = function (element, mediadoc, additem) {
+	var updateMediaResultHtml = function (element, mediadoc) {
+		element.appendChild(generateMediaHtml(mediadoc));
+	};
+
+	var generateMediaHtml = function (mediadoc) {
+		var mediaHtml = document.createElement('div'),
+			htmlForInnerMedia = '';
+		mediaHtml.setAttribute('class', '_pea-col-span4 media-item-x');
+		mediaHtml.setAttribute('data-id', mediadoc._id);
+		if (!additem) {
+			htmlForInnerMedia += '<input style="display:none;" name="assets" type="checkbox" value="' + mediadoc._id + '" checked="checked"></input>';
+		}
+		if (mediadoc.assettype.match('image')) {
+			htmlForInnerMedia += '<img class="_pea-col-span11" title="' + mediadoc.name + '" src="' + mediadoc.fileurl + '"/>';
+		}
+		else {
+			htmlForInnerMedia += '<div class="_pea-col-span11"> ' + mediadoc.fileurl + '</div>';
+		}
+		htmlForInnerMedia += '<div class="mix-options _pea-text-right">';
+		if (additem) {
+			htmlForInnerMedia += '<a data-id="' + mediadoc._id + '"  title="' + mediadoc.name + '" class="_pea-button add-asset-item _pea-color-success">+</a>';
+		}
+		else {
+			htmlForInnerMedia += '<a href="/p-admin/asset/' + mediadoc._id + '" target="_blank"  title="edit asset" class="_pea-button edit-asset _pea-color-info">i</a>';
+			htmlForInnerMedia += '<a data-assetid="' + mediadoc._id + '" title="make primary asset" class="_pea-button make-primary _pea-color-warn">*</a>';
+			htmlForInnerMedia += '<a data-assetid="' + mediadoc._id + '" title="remove asset" class="_pea-button remove-asset _pea-color-error">x</a>';
+		}
+		htmlForInnerMedia += '</div>';
+		mediaHtml.innerHTML = htmlForInnerMedia;
+		return mediaHtml;
+	};
+
+	updateMediaResultHtml(element, mediadoc);
+};
+
+updatemedia.handleMediaButtonClick = function (e) {
+	var eTarget = e.target;
+	if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('remove-asset')) {
+		document.getElementById('media-files-result').removeChild(eTarget.parentElement.parentElement);
+	}
+	else if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('make-primary')) {
+		document.getElementById('primaryasset-input').value = eTarget.getAttribute('data-assetid');
+		var mpbuttons = document.querySelectorAll('._pea-button.make-primary');
+		for (var x in mpbuttons) {
+			if (typeof mpbuttons[x] === 'object') {
+				mpbuttons[x].style.display = 'inline-block';
+			}
+		}
+		eTarget.style.display = 'none';
+	}
+};
+
+updatemedia.uploadFile = function (mediafilesresult, file, options) {
+	var reader = new FileReader(),
+		client = new XMLHttpRequest(),
+		formData = new FormData(),
+		posturl = (options && options.posturl) ? options.posturl : '/mediaasset/new?format=json',
+		callback = (options && options.callback && typeof options.callback === 'function') ? options.callback : function (data) {
+			updatemedia(mediafilesresult, data);
+		};
+
+	reader.onload = function () {
+		// console.log(e);
+		// console.log(file);
+		formData.append('mediafile', file, file.name);
+
+		client.open('post', posturl, true);
+		client.setRequestHeader('x-csrf-token', document.querySelector('input[name=_csrf]').value);
+		client.send(formData); /* Send to server */
+	};
+	reader.readAsDataURL(file);
+	client.onreadystatechange = function () {
+		if (client.readyState === 4) {
+			try {
+				var res = JSON.parse(client.response);
+				if (res.result === 'error') {
+					window.ribbonNotification.showRibbon(res.data.error, 4000, 'error');
+				}
+				else if (client.status !== 200) {
+					window.ribbonNotification.showRibbon(client.status + ': ' + client.statusText, 4000, 'error');
+				}
+				else {
+					window.ribbonNotification.showRibbon('saved', 4000, 'success');
+					callback(res.data.doc);
+				}
+			}
+			catch (e) {
+				window.ribbonNotification.showRibbon(e.message, 4000, 'error');
+				console.log(e);
+			}
+		}
+	};
+};
+
+module.exports = updatemedia;
+
+},{}]},{},[16]);

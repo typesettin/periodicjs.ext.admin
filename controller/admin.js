@@ -221,7 +221,7 @@ var setSearchLimitTo1000 = function (req, res, next) {
  * @return {object} reponds with an error page or sends user to authenicated in resource
  */
 var index = function (req, res) {
-	res.header('Cache-Control', 'public, max-age=7200');
+	// res.header('Cache-Control', 'public, max-age=7200');
 
 	CoreController.getPluginViewDefaultTemplate({
 			viewname: 'p-admin/home/index',

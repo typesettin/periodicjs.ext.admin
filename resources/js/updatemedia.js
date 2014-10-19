@@ -58,7 +58,7 @@ updatemedia.uploadFile = function (mediafilesresult, file, options) {
 		client = new XMLHttpRequest(),
 		formData = new FormData(),
 		posturl = (options && options.posturl) ? options.posturl : '/mediaasset/new?format=json',
-		callback = (options && options.callback) ? options.callback : function (data) {
+		callback = (options && options.callback && typeof options.callback === 'function') ? options.callback : function (data) {
 			updatemedia(mediafilesresult, data);
 		};
 
