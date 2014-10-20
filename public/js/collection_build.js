@@ -3314,6 +3314,7 @@ window.addEventListener('load', function () {
 var request = require('superagent'),
 	updatemedia = require('./updatemedia'),
 	letterpress = require('letterpressjs'),
+	uploadmediaCallback,
 	wysihtml5Editor,
 	ajaxFormToSubmit,
 	mediafileinput,
@@ -3324,6 +3325,7 @@ var contententry = function (options) {
 };
 
 contententry.prototype.init = function (options) {
+	uploadmediaCallback = options.uploadmediaCallback;
 	ajaxFormToSubmit = options.ajaxFormToSubmit;
 	mediafileinput = options.mediafileinput;
 	mediafilesresult = options.mediafilesresult;
@@ -3522,7 +3524,7 @@ contententry.prototype.uploadMediaFiles = function (e) {
 	var files = e.target.files || e.dataTransfer.files,
 		autouploadsettings = window.adminSettings || {},
 		f,
-		updateitemimage = function (mediadoc) {
+		uploadmediafilecallback = uploadmediaCallback || function (mediadoc) {
 			// console.log(mediadoc);
 			updatemedia(mediafilesresult, mediadoc);
 			contententry.prototype.autoSaveItem({
@@ -3536,7 +3538,7 @@ contententry.prototype.uploadMediaFiles = function (e) {
 		// ParseFile(f);
 		// uploadFile(f);
 		updatemedia.uploadFile(mediafilesresult, f, {
-			callback: updateitemimage
+			callback: uploadmediafilecallback
 		});
 	}
 };
