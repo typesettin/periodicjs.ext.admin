@@ -13,44 +13,54 @@
 			
 			<% include ../../shared/compose_content %>
 			<h2>Library Items</h2>
-			<div class="_pea-document" id="library-items">
+			<div class="_pea-document" id="library-content_entities">
 				<div id="library-item-documents" class="_pea-row _pea-container-forminput">
 					<table class="_pea-table _pea-form">
-					<tbody id="library-table-items">
-					<%if(library && library.items){ %>
-						<% library.items.forEach(function(docresult,index){
-							if(docresult.item){
+					<tbody id="library-table-content_entities">
+					<%if(library && library.content_entities){ %>
+						<% library.content_entities.forEach(function(docresult,index){
+							var content_entity,appendInfo;
+							if(docresult.entity_item){
+								content_entity = docresult.entity_item ;
+								appendInfo = '"entity_item":"'+content_entity._id+'"';
+							}
+							else if(docresult.entity_collection){
+								content_entity = docresult.entity_collection;
+								appendInfo = '"entity_collection":"'+content_entity._id+'"';
+							}
+
+							if(content_entity){
 								%>
-								<tr id="tr-docid-<%= docresult.item._id%>">
+								<tr id="tr-docid-<%= content_entity._id%>">
 									<td class="_pea-col-span9">
-										<input style="display:none;"  name="items" type="checkbox" value='{"order":<%-(index*10)%>,"item":"<%=docresult.item._id%>"}' checked="checked"></input>
-										<%= docresult.item.title %>
+										<input style="display:none;"  name="content_entities" type="checkbox" value='{"order":<%-(index*10)%>,"entitytype":"<%-docresult.entitytype%>",<%=appendInfo%>}' checked="checked"></input>
+										<%= content_entity.title %> <small class="_pea-color-inverse"> <%- docresult.entitytype %> </small>
 										<div><small>
 											<%
-											if(docresult.item.tags && docresult.item.tags.length >0){
+											if(content_entity.tags && content_entity.tags.length >0){
 												%>
 												<strong>tags:</strong> <%
-												for(var i in docresult.item.tags){
+												for(var i in content_entity.tags){
 													%> 
-													<%=docresult.item.tags[i].title %>, 
+													<%=content_entity.tags[i].title %>, 
 													<%
 												}
 											}
-											if(docresult.item.categories && docresult.item.categories.length >0){
+											if(content_entity.categories && content_entity.categories.length >0){
 												%>
 												<strong>categories:</strong> <%
-												for(var i in docresult.item.categories){
+												for(var i in content_entity.categories){
 													%> 
-													<%=docresult.item.categories[i].title %>, 
+													<%=content_entity.categories[i].title %>, 
 													<%
 												}
 											}
-											if(docresult.item.contenttypes && docresult.item.contenttypes.length >0){
+											if(content_entity.contenttypes && content_entity.contenttypes.length >0){
 												%>
 												<strong>contenttypes:</strong> <%
-												for(var i in docresult.item.contenttypes){
+												for(var i in content_entity.contenttypes){
 													%> 
-													<%=docresult.item.contenttypes[i].title %>, 
+													<%=content_entity.contenttypes[i].title %>, 
 													<%
 												}
 											}
@@ -58,7 +68,7 @@
 										</small></div>
 									</td>
 									<td class="_pea-col-span3 _pea-text-right">
-										<a data-docid="<%= docresult.item._id%>" class="_pea-button remove-doc-to-library _pea-color-error">x</a>
+										<a data-docid="<%= content_entity._id%>" class="_pea-button remove-doc-to-library _pea-color-error">x</a>
 									</td>
 								</tr>
 							<%		

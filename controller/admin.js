@@ -785,7 +785,7 @@ var library_content_search_index = function (req, res) {
 			extname: 'periodicjs.ext.admin'
 		},
 		function (err, templatepath) {
-			var content_documents = req.controllerData.items.concat(req.controllerData.collections);
+			var content_entities = req.controllerData.items.concat(req.controllerData.collections);
 			CoreController.handleDocumentQueryRender({
 				res: res,
 				req: req,
@@ -795,7 +795,7 @@ var library_content_search_index = function (req, res) {
 						title: 'Library Search Result',
 						extensions: CoreUtilities.getAdminMenu()
 					},
-					items: content_documents.sort(CoreUtilities.sortObject('asc', 'name')),
+					content_entities: content_entities.sort(CoreUtilities.sortObject('asc', 'name')),
 					user: req.user
 				}
 			});

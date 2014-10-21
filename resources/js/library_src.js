@@ -17,7 +17,9 @@ var request = require('superagent'),
 
 var generateLibraryDoc = function (documentstoadd) {
 	documentstoadd.style.display = 'none';
-	var docid = documentstoadd.firstChild.firstChild.getAttribute('data-docid');
+	var aelementoflibrarydoc = documentstoadd.firstChild.firstChild;
+	var docid = aelementoflibrarydoc.getAttribute('data-docid');
+	var docentitytype = aelementoflibrarydoc.getAttribute('data-entitytype');
 	var removecolumn = document.createElement('td');
 	removecolumn.setAttribute('class', '_pea-col-span3 _pea-text-right');
 	removecolumn.innerHTML = '<a data-docid="' + docid + '" class="_pea-button remove-doc-to-library _pea-color-error">x</a>';
@@ -28,9 +30,14 @@ var generateLibraryDoc = function (documentstoadd) {
 	var docidinput = document.createElement('input');
 	docidinput.type = 'checkbox';
 	docidinput.style.display = 'none';
-	docidinput.name = 'items';
+	docidinput.name = 'content_entities';
 	docidinput.checked = 'checked';
-	docidinput.value = '{"order":10,"item":"' + docid + '"}';
+	if (docentitytype === 'item') {
+		docidinput.value = '{"order":10,"entitytype":"item","entity_item":"' + docid + '"}';
+	}
+	else if (docentitytype === 'collection') {
+		docidinput.value = '{"order":10,"entitytype":"collection","entity_collection":"' + docid + '"}';
+	}
 	documentstoadd.firstChild.appendChild(docidinput);
 	// console.log('docidinput', docidinput);
 	// console.log('documentstoadd', documentstoadd.firstChild);
@@ -43,14 +50,23 @@ var libraryDocsCLick = function (e) {
 	var eTarget = e.target;
 	if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('add-doc-to-library')) {
 		if (document.querySelector('input[name=docid]')) {
+			var entityTypeToAdd = eTarget.getAttribute('data-entitytype'),
+				contentEntityData = {
+					order: 10,
+					entitytype: entityTypeToAdd
+				};
+			if (entityTypeToAdd === 'item') {
+				contentEntityData.entity_item = eTarget.getAttribute('data-docid');
+			}
+			else if (entityTypeToAdd === 'collection') {
+				contentEntityData.entity_collection = eTarget.getAttribute('data-docid');
+			}
+
 			request
 				.post('/library/append/' + document.querySelector('input[name=docid]').value)
 				.send({
 					_csrf: document.querySelector('input[name=_csrf]').value,
-					items: {
-						order: 10,
-						item: eTarget.getAttribute('data-docid')
-					}
+					content_entities: contentEntityData
 				})
 				.set('Accept', 'application/json')
 				.query({
@@ -89,8 +105,8 @@ var generateSearchResult = function (documents) {
 	for (var x in documents) {
 		var docresult = documents[x];
 		docresulthtml += '<tr>';
-		docresulthtml += '<td><a data-docid="' + docresult._id + '" class="_pea-button add-doc-to-library _pea-color-success">+</a></td>';
-		docresulthtml += '<td>' + docresult.title;
+		docresulthtml += '<td><a data-docid="' + docresult._id + '" data-entitytype="' + docresult.entitytype + '" class="_pea-button add-doc-to-library _pea-color-success">+</a></td>';
+		docresulthtml += '<td>' + docresult.title + ' <small>(' + docresult.entitytype + ')</small>';
 		docresulthtml += '<div><small>';
 		if (docresult.authors) {
 			docresulthtml += '<strong>authors:</strong> ';
@@ -144,7 +160,7 @@ var searchDocs = function () {
 					window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
 				}
 				else {
-					generateSearchResult(res.body.items);
+					generateSearchResult(res.body.content_entities);
 				}
 			}
 		});
@@ -186,9 +202,9 @@ window.addEventListener('load', function () {
 	searchDocButton = document.getElementById('searchdocumentsbutton');
 	searchDocInputText = document.getElementById('searchdocumentstext');
 	searchDocResults = document.getElementById('library-item-searchresult');
-	libraryDocs = document.getElementById('library-items');
+	libraryDocs = document.getElementById('library-content_entities');
 	libraryDocsResults = document.getElementById('library-item-documents');
-	libraryDocsItemTable = document.getElementById('library-table-items');
+	libraryDocsItemTable = document.getElementById('library-table-content_entities');
 	searchDocButton.addEventListener('click', searchDocs, false);
 	libraryDocs.addEventListener('click', libraryDocsCLick, false);
 });
