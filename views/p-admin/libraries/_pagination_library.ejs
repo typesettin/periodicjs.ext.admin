@@ -1,0 +1,53 @@
+<% 
+	currentpagenum = parseInt(request.query.pagenum);
+	// nextlinkquery.pagenum = currentpagenum +1;
+
+	var prevlink = '?'+locals.viewhelper.getQueryString(request.query).replace('pagenum='+currentpagenum,'pagenum='+(parseInt(currentpagenum-1)));	
+	var nextlink = '?'+locals.viewhelper.getQueryString(request.query).replace('pagenum='+currentpagenum,'pagenum='+(parseInt(currentpagenum)+1));
+%>
+<tr>
+	<th colspan="3" class="_pea-text-left ">
+		Page
+		<% if(currentpagenum >1){%>
+			<a href="<%= prevlink %>">&laquo;</a> 
+		<%}%>
+
+		<% if(editlistingprops){%>
+			<input type="text" name="pagenum" class="_pea-text-center autoFormSubmit" style="width:2em;" value="<%- request.query.pagenum %>"/>
+		<%}
+		else{%>
+			<%- request.query.pagenum %>
+		<%}%> of <%- librarypages %> 
+
+		<% if(libraries && libraries.length>0 && libraries.length >= request.query.limit){%>
+			<a href="<%= nextlink %>">&raquo;</a>
+		<%}%>
+	</th>
+	<th colspan="4" class="_pea-text-right "> 
+		<a href="/p-admin/libraries">Reset Filters</a>
+		<% if(editlistingprops){%>
+		 | 
+			<span >
+				<% var librariesperpage = [{
+					"value":"15",
+					"label":"15"
+					},{
+					"value":"30",
+					"label":"30"
+					},{
+					"value":"50",
+					"label":"50"
+					}]; %>
+				<select name="librariesperpage"  class="autoFormSubmit">
+					<% librariesperpage.forEach(function(iperpage){
+						%>
+							<option <% if(request.query.librariesperpage === iperpage.value ){%> selected="selected"
+							<%}%> value="<%= iperpage.value %>"><%= iperpage.label %></option>
+						<%
+						}); %>
+				</select> per page
+			</span> | 
+			<span><%- librariescount %> libraries</span>
+		<%}%>
+	</th>
+</tr>

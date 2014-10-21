@@ -10,17 +10,17 @@ var request = require('superagent'),
 	searchDocButton,
 	searchDocInputText,
 	searchDocResults,
-	collectionDocs,
-	collectionDocsResults,
-	collectionDocsItemTable;
+	libraryDocs,
+	libraryDocsResults,
+	libraryDocsItemTable;
 
 
-var generateCollectionDoc = function (documentstoadd) {
+var generateLibraryDoc = function (documentstoadd) {
 	documentstoadd.style.display = 'none';
 	var docid = documentstoadd.firstChild.firstChild.getAttribute('data-docid');
 	var removecolumn = document.createElement('td');
 	removecolumn.setAttribute('class', '_pea-col-span3 _pea-text-right');
-	removecolumn.innerHTML = '<a data-docid="' + docid + '" class="_pea-button remove-doc-to-collection _pea-color-error">x</a>';
+	removecolumn.innerHTML = '<a data-docid="' + docid + '" class="_pea-button remove-doc-to-library _pea-color-error">x</a>';
 	// console.log("removecolumn",removecolumn);
 	documentstoadd.removeChild(documentstoadd.firstChild);
 	documentstoadd.appendChild(removecolumn);
@@ -34,17 +34,17 @@ var generateCollectionDoc = function (documentstoadd) {
 	documentstoadd.firstChild.appendChild(docidinput);
 	// console.log('docidinput', docidinput);
 	// console.log('documentstoadd', documentstoadd.firstChild);
-	collectionDocsItemTable.appendChild(documentstoadd);
+	libraryDocsItemTable.appendChild(documentstoadd);
 	documentstoadd.style.display = 'table-row';
 	documentstoadd.style.width = '100%';
 };
 
-var collectionDocsCLick = function (e) {
+var libraryDocsCLick = function (e) {
 	var eTarget = e.target;
-	if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('add-doc-to-collection')) {
+	if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('add-doc-to-library')) {
 		if (document.querySelector('input[name=docid]')) {
 			request
-				.post('/collection/append/' + document.querySelector('input[name=docid]').value)
+				.post('/library/append/' + document.querySelector('input[name=docid]').value)
 				.send({
 					_csrf: document.querySelector('input[name=_csrf]').value,
 					items: {
@@ -68,16 +68,16 @@ var collectionDocsCLick = function (e) {
 							window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
 						}
 						else {
-							generateCollectionDoc(eTarget.parentElement.parentElement, eTarget.getAttribute('data-docid'));
+							generateLibraryDoc(eTarget.parentElement.parentElement, eTarget.getAttribute('data-docid'));
 						}
 					}
 				});
 		}
 		else {
-			window.ribbonNotification.showRibbon('You have to save and create a collection before adding items to it', 4000, 'error');
+			window.ribbonNotification.showRibbon('You have to save and create a library before adding items to it', 4000, 'error');
 		}
 	}
-	else if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('remove-doc-to-collection')) {
+	else if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('remove-doc-to-library')) {
 		// var elemtoremove = document.getElementById("tr-docid-"+eTarget.getAttribute("data-docid"));
 		var elemtoremove = eTarget.parentElement.parentElement;
 		elemtoremove.parentElement.removeChild(elemtoremove);
@@ -89,7 +89,7 @@ var generateSearchResult = function (documents) {
 	for (var x in documents) {
 		var docresult = documents[x];
 		docresulthtml += '<tr>';
-		docresulthtml += '<td><a data-docid="' + docresult._id + '" class="_pea-button add-doc-to-collection _pea-color-success">+</a></td>';
+		docresulthtml += '<td><a data-docid="' + docresult._id + '" class="_pea-button add-doc-to-library _pea-color-success">+</a></td>';
 		docresulthtml += '<td>' + docresult.title;
 		docresulthtml += '<div><small>';
 		if (docresult.authors) {
@@ -152,13 +152,13 @@ var searchDocs = function () {
 
 window.cnt_lp = cnt_lp;
 
-window.backToCollectionLanding = function () {
-	window.location = '/p-admin/collections';
+window.backToLibraryLanding = function () {
+	window.location = '/p-admin/libraries';
 };
 
 window.addEventListener('load', function () {
 	contententry = new contentEntryModule({
-		ajaxFormToSubmit: document.getElementById('edit-collection-form'),
+		ajaxFormToSubmit: document.getElementById('edit-library-form'),
 		mediafileinput: document.getElementById('padmin-mediafiles'),
 		mediafilesresult: document.getElementById('media-files-result')
 	});
@@ -170,25 +170,25 @@ window.addEventListener('load', function () {
 	cat_lp.init();
 	athr_lp.init();
 	cnt_lp.init();
-	if (window.collectiontags && typeof window.collectiontags === 'object') {
-		tag_lp.setPreloadDataObject(window.collectiontags);
+	if (window.librarytags && typeof window.librarytags === 'object') {
+		tag_lp.setPreloadDataObject(window.librarytags);
 	}
-	if (window.collectioncategories && typeof window.collectioncategories === 'object') {
-		cat_lp.setPreloadDataObject(window.collectioncategories);
+	if (window.librarycategories && typeof window.librarycategories === 'object') {
+		cat_lp.setPreloadDataObject(window.librarycategories);
 	}
-	if (window.collectionauthors && typeof window.collectionauthors === 'object') {
-		athr_lp.setPreloadDataObject(window.collectionauthors);
+	if (window.libraryauthors && typeof window.libraryauthors === 'object') {
+		athr_lp.setPreloadDataObject(window.libraryauthors);
 	}
-	if (window.collectioncontenttypes && typeof window.collectioncontenttypes === 'object') {
-		cnt_lp.setPreloadDataObject(window.collectioncontenttypes);
+	if (window.librarycontenttypes && typeof window.librarycontenttypes === 'object') {
+		cnt_lp.setPreloadDataObject(window.librarycontenttypes);
 	}
 	window.ajaxFormEventListers('._pea-ajax-form');
 	searchDocButton = document.getElementById('searchdocumentsbutton');
 	searchDocInputText = document.getElementById('searchdocumentstext');
-	searchDocResults = document.getElementById('collection-item-searchresult');
-	collectionDocs = document.getElementById('collection-items');
-	collectionDocsResults = document.getElementById('collection-item-documents');
-	collectionDocsItemTable = document.getElementById('collection-table-items');
+	searchDocResults = document.getElementById('library-item-searchresult');
+	libraryDocs = document.getElementById('library-items');
+	libraryDocsResults = document.getElementById('library-item-documents');
+	libraryDocsItemTable = document.getElementById('library-table-items');
 	searchDocButton.addEventListener('click', searchDocs, false);
-	collectionDocs.addEventListener('click', collectionDocsCLick, false);
+	libraryDocs.addEventListener('click', libraryDocsCLick, false);
 });

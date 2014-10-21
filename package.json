@@ -21,7 +21,12 @@
     "postuninstall": "node uninstall.js"
   },
   "keywords": [
-    "periodicjs","content management system","cms","wordpress","drupal","ghost"
+    "periodicjs",
+    "content management system",
+    "cms",
+    "wordpress",
+    "drupal",
+    "ghost"
   ],
   "dependencies": {
     "async": "0.9.0",
@@ -67,10 +72,10 @@
     "uglify-js": "^2.4.15",
     "uglifyify": "^2.5.0"
   },
-  "_id": "periodicjs.ext.admin@1.90.20",
-  "_shasum": "e2082378d7191b2703d758aedcccd9a5c5ef15de",
-  "_from": "periodicjs.ext.admin@1.90.20",
-  "_resolved": "https://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.90.20.tgz",
+  "_id": "periodicjs.ext.admin@1.90.312",
+  "_shasum": "0f25ee84b92f67cfd8a85a67dd2610589be431d1",
+  "_from": "periodicjs.ext.admin@1.90.312",
+  "_resolved": "https://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.90.312.tgz",
   "gitHead": "23466172484b2277c691c4f2684dfdb1cb92cb23",
   "bugs": {
     "url": "https://github.com/typesettin/periodicjs.ext.admin/issues"
@@ -88,8 +93,8 @@
     }
   ],
   "dist": {
-    "shasum": "e2082378d7191b2703d758aedcccd9a5c5ef15de",
-    "tarball": "http://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.90.20.tgz"
+    "shasum": "0f25ee84b92f67cfd8a85a67dd2610589be431d1",
+    "tarball": "http://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-1.90.312.tgz"
   },
   "directories": {},
   "readme": "ERROR: No README data found!"

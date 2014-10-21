@@ -3285,16 +3285,16 @@ window.addEventListener('load', function () {
 	cat_lp.init();
 	athr_lp.init();
 	cnt_lp.init();
-	if (typeof collectiontags === 'object') {
+	if (window.collectiontags && typeof window.collectiontags === 'object') {
 		tag_lp.setPreloadDataObject(window.collectiontags);
 	}
-	if (typeof collectioncategories === 'object') {
+	if (window.collectioncategories && typeof window.collectioncategories === 'object') {
 		cat_lp.setPreloadDataObject(window.collectioncategories);
 	}
-	if (typeof collectionauthors === 'object') {
+	if (window.collectionauthors && typeof window.collectionauthors === 'object') {
 		athr_lp.setPreloadDataObject(window.collectionauthors);
 	}
-	if (typeof collectioncontenttypes === 'object') {
+	if (window.collectioncontenttypes && typeof window.collectioncontenttypes === 'object') {
 		cnt_lp.setPreloadDataObject(window.collectioncontenttypes);
 	}
 	window.ajaxFormEventListers('._pea-ajax-form');

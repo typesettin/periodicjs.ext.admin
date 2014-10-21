@@ -20,6 +20,7 @@ var path = require('path'),
 	mongoose,
 	User,
 	Collection,
+	Library,
 	Item, //Item
 	AppDBSetting,
 	Contenttype,
@@ -625,6 +626,150 @@ var collection_edit = function (req, res) {
 							collection: req.controllerData.collection,
 							serverdate: moment(req.controllerData.collection.publishat).format('YYYY-MM-DD'),
 							servertime: moment(req.controllerData.collection.publishat).format('HH:mm'),
+							adminSettings: adminSettings,
+							user: req.user
+						}
+					});
+				}
+			});
+
+		}
+	);
+};
+/**
+ * list libraries page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
+var libraries_index = function (req, res) {
+	CoreController.getPluginViewDefaultTemplate({
+			viewname: 'p-admin/libraries/index',
+			themefileext: appSettings.templatefileextension,
+			extname: 'periodicjs.ext.admin'
+		},
+		function (err, templatepath) {
+			CoreController.handleDocumentQueryRender({
+				res: res,
+				req: req,
+				renderView: templatepath,
+				responseData: {
+					pagedata: {
+						title: 'Librarys',
+						extensions: CoreUtilities.getAdminMenu()
+					},
+					libraries: req.controllerData.libraries,
+					librariescount: req.controllerData.librariescount,
+					librarypages: Math.ceil(req.controllerData.librariescount / req.query.limit),
+					user: req.user
+				}
+			});
+		}
+	);
+};
+
+/**
+ * new library page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
+var library_new = function (req, res) {
+	CoreController.getPluginViewDefaultTemplate({
+			viewname: 'p-admin/libraries/new',
+			themefileext: appSettings.templatefileextension,
+			extname: 'periodicjs.ext.admin'
+		},
+		function (err, templatepath) {
+			getDefaultContentTypes('library_default_contenttypes', function (err, defaultcontenttypes) {
+				if (err) {
+					CoreController.handleDocumentQueryErrorResponse({
+						err: err,
+						res: res,
+						req: req
+					});
+				}
+				else {
+					CoreController.handleDocumentQueryRender({
+						res: res,
+						req: req,
+						renderView: templatepath,
+						responseData: {
+							pagedata: {
+								title: 'New Library',
+								headerjs: ['/extensions/periodicjs.ext.admin/js/library.min.js'],
+								extensions: CoreUtilities.getAdminMenu()
+							},
+							library: null,
+							default_contentypes: defaultcontenttypes,
+							serverdate: moment().format('YYYY-MM-DD'),
+							servertime: moment().format('HH:mm'),
+							adminSettings: adminSettings,
+							user: req.user
+						}
+					});
+				}
+			});
+		}
+	);
+};
+
+/**
+ * edit library page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
+var library_edit = function (req, res) {
+	CoreController.getPluginViewDefaultTemplate({
+			viewname: 'p-admin/libraries/edit',
+			themefileext: appSettings.templatefileextension,
+			extname: 'periodicjs.ext.admin'
+		},
+		function (err, templatepath) {
+
+
+			getDefaultContentTypes('library_default_contenttypes', function (err, defaultcontenttypes) {
+				if (err) {
+					CoreController.handleDocumentQueryErrorResponse({
+						err: err,
+						res: res,
+						req: req
+					});
+				}
+				else {
+					if (defaultcontenttypes && defaultcontenttypes.length > 0) {
+						if (req.controllerData.library.contenttypes && req.controllerData.library.contenttypes.length > 0) {
+							for (var a in defaultcontenttypes) {
+								var alreadyHasContenttype = false;
+								for (var b in req.controllerData.library.contenttypes) {
+									if (defaultcontenttypes[a]._id.equals(req.controllerData.library.contenttypes[b]._id)) {
+										alreadyHasContenttype = true;
+									}
+									// console.log('a',a,'defaultcontenttypes[a]._id',defaultcontenttypes[a]._id,'b',b,req.controllerData.library.contenttypes[b]._id,'alreadyHasContenttype',alreadyHasContenttype);
+								}
+								if (alreadyHasContenttype === false) {
+									req.controllerData.library.contenttypes.push(defaultcontenttypes[a]);
+								}
+							}
+						}
+						else {
+							req.controllerData.library.contenttypes = defaultcontenttypes;
+						}
+					}
+					CoreController.handleDocumentQueryRender({
+						res: res,
+						req: req,
+						renderView: templatepath,
+						responseData: {
+							pagedata: {
+								title: req.controllerData.library.title + ' - Edit Library',
+								headerjs: ['/extensions/periodicjs.ext.admin/js/library.min.js'],
+								extensions: CoreUtilities.getAdminMenu()
+							},
+							library: req.controllerData.library,
+							serverdate: moment(req.controllerData.library.publishat).format('YYYY-MM-DD'),
+							servertime: moment(req.controllerData.library.publishat).format('HH:mm'),
 							adminSettings: adminSettings,
 							user: req.user
 						}
@@ -1509,6 +1654,7 @@ var controller = function (resources) {
 	CoreUtilities = new Utilities(resources);
 	Item = mongoose.model('Item');
 	Collection = mongoose.model('Collection');
+	Library = mongoose.model('Library');
 	User = mongoose.model('User');
 	AppDBSetting = mongoose.model('Setting');
 	Contenttype = mongoose.model('Contenttype');
@@ -1527,6 +1673,9 @@ var controller = function (resources) {
 		collections_index: collections_index,
 		collection_new: collection_new,
 		collection_edit: collection_edit,
+		libraries_index: libraries_index,
+		library_new: library_new,
+		library_edit: library_edit,
 		extensions_index: extensions_index,
 		loadExtensions: loadExtensions,
 		loadExtension: loadExtension,

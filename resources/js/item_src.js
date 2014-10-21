@@ -27,16 +27,16 @@ window.addEventListener('load', function () {
 	athr_lp.init();
 	cnt_lp.init();
 
-	if (typeof itemtags === 'object') {
+	if (window.itemtags && typeof window.itemtags === 'object') {
 		tag_lp.setPreloadDataObject(window.itemtags);
 	}
-	if (typeof itemcategories === 'object') {
+	if (window.itemcategories && typeof window.itemcategories === 'object') {
 		cat_lp.setPreloadDataObject(window.itemcategories);
 	}
-	if (typeof itemauthors === 'object') {
+	if (window.itemauthors && typeof window.itemauthors === 'object') {
 		athr_lp.setPreloadDataObject(window.itemauthors);
 	}
-	if (typeof itemcontenttypes === 'object') {
+	if (window.itemcontenttypes && typeof window.itemcontenttypes === 'object') {
 		cnt_lp.setPreloadDataObject(window.itemcontenttypes);
 	}
 

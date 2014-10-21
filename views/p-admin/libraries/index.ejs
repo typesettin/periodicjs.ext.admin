@@ -1,0 +1,127 @@
+<% include ../../shared/header %>
+<% include ../../shared/nav %>
+<% 
+	var  getsortlink= function(field,label){
+		var order = (request.query.sort && request.query.sort.search("-") === 0) ? '' : '-' ;
+		var orderlink = (request.query.sort) ? 
+			'?'+locals.viewhelper.getQueryString(request.query).replace('sort='+request.query.sort,'sort='+order+field) 
+			: '?'+locals.viewhelper.getQueryString(request.query)+'&sort='+order+field;
+		%>
+		<a href="  <%= orderlink %>"><%= label %></a>
+		<%
+	}
+%>
+<input type="hidden" name="_csrf" value=<%= locals.token %> >
+<form class="_pea-form" method="get" name="libraries-form">
+	<div class="_pea-container">
+		<div class="_pea-row _pea-form">
+			<div class="_pea-col-span6 _pea-text-big-em">
+				<a href="/p-admin/library/new" class="_pea-button _pea-color-info">New Library</a>
+			</div>
+			<div class="_pea-col-span6 _pea-text-right">
+					<input type="text" placeholder="search" class="_pea-col-span10 _pea-text-big" name="search"/>
+					<button type="submit" class="_pea-col-span2 _pea-text-big" >search</button>
+			</div>
+		</div>
+		<div class="_pea-row">
+			<div class="_pea-col-span12">
+				<div class="_pea-document">
+					<table class="_pea-table">
+						<thead style="">
+							<% editlistingprops = true %>
+							<% include _pagination_library %>
+						</thead>
+						<thead>
+							<tr class="_pea-text-left">
+								<th><% getsortlink('title','Title') %></th>
+								<th>Author</th>
+								<th>Categories</th>
+								<th>Tags</th>
+								<th>Type</th>
+								<th style="width:6em"><% getsortlink('createdat','Date') %></th>
+								<th style="width:6em"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<% if(libraries.length>0){
+									libraries.forEach(function(library){ %>
+										<tr>
+											<td> 
+												<% if(library.primaryasset && library.primaryasset.fileurl  && library.primaryasset.assettype.match("image")){%>
+													<div class="_pea-pull-right _pea-col-span9" style="height:100%;">
+														<a href="/p-admin/library/edit/<%= library.name %>" style="position:relative; vertical-align:center;"><%= library.title %> </a>
+														
+													</div>
+													<div class="_pea-pull-left _pea-col-span3" style=" overflow:hidden; max-height:5em; padding-right:1em;">
+													
+														<img src="<%- library.primaryasset.fileurl %>" style="width:100%; height:auto;" />
+													</div>
+												<%} 
+												else{%>
+
+												<div class="_pea-col-span12">
+													<a href="/p-admin/library/edit/<%= library.name %>"><%= library.title %> </a>
+												</div>
+												<%}%>
+											</td>
+											<td>
+											<%if(library.authors && library.authors.length>0){
+													library.authors.forEach(function(author){%>
+													<a href="/p-admin/libraries?filter_authors=<%= author.username %>"><%= author.username %></a>,
+													<%});
+												}
+												else if(library.primaryauthor){%>
+												<a href="/p-admin/libraries?filter_authors=<%= library.primaryauthor.username %>"><%= library.primaryauthor.username %></a>
+												<%}%>
+											</td>
+											<td>
+												<%if(library.categories && library.categories.length>0){
+													library.categories.forEach(function(category){%>
+														<a href="/p-admin/libraries?filter_categories=<%= category.name %>"><%= category.title %></a>,
+													<%});
+												}%>
+											</td>
+											<td>
+												<%if(library.tags && library.tags.length>0){
+													library.tags.forEach(function(tag){%>
+														<a href="/p-admin/libraries?filter_tags=<%= tag.name %>"><%= tag.title %></a>,
+													<%});
+												}%>
+											</td>
+											<td>
+												<%if(library.contenttypes && library.contenttypes.length>0){
+													library.contenttypes.forEach(function(contenttype){%>
+														<a href="/p-admin/libraries?filter_contenttypes=<%= contenttype.name %>"><%= contenttype.title %></a>,
+													<%});
+												}%>
+											</td>
+											<td>
+												<small>
+													<% var disDate = new Date(library.createdat) %>
+													<%- disDate %>
+												</small>
+											</td>
+											<td>
+												<a href="/p-admin/library/edit/<%= library.name %>" class="_pea-button _pea-color-inverse"> edit </a>
+												<a href="/library/<%= library.name %>" class="_pea-button " target="_blank"> i </a>
+												<a data-href="/library/<%= library.name %>/delete" class="_pea-button _pea-color-error _pea-dialog-delete" data-successfunction="backToItemLanding" >x</a>
+											</td>
+										</tr>
+										<%
+									});
+								}
+								else{ %>
+									<tr><td colspan="7" class="_pea-text-center">No Libraries!</td></tr>
+								<%} %>
+						</tbody>
+						<tfoot style="">
+							<% editlistingprops = false %>
+							<% include _pagination_library %>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+<% include ../../shared/footer %>

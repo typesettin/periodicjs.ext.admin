@@ -1,0 +1,92 @@
+<input type="hidden" name="_csrf" value=<%= locals.token %> >
+<div class="_pea-container">
+	<div class="_pea-row">
+		<div class="_pea-col-span8">
+			<% 
+				var genericdoc = library; 
+				var genericdocname = "library"; 
+				var genericdocdeletefunction = "backToLibraryLanding"; 
+				var genericdocnamelink = "libraries"; 
+				var genericdocTitle = "Library"; 
+				var mediaassettitle = "<h2>Content Media</h2>";
+			%>
+			
+			<% include ../../shared/compose_content %>
+			<h2>Library Items</h2>
+			<div class="_pea-document" id="library-items">
+				<div id="library-item-documents" class="_pea-row _pea-container-forminput">
+					<table class="_pea-table _pea-form">
+					<tbody id="library-table-items">
+					<%if(library && library.items){ %>
+						<% library.items.forEach(function(docresult,index){
+							if(docresult.item){
+								%>
+								<tr id="tr-docid-<%= docresult.item._id%>">
+									<td class="_pea-col-span9">
+										<input style="display:none;"  name="items" type="checkbox" value='{"order":<%-(index*10)%>,"item":"<%=docresult.item._id%>"}' checked="checked"></input>
+										<%= docresult.item.title %>
+										<div><small>
+											<%
+											if(docresult.item.tags && docresult.item.tags.length >0){
+												%>
+												<strong>tags:</strong> <%
+												for(var i in docresult.item.tags){
+													%> 
+													<%=docresult.item.tags[i].title %>, 
+													<%
+												}
+											}
+											if(docresult.item.categories && docresult.item.categories.length >0){
+												%>
+												<strong>categories:</strong> <%
+												for(var i in docresult.item.categories){
+													%> 
+													<%=docresult.item.categories[i].title %>, 
+													<%
+												}
+											}
+											if(docresult.item.contenttypes && docresult.item.contenttypes.length >0){
+												%>
+												<strong>contenttypes:</strong> <%
+												for(var i in docresult.item.contenttypes){
+													%> 
+													<%=docresult.item.contenttypes[i].title %>, 
+													<%
+												}
+											}
+											%>
+										</small></div>
+									</td>
+									<td class="_pea-col-span3 _pea-text-right">
+										<a data-docid="<%= docresult.item._id%>" class="_pea-button remove-doc-to-library _pea-color-error">x</a>
+									</td>
+								</tr>
+							<%		
+							}
+						})%>
+					<%}%>
+					</tbody>
+					</table>
+				</div>
+				<div class="_pea-row">
+					<input type="text" placeholder="search documents" class="_pea-col-span10" id="searchdocumentstext" name="search"/>
+					<input type="button" id="searchdocumentsbutton" name="searchdocumentsbutton" value="search" class="_pea-col-span2"  />
+				</div>
+				<div id="library-item-searchresult" class="_pea-row _pea-container-forminput">
+					
+				</div>
+			</div>
+			<% include ../../shared/content_attributes %>
+			<% include ../../shared/media_asset %>
+		</div>
+		<div class="_pea-col-span3 _pea-pull-right">
+			<% include ../../shared/content_options %>
+			<% include ../../shared/content_taxonmy %>
+			<% if(genericdoc){%>
+				<% include ../../shared/content_delete %>
+			<%}%>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="<%= locals.themehelper.extensionPublicResourcePath('periodicjs.ext.admin','js') %>wysihtml5-advanced.js"></script>
+<script type="text/javascript" src="<%= locals.themehelper.extensionPublicResourcePath('periodicjs.ext.admin','js') %>wysihtml5-0.4.0pre.min.js"></script>

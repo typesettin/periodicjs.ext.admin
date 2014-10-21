@@ -25,6 +25,7 @@ module.exports = function (periodic) {
 		categoryRouter = periodic.express.Router(),
 		categoryAdminRouter = periodic.express.Router(),
 		collectionRouter = periodic.express.Router(),
+		libraryRouter = periodic.express.Router(),
 		settingsRouter = periodic.express.Router(),
 		extensionAdminRouter = periodic.express.Router(),
 		themeAdminRouter = periodic.express.Router(),
@@ -38,6 +39,7 @@ module.exports = function (periodic) {
 		userController = require(path.resolve(process.cwd(), './app/controller/user'))(periodic),
 		contenttypeController = require(path.resolve(process.cwd(), './app/controller/contenttype'))(periodic),
 		collectionController = require(path.resolve(process.cwd(), './app/controller/collection'))(periodic),
+		libraryController = require(path.resolve(process.cwd(), './app/controller/library'))(periodic),
 		adminController = require('./controller/admin')(periodic),
 		adminSettingsController = require('./controller/settings')(periodic),
 		authController = require('../periodicjs.ext.login/controller/auth')(periodic),
@@ -50,6 +52,7 @@ module.exports = function (periodic) {
 	themeAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	itemRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	collectionRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	libraryRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	tagRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	tagAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	categoryRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
@@ -67,6 +70,7 @@ module.exports = function (periodic) {
 	adminRouter.get('/', adminController.getMarkdownReleases, adminController.getHomepageStats, adminController.index);
 	adminRouter.get('/items', itemController.loadItemsWithCount, itemController.loadItemsWithDefaultLimit, itemController.loadItems, adminController.items_index);
 	adminRouter.get('/collections', collectionController.loadCollectionsWithCount, collectionController.loadCollectionsWithDefaultLimit, collectionController.loadCollections, adminController.collections_index);
+	adminRouter.get('/libraries', libraryController.loadLibrariesWithCount, libraryController.loadLibrariesWithDefaultLimit, libraryController.loadLibraries, adminController.libraries_index);
 	adminRouter.get('/contenttypes', contenttypeController.loadContenttypeWithCount, contenttypeController.loadContenttypeWithDefaultLimit, contenttypeController.loadContenttypes, adminController.contenttypes_index);
 	adminRouter.get('/tags', tagController.loadTagsWithCount, tagController.loadTagsWithDefaultLimit, tagController.loadTags, adminController.tags_index);
 	adminRouter.get('/categories', categoryController.loadCategoriesWithCount, categoryController.loadCategoriesWithDefaultLimit, categoryController.loadCategories, adminController.categories_index);
@@ -120,6 +124,16 @@ module.exports = function (periodic) {
 	collectionRouter.post('/edit', collectionController.update);
 	collectionRouter.post('/append/:id', collectionController.loadCollection, collectionController.append);
 	collectionRouter.post('/:id/delete', collectionController.loadCollection, collectionController.remove);
+	/**
+	 * admin/library manager routes
+	 */
+	adminRouter.get('/library/new', adminController.library_new);
+	adminRouter.get('/library/edit/:id', libraryController.loadLibrary, adminController.library_edit);
+	adminRouter.get('/library/search', adminController.setSearchLimitTo1000, libraryController.loadLibraries, libraryController.index);
+	libraryRouter.post('/new', libraryController.create);
+	libraryRouter.post('/edit', libraryController.update);
+	libraryRouter.post('/append/:id', libraryController.loadLibrary, libraryController.append);
+	libraryRouter.post('/:id/delete', libraryController.loadLibrary, libraryController.remove);
 
 	/**
 	 * admin/tag manager routes
@@ -209,6 +223,7 @@ module.exports = function (periodic) {
 	periodic.app.use('/p-admin', adminRouter);
 	periodic.app.use('/item', itemRouter);
 	periodic.app.use('/collection', collectionRouter);
+	periodic.app.use('/library', libraryRouter);
 	periodic.app.use('/tag', tagRouter);
 	periodic.app.use('/category', categoryRouter);
 	periodic.app.use('/contenttype', contenttypeRouter);
