@@ -3245,6 +3245,7 @@ var searchDocs = function () {
 		.set('Accept', 'application/json')
 		.query({
 			format: 'json',
+			sort: 'title',
 			search: searchDocInputText.value
 		})
 		.end(function (error, res) {

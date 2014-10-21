@@ -130,6 +130,7 @@ module.exports = function (periodic) {
 	adminRouter.get('/library/new', adminController.library_new);
 	adminRouter.get('/library/edit/:id', libraryController.loadLibrary, adminController.library_edit);
 	adminRouter.get('/library/search', adminController.setSearchLimitTo1000, libraryController.loadLibraries, libraryController.index);
+	adminRouter.get('/library/search_content', adminController.setSearchLimitTo1000, itemController.loadItems, collectionController.loadCollections, adminController.library_content_search_index);
 	libraryRouter.post('/new', libraryController.create);
 	libraryRouter.post('/edit', libraryController.update);
 	libraryRouter.post('/append/:id', libraryController.loadLibrary, libraryController.append);

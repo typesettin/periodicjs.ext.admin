@@ -727,8 +727,6 @@ var library_edit = function (req, res) {
 			extname: 'periodicjs.ext.admin'
 		},
 		function (err, templatepath) {
-
-
 			getDefaultContentTypes('library_default_contenttypes', function (err, defaultcontenttypes) {
 				if (err) {
 					CoreController.handleDocumentQueryErrorResponse({
@@ -776,7 +774,31 @@ var library_edit = function (req, res) {
 					});
 				}
 			});
+		}
+	);
+};
 
+var library_content_search_index = function (req, res) {
+	CoreController.getPluginViewDefaultTemplate({
+			viewname: 'p-admin/libraries/index',
+			themefileext: appSettings.templatefileextension,
+			extname: 'periodicjs.ext.admin'
+		},
+		function (err, templatepath) {
+			var content_documents = req.controllerData.items.concat(req.controllerData.collections);
+			CoreController.handleDocumentQueryRender({
+				res: res,
+				req: req,
+				renderView: templatepath,
+				responseData: {
+					pagedata: {
+						title: 'Library Search Result',
+						extensions: CoreUtilities.getAdminMenu()
+					},
+					items: content_documents.sort(CoreUtilities.sortObject('asc', 'name')),
+					user: req.user
+				}
+			});
 		}
 	);
 };
@@ -1676,6 +1698,7 @@ var controller = function (resources) {
 		libraries_index: libraries_index,
 		library_new: library_new,
 		library_edit: library_edit,
+		library_content_search_index: library_content_search_index,
 		extensions_index: extensions_index,
 		loadExtensions: loadExtensions,
 		loadExtension: loadExtension,

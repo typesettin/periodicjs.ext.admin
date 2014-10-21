@@ -126,7 +126,7 @@ var generateSearchResult = function (documents) {
 var searchDocs = function () {
 	// var etarget = e.target;
 	request
-		.get('/p-admin/item/search')
+		.get('/p-admin/library/search_content')
 		.set('Accept', 'application/json')
 		.query({
 			format: 'json',
