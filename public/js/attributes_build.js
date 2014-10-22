@@ -3119,6 +3119,7 @@ var request = require('superagent'),
 	contentEntryModule = require('./contententry'),
 	contententry,
 	doctypename,
+	docnameform,
 	doctypenamelink,
 	docid,
 	parent_lp,
@@ -3206,9 +3207,14 @@ window.addEventListener('load', function () {
 	docid = document.querySelector('input[name=docid]');
 	doctypename = document.querySelector('input[name=doctypename]');
 	doctypenamelink = document.querySelector('input[name=doctypenamelink]');
-	contententry = new contentEntryModule({
-		ajaxFormToSubmit: document.getElementById('edit-' + doctypename.value + '-form')
-	});
+	if (doctypename) {
+		docnameform = document.getElementById('edit-' + doctypename.value + '-form');
+	}
+	if (docnameform) {
+		contententry = new contentEntryModule({
+			ajaxFormToSubmit: docnameform
+		});
+	}
 	if (document.querySelector('#padmin-parent')) {
 		parent_lp = contententry.parent_lp({
 			doctypename: doctypename.value,

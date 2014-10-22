@@ -428,6 +428,17 @@ var item_new = function (req, res) {
 };
 
 /**
+ * set req.param.id for item
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
+var item_loadItem = function (req, res, next) {
+	var postdata = CoreUtilities.removeEmptyObjectValues(req.body);
+	req.params.id = postdata.docid;
+	next();
+};
+/**
  * edit item page
  * @param  {object} req
  * @param  {object} res
@@ -568,6 +579,19 @@ var collection_new = function (req, res) {
 			});
 		}
 	);
+};
+
+
+/**
+ * set req.param.id for collection
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
+var collection_loadItem = function (req, res, next) {
+	var postdata = CoreUtilities.removeEmptyObjectValues(req.body);
+	req.params.id = postdata.docid;
+	next();
 };
 
 /**
@@ -1690,9 +1714,11 @@ var controller = function (resources) {
 		settings_faq: settings_faq,
 		mail_index: mail_index,
 		items_index: items_index,
+		item_loadItem: item_loadItem,
 		item_new: item_new,
 		item_edit: item_edit,
 		collections_index: collections_index,
+		collection_loadItem: collection_loadItem,
 		collection_new: collection_new,
 		collection_edit: collection_edit,
 		libraries_index: libraries_index,
