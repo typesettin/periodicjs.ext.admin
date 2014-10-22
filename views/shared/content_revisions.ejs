@@ -1,0 +1,22 @@
+<h2>Track Changes</h2>
+<div class="_pea-document">
+	<div class="_pea-text-left">
+		<%if(genericdoc && genericdoc.changes && genericdoc.changes.length>0){
+			genericdoc.changes.reverse();
+			%><div class="_pea-row"><%
+				genericdoc.changes.forEach(function(changeset,index){
+					if(index<5){%>
+					<div class="_pea-row"><small><%- (genericdoc.changes.length - index)%>. <%- changeset.createdat%> (<%- changeset.editor_username %>) </small></div>
+					<%}
+
+				});
+				if(genericdoc.changes.length>5){%>
+						<div class="_pea-row _pea-text-center"><small><a href="/p-admin/<%- genericdocname %>/edit/<%- genericdoc._id %>/revisions">View all changes</a></small></div>
+					<%}
+			%></div><%
+			}
+			else{
+				%><h3>No Changes</h3><%
+			}%>
+	</div>
+</div>
