@@ -32,6 +32,7 @@
     "async": "0.9.0",
     "classie": ">=0.1.0",
     "codemirror": "4.2.0",
+    "diff": "^1.0.8",
     "fs-extra": "0.9.1",
     "letterpressjs": "0.0.3",
     "periodicjs.component.tabs": "^1.1.0",
