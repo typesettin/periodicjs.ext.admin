@@ -1485,7 +1485,7 @@ module.exports = letterpress;
 if ( typeof window === "object" && typeof window.document === "object" ) {
 	window.letterpress = letterpress;
 }
-},{"classie":1,"domhelper":10,"events":3,"superagent":16,"util":7,"util-extend":12}],10:[function(require,module,exports){
+},{"classie":1,"domhelper":10,"events":3,"superagent":13,"util":7,"util-extend":12}],10:[function(require,module,exports){
 /*
  * domhelper
  * http://github.com/yawetse/domhelper
@@ -1871,120 +1871,6 @@ function extend(origin, add) {
 }
 
 },{}],13:[function(require,module,exports){
-/*
- * component.tabs
- * http://github.amexpub.com/modules/component.tabs
- *
- * Copyright (c) 2013 AmexPub. All rights reserved.
- */
-
-'use strict';
-
-module.exports = require('./lib/component.tabs');
-
-},{"./lib/component.tabs":14}],14:[function(require,module,exports){
-/*
- * component.tabs
- * http://github.amexpub.com/modules
- *
- * Copyright (c) 2014 Yaw Joseph Etse. All rights reserved.
- */
-'use strict';
-
-var extend = require('util-extend'),
-	classie = require('classie'),
-	events = require('events'),
-	util = require('util');
-
-/**
- * A module that represents a componentTabs object, a componentTab is a page composition tool.
- * @{@link https://github.com/typesettin/component.tabs}
- * @author Yaw Joseph Etse
- * @copyright Copyright (c) 2014 Typesettin. All rights reserved.
- * @license MIT
- * @constructor componentTabs
- * @requires module:util-extent
- * @requires module:util
- * @requires module:events
- * @param {object} el element of tab container
- * @param {object} options configuration options
- */
-var componentTabs = function (el, options) {
-	events.EventEmitter.call(this);
-
-	this.el = el;
-	this.options = extend({}, this.options);
-	extend(this.options, options);
-	this.showTab = this._show;
-	this._init();
-};
-
-util.inherits(componentTabs, events.EventEmitter);
-
-/** module default configuration */
-componentTabs.prototype.options = {
-	start: 0,
-	tabselector: 'nav > ul > li',
-	itemselector: '.content > section',
-	currenttabclass: 'tab-current',
-	currentitemclass: 'content-current'
-};
-/**
- * initializes tabs and shows current tab.
- * @emits tabsInitialized
- */
-componentTabs.prototype._init = function () {
-	// tabs elemes
-	this.tabs = [].slice.call(this.el.querySelectorAll(this.options.tabselector));
-	// content items
-	this.items = [].slice.call(this.el.querySelectorAll(this.options.itemselector));
-	// current index
-	this.current = -1;
-	// show current content item
-	this._show();
-	// init events
-	this._initEvents();
-	if (this.options.callback) {
-		this.options.callback();
-	}
-	this.emit('tabsInitialized');
-
-};
-/**
- * handle tab click events.
- */
-componentTabs.prototype._initEvents = function () {
-	var self = this;
-
-	this.tabs.forEach(function (tab, idx) {
-		tab.addEventListener('click', function (ev) {
-			ev.preventDefault();
-			self._show(idx);
-		});
-	});
-	this.emit('tabsEventsInitialized');
-};
-/**
- * Sets up a new lintotype component.
- * @param {number} idx tab to show
- * @emits tabsShowIndex
- */
-componentTabs.prototype._show = function (idx) {
-	if (this.current >= 0) {
-		classie.remove(this.tabs[this.current],this.options.currenttabclass);
-		classie.remove(this.items[this.current],this.options.currentitemclass);
-	}
-	// change current
-	this.current = idx !== undefined ? idx : this.options.start >= 0 && this.options.start < this.items.length ? this.options.start : 0;
-	classie.add(this.tabs[this.current],this.options.currenttabclass);
-	classie.add(this.items[this.current],this.options.currentitemclass);
-	this.emit('tabsShowIndex', this.current);
-};
-module.exports = componentTabs;
-
-},{"classie":1,"events":3,"util":7,"util-extend":15}],15:[function(require,module,exports){
-module.exports=require(12)
-},{"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/letterpressjs/node_modules/util-extend/extend.js":12}],16:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -3035,7 +2921,7 @@ request.put = function(url, data, fn){
 
 module.exports = request;
 
-},{"emitter":17,"reduce":18}],17:[function(require,module,exports){
+},{"emitter":14,"reduce":15}],14:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -3201,7 +3087,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],18:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 
 /**
  * Reduce `arr` with `fn`.
@@ -3226,7 +3112,291 @@ module.exports = function(arr, fn, initial){
   
   return curr;
 };
-},{}],19:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
+'use strict';
+
+var contentEntryModule = require('./contententry'),
+	contententry,
+	tag_lp,
+	cat_lp,
+	athr_lp,
+	cnt_lp;
+
+
+window.backToItemLanding = function () {
+	window.location = '/p-admin/items';
+};
+
+window.addEventListener('load', function () {
+	contententry = new contentEntryModule({
+		ajaxFormToSubmit: document.getElementById('edit-item-form'),
+		mediafileinput: document.getElementById('padmin-mediafiles'),
+		mediafilesresult: document.getElementById('media-files-result')
+	});
+	tag_lp = contententry.tag_lp({});
+	cnt_lp = contententry.cnt_lp({});
+	cat_lp = contententry.cat_lp({});
+	athr_lp = contententry.athr_lp({});
+	tag_lp.init();
+	cat_lp.init();
+	athr_lp.init();
+	cnt_lp.init();
+
+	if (window.itemtags && typeof window.itemtags === 'object') {
+		tag_lp.setPreloadDataObject(window.itemtags);
+	}
+	if (window.itemcategories && typeof window.itemcategories === 'object') {
+		cat_lp.setPreloadDataObject(window.itemcategories);
+	}
+	if (window.itemauthors && typeof window.itemauthors === 'object') {
+		athr_lp.setPreloadDataObject(window.itemauthors);
+	}
+	if (window.itemcontenttypes && typeof window.itemcontenttypes === 'object') {
+		cnt_lp.setPreloadDataObject(window.itemcontenttypes);
+	}
+
+	window.ajaxFormEventListers('._pea-ajax-form');
+});
+
+},{"./contententry":17}],17:[function(require,module,exports){
+'use strict';
+
+var request = require('superagent'),
+	updatemedia = require('./updatemedia'),
+	letterpress = require('letterpressjs'),
+	uploadmediaCallback,
+	wysihtml5Editor,
+	ajaxFormToSubmit,
+	mediafileinput,
+	mediafilesresult;
+
+var contententry = function (options) {
+	this.init(options);
+};
+
+contententry.prototype.init = function (options) {
+	uploadmediaCallback = options.uploadmediaCallback;
+	ajaxFormToSubmit = options.ajaxFormToSubmit;
+	mediafileinput = options.mediafileinput;
+	mediafilesresult = options.mediafilesresult;
+	if (mediafileinput) {
+		mediafileinput.addEventListener('change', this.uploadMediaFiles, false);
+	}
+	if (mediafilesresult) {
+		mediafilesresult.addEventListener('click', updatemedia.handleMediaButtonClick, false);
+	}
+	if (document.querySelector('#wysihtml5-textarea')) {
+		wysihtml5Editor = new window.wysihtml5.Editor('wysihtml5-textarea', {
+			// id of textarea element
+			toolbar: 'wysihtml5-toolbar', // id of toolbar element
+			parserRules: window.wysihtml5ParserRules // defined in parser rules set 
+		});
+	}
+};
+
+contententry.prototype.autoSaveItem = function (options) {
+	var autosaveval = options.autosave,
+		t;
+	t = setTimeout(function () {
+		if (autosaveval && ajaxFormToSubmit) {
+			window.ajaxFormSubmit(null, ajaxFormToSubmit);
+		}
+		clearTimeout(t);
+	}, 500);
+};
+
+contententry.prototype.createPeriodicTag = function (id, val, callback, url, type) {
+	if ((id === 'NEWTAG' || id === 'SELECT') && val) {
+		request
+			.post(url)
+			.send({
+				title: val,
+				_csrf: document.querySelector('input[name=_csrf]').value
+			})
+			.set('Accept', 'application/json')
+			.end(function (error, res) {
+				if (res.error) {
+					error = res.error;
+				}
+				if (error) {
+					window.ribbonNotification.showRibbon(error.message, 4000, 'error');
+				}
+				else {
+					if (res.body.result === 'error') {
+						window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
+					}
+					else if (typeof res.body.data.doc._id === 'string') {
+						callback(
+							res.body.data.doc._id,
+							res.body.data.doc.title,
+							error);
+					}
+				}
+			});
+	}
+	else if (id !== 'SELECT' || id !== 'NEWTAG') {
+		callback(id, val);
+	}
+	// console.log('autosaveval', autosaveval, 'type', type, 'window.adminSettings', window.adminSettings,'ajaxFormToSubmit',ajaxFormToSubmit);
+
+	var autosaveval = true,
+		autouploadsettings = window.adminSettings || {};
+	switch (type) {
+	case 'tag':
+		autosaveval = (autouploadsettings.autosave_compose_tags) || true;
+		break;
+	case 'contenttype':
+		autosaveval = (autouploadsettings.autosave_compose_contenttypes) || true;
+		break;
+	case 'category':
+		autosaveval = (autouploadsettings.autosave_compose_categories) || true;
+		break;
+	}
+
+	contententry.prototype.autoSaveItem({
+		autosave: autosaveval
+	});
+};
+
+contententry.prototype.parent_lp = function (configoptions) {
+	var options = configoptions || {},
+		idSelector = options.idSelector || '#padmin-parent',
+		sourcedata = '/' + options.doctypename + '/search.json',
+		sourcearrayname = options.doctypenamelink,
+		returnlp = new letterpress({
+			idSelector: idSelector,
+			sourcedata: sourcedata,
+			sourcearrayname: sourcearrayname,
+			createTagFunc: function (id, val, callback) {
+				if (id === 'NEWTAG' || id === 'SELECT') {
+					window.ribbonNotification.showRibbon(options.doctypename + ' does not exist', 4000, 'error');
+				}
+				else if (id !== 'SELECT' || id !== 'NEWTAG') {
+					callback(id, val);
+					this.autoSaveItem({
+						autosave: true
+					});
+				}
+			}.bind(this)
+		});
+
+	return returnlp;
+};
+
+
+contententry.prototype.athr_lp = function (configoptions) {
+	var options = configoptions || {},
+		idSelector = options.idSelector || '#padmin-authors',
+		sourcedata = options.sourcedata || '/user/search.json',
+		sourcearrayname = options.sourcearrayname || 'users',
+		returnlp = new letterpress({
+			idSelector: idSelector,
+			sourcedata: sourcedata,
+			sourcearrayname: sourcearrayname,
+			valueLabel: 'username',
+			disablenewtags: true,
+			createTagFunc: function (id, val, callback) {
+				if (id === 'NEWTAG' || id === 'SELECT') {
+					window.ribbonNotification.showRibbon('user does not exist', 4000, 'error');
+				}
+				else if (id !== 'SELECT' || id !== 'NEWTAG') {
+					callback(id, val);
+					this.autoSaveItem({
+						autosave: true
+					});
+				}
+
+			}.bind(this)
+		});
+
+	return returnlp;
+};
+
+contententry.prototype.cnt_lp = function (configoptions) {
+	var options = configoptions || {},
+		idSelector = options.idSelector || '#padmin-contenttypes',
+		sourcedata = options.sourcedata || '/contenttype/search.json',
+		sourcearrayname = options.sourcearrayname || 'contenttypes',
+		tagposturl = options.tagposturl || '/contenttype/new/' + window.makeNiceName(document.querySelector('#padmin-contenttypes').value) + '/?format=json&limit=200',
+		type = options.type || 'contenttype',
+		returnlp = new letterpress({
+			idSelector: idSelector,
+			sourcedata: sourcedata,
+			sourcearrayname: sourcearrayname,
+			createTagFunc: function (id, val, callback) {
+				this.createPeriodicTag(id, val, callback, tagposturl, type);
+			}.bind(this)
+		});
+
+	return returnlp;
+};
+
+contententry.prototype.cat_lp = function (configoptions) {
+	var options = configoptions || {},
+		idSelector = options.idSelector || '#padmin-categories',
+		sourcedata = options.sourcedata || '/category/search.json',
+		sourcearrayname = options.sourcearrayname || 'categories',
+		categoryposturl = options.categoryposturl || '/category/new/' + window.makeNiceName(document.querySelector('#padmin-categories').value) + '/?format=json&limit=200',
+		type = options.type || 'category',
+		returnlp = new letterpress({
+			idSelector: idSelector,
+			sourcedata: sourcedata,
+			sourcearrayname: sourcearrayname,
+			createTagFunc: function (id, val, callback) {
+				this.createPeriodicTag(id, val, callback, categoryposturl, type);
+			}.bind(this)
+		});
+
+	return returnlp;
+};
+
+contententry.prototype.tag_lp = function (configoptions) {
+	var options = configoptions || {},
+		idSelector = options.idSelector || '#padmin-tags',
+		sourcedata = options.sourcedata || '/tag/search.json',
+		sourcearrayname = options.sourcearrayname || 'tags',
+		tagposturl = options.tagposturl || '/tag/new/' + window.makeNiceName(document.querySelector('#padmin-tags').value) + '/?format=json&limit=200',
+		type = options.type || 'tag',
+		returnlp = new letterpress({
+			idSelector: idSelector,
+			sourcedata: sourcedata,
+			sourcearrayname: sourcearrayname,
+			createTagFunc: function (id, val, callback) {
+				this.createPeriodicTag(id, val, callback, tagposturl, type);
+			}.bind(this)
+		});
+
+	return returnlp;
+};
+
+contententry.prototype.uploadMediaFiles = function (e) {
+	// fetch FileList object
+	var files = e.target.files || e.dataTransfer.files,
+		autouploadsettings = window.adminSettings || {},
+		f,
+		uploadmediafilecallback = uploadmediaCallback || function (mediadoc) {
+			// console.log(mediadoc);
+			updatemedia(mediafilesresult, mediadoc);
+			contententry.prototype.autoSaveItem({
+				autosave: (autouploadsettings.autosave_compose_assets) || true
+			});
+		};
+
+	// process all File objects
+	for (var i = 0; i < files.length; i++) {
+		f = files[i];
+		// ParseFile(f);
+		// uploadFile(f);
+		updatemedia.uploadFile(mediafilesresult, f, {
+			callback: uploadmediafilecallback
+		});
+	}
+};
+
+
+module.exports = contententry;
+
+},{"./updatemedia":18,"letterpressjs":8,"superagent":13}],18:[function(require,module,exports){
 'use strict';
 
 var updatemedia = function (element, mediadoc, additem) {
@@ -3326,81 +3496,4 @@ updatemedia.uploadFile = function (mediafilesresult, file, options) {
 
 module.exports = updatemedia;
 
-},{}],20:[function(require,module,exports){
-'use strict';
-
-var letterpress = require('letterpressjs'),
-	updatemedia = require('./updatemedia'),
-	roles_lp = new letterpress({
-		idSelector: '#padmin-userroles',
-		sourcedata: '/userroles/search.json',
-		sourcearrayname: 'userroles',
-		valueLabel: 'name',
-		disablenewtags: true,
-		createTagFunc: function (id, val, callback) {
-			if (id === 'NEWTAG' || id === 'SELECT') {
-				window.ribbonNotification.showRibbon('role does not exist', 4000, 'error');
-			}
-			else if (id !== 'SELECT' || id !== 'NEWTAG') {
-				callback(id, val);
-			}
-		}
-	}),
-	mediafileinput,
-	mediafilesresult,
-	tabelement,
-	componentTab1,
-	ComponentTabs = require('periodicjs.component.tabs');
-
-var uploadMediaFiles = function (e) {
-	// fetch FileList object
-	var files = e.target.files || e.dataTransfer.files,
-		f,
-		updateuserpic = function (mediadoc) {
-			console.log(mediadoc);
-			updatemedia(mediafilesresult, mediadoc);
-		};
-
-	// process all File objects
-	for (var i = 0; i < files.length; i++) {
-		f = files[i];
-		// ParseFile(f);
-		// uploadFile(f);
-		updatemedia.uploadFile(mediafilesresult, f, {
-			callback: updateuserpic
-		});
-	}
-};
-
-window.backToUsersLanding = function () {
-	window.location = '/p-admin/users';
-};
-
-window.addEventListener('load', function () {
-	var passwordElement = document.querySelector('input[name="password"]');
-	if (passwordElement) {
-		setTimeout(function () {
-			passwordElement.value = '';
-			// console.log('passwordElement', passwordElement);
-		}, 500);
-	}
-	tabelement = document.getElementById('tabs');
-	if (tabelement) {
-		componentTab1 = new ComponentTabs(tabelement);
-	}
-
-	if (document.querySelector('#padmin-userroles')) {
-		roles_lp.init();
-		if (typeof window.userprofileuseroles === 'object') {
-			roles_lp.setPreloadDataObject(window.userprofileuseroles);
-		}
-	}
-	window.ajaxFormEventListers('._pea-ajax-form');
-
-	mediafileinput = document.getElementById('padmin-mediafiles');
-	mediafilesresult = document.getElementById('media-files-result');
-	mediafileinput.addEventListener('change', uploadMediaFiles, false);
-	mediafilesresult.addEventListener('click', updatemedia.handleMediaButtonClick, false);
-});
-
-},{"./updatemedia":19,"letterpressjs":8,"periodicjs.component.tabs":13}]},{},[20]);
+},{}]},{},[16]);

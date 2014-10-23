@@ -504,6 +504,49 @@ var item_edit = function (req, res) {
 };
 
 /**
+ * review item revision page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
+var item_review_revision = function (req, res) {
+	CoreController.getPluginViewDefaultTemplate({
+			viewname: 'p-admin/items/review_revision',
+			themefileext: appSettings.templatefileextension,
+			extname: 'periodicjs.ext.admin'
+		},
+		function (err, templatepath) {
+			if (!err && !User.hasPrivilege(req.user, 110)) {
+				err = new Error('You don\'t have access to view content');
+			}
+			if (err) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: err,
+					res: res,
+					req: req
+				});
+			}
+			else {
+				CoreController.handleDocumentQueryRender({
+					res: res,
+					req: req,
+					renderView: templatepath,
+					responseData: {
+						pagedata: {
+							title: 'New Item',
+							headerjs: ['/extensions/periodicjs.ext.admin/js/content_revision.min.js'],
+							extensions: CoreUtilities.getAdminMenu()
+						},
+						item: req.controllerData.item,
+						user: req.user
+					}
+				});
+			}
+		}
+	);
+};
+
+/**
  * list collections page
  * @param  {object} req
  * @param  {object} res
@@ -1717,6 +1760,7 @@ var controller = function (resources) {
 		item_loadItem: item_loadItem,
 		item_new: item_new,
 		item_edit: item_edit,
+		item_review_revision: item_review_revision,
 		collections_index: collections_index,
 		collection_loadItem: collection_loadItem,
 		collection_new: collection_new,

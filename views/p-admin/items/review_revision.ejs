@@ -1,0 +1,20 @@
+<% include ../../shared/header %>
+<% include ../../shared/nav %>
+	<script type="text/javascript">
+	<%- locals.viewhelper.passObjToClient(item.tags,"itemtags") %>
+	<%- locals.viewhelper.passObjToClient(item.categories,"itemcategories") %>
+	<%- locals.viewhelper.passObjToClient(item.authors,"itemauthors") %>
+	<%- locals.viewhelper.passObjToClient(item.contenttypes,"itemcontenttypes") %>	
+	</script>
+	<% 
+		var genericdoc = item; 
+		var genericdocname = "item"; 
+		var genericdocdeletefunction = "backToItemLanding"; 
+		var genericdocnamelink = "items"; 
+		var genericdocTitle = "Item"; 
+		var mediaassettitle = "<h2>Content Media</h2>";
+	%>
+	<form class="_pea-form _pea-ajax-form " id="edit-item-form" name="edit-item-form" method="post" action="/item/edit" data-successfunction="updateContentTypes" onsubmit="return false;" enctype='multipart/form-data'>
+		<% include ../../shared/content_revision %>
+	</form>
+<% include ../../shared/footer %>
