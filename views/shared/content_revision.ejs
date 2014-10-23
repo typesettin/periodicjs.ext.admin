@@ -1,1 +1,118 @@
-rev
+<input type="hidden" name="_csrf" value=<%= locals.token %> >
+<input type="hidden" name="content_entity_type" value="<% genericdocname %>">
+<input type="hidden" name="docid" value="<%= genericdoc._id %>">
+<div class="_pea-container">
+	<% var changedprops=[],
+			changesetnum = request.params.changeset,
+			changesetdata = genericdoc.changes[request.params.changeset-1];
+		for(var prop in changesetdata.changeset){
+			changedprops.push(prop);
+		} 
+	%>
+	<div class="_pea-row">
+		<div class="_pea-col-span9">
+			<h2 style="margin-bottom:2em;">
+				<a href="/p-admin/<%- genericdocnamelink %>/"> Item </a> &rsaquo; 
+				<a href="/p-admin/<%- genericdocname %>/edit/<%- genericdoc._id %>"> Edit </a> &rsaquo; 
+				<a href="/p-admin/<%- genericdocname %>/edit/<%- genericdoc._id %>/revisions"> Revisions </a> &rsaquo;
+				Changeset <%- changesetnum %>
+				
+				<input type="submit" name="save_button" style="font-size: 65%;" value="Revert Changes" class="_pea-button _pea-color-success _pea-pull-right">
+				
+			</h2>
+			<%
+				for(var i in changedprops){
+					%>
+					<h3><%- changedprops[i].toUpperCase() %></h3>
+					<%
+						if(changedprops[i]==='categories' || changedprops[i]==='tags' || changedprops[i]==='contenttypes' || changedprops[i]==='authors'){
+							var changedproplabel = changedprops[i];
+							%>
+							<div class="_pea-row _pea-container-forminput">
+								<div class="_pea-document">
+									<div class="_pea-row">
+										<div class="_pea-col-span6"><h4>Current</h4></div>
+										<div class="_pea-col-span6"><h4>Revision (<%- changesetnum %>)</h4></div>
+									</div>
+									<div class="_pea-row">
+										<div class="_pea-col-span6">
+											<% genericdoc[changedprops[i]].forEach(function(changedpropitem){ %>
+												<span class="_pea-button _pea-text-small" data-<%- changedproplabel %>-id="<%- changedpropitem._id %>">
+												<% if(changedproplabel==='authors'){%>
+														<%- changedpropitem.username %>
+													<%}
+													else{%>
+														<%- changedpropitem.name %>
+													<%}%>
+												</span>
+											<% }); %>
+										</div>
+										<div class="_pea-col-span6">
+											<% changesetdata.changeset[changedprops[i]].forEach(function(changesetitem){%>
+													<span class="_pea-button _pea-text-small" data-<%- changedproplabel %>-id="<%- changesetitem %>"><%- changesetitem  %></span>
+													<input id="lp-cbx_<%- changesetitem %>" style="display:none;" name="<%- changedproplabel %>" type="checkbox" value="<%- changesetitem %>" checked="checked"></input>
+											<%}); %>
+										</div>
+									</div>
+								</div>
+							</div>
+					<%}
+						else if(changedprops[i]==='contenttypeattributes'){%>
+							<div class="_pea-row _pea-container-forminput">
+								<div class="_pea-document">
+									<table>
+										<thead>
+											<tr>
+												<th class="_pea-col-span4">Current</th>
+												<th class="_pea-col-span4">Revision</th>
+												<th class="_pea-col-span4">diff</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class="_pea-col-span4">
+													<pre class="_pea-console compare-revision-diff" data-diff-element="current" data-diff-attribute="<%- changedprops[i] %>" ><%- JSON.stringify(genericdoc[changedprops[i]],null,1) %></pre>
+												</td>
+												<td class="_pea-col-span4">
+													<pre class="_pea-console compare-revision-diff" data-diff-element="revision" data-diff-attribute="<%- changedprops[i] %>" ><%- JSON.stringify(changesetdata.changeset[changedprops[i]] ,null,1) %></pre>
+													<input type="hidden" name="contenttypeattributes" value="<%JSON.stringify(changesetdata.changeset[changedprops[i]])%>">
+												</td>
+												<td class="_pea-col-span4">
+													<div class=" compare-revision-diff" data-diff-element="result" data-diff-attribute="<%- changedprops[i] %>" >&nbsp;</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+					<%}else{%>
+							<div class="_pea-row _pea-container-forminput">
+								<div class="_pea-document">
+									<table>
+										<thead>
+											<tr>
+												<th class="_pea-col-span4">Current</th>
+												<th class="_pea-col-span4">Revision</th>
+												<th class="_pea-col-span4">diff</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class="_pea-col-span4 compare-revision-diff" data-diff-element="current" data-diff-attribute="<%- changedprops[i] %>"><%- genericdoc[changedprops[i]] %></td>
+												<td class="_pea-col-span4 compare-revision-diff" data-diff-element="revision" data-diff-attribute="<%- changedprops[i] %>" ><%- changesetdata.changeset[changedprops[i]] %></td>
+												<td class="_pea-col-span4 compare-revision-diff" data-diff-element="result" data-diff-attribute="<%- changedprops[i] %>">&nbsp;</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+					<%}%>
+					<%
+				}
+			%>
+		</div>
+		<div class="_pea-col-span2 _pea-pull-right">
+			<% include content_revision_meta %>
+		</div>
+	</div>
+</div>

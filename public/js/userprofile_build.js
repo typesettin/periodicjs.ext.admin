@@ -1984,7 +1984,7 @@ module.exports = componentTabs;
 
 },{"classie":1,"events":3,"util":7,"util-extend":15}],15:[function(require,module,exports){
 module.exports=require(12)
-},{"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/letterpressjs/node_modules/util-extend/extend.js":12}],16:[function(require,module,exports){
+},{"/Users/yawetse/Developer/test/testinstances/periodicjs/node_modules/periodicjs.ext.admin/node_modules/letterpressjs/node_modules/util-extend/extend.js":12}],16:[function(require,module,exports){
 /**
  * Module dependencies.
  */

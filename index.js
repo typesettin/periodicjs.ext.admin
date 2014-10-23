@@ -111,6 +111,7 @@ module.exports = function (periodic) {
 	adminRouter.get('/item/new', adminController.item_new);
 	adminRouter.get('/item/edit/:id', itemController.loadFullItem, adminController.item_edit);
 	adminRouter.get('/item/edit/:id/revision/:changeset', itemController.loadFullItem, adminController.item_review_revision);
+	adminRouter.get('/item/edit/:id/revisions', itemController.loadFullItem, adminController.item_revisions);
 	adminRouter.get('/item/search', adminController.setSearchLimitTo1000, itemController.loadItems, itemController.index);
 	itemRouter.post('/new', itemController.create);
 	itemRouter.post('/edit', adminController.item_loadItem, itemController.loadItem, itemController.update);

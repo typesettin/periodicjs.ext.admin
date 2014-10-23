@@ -1,0 +1,45 @@
+
+<div class="_pea-container">
+	<div class="_pea-row">
+		<div class="_pea-col-span9">
+			<h2>
+				<a href="/p-admin/<%- genericdocnamelink %>/"> Item </a> &rsaquo; 
+				<a href="/p-admin/<%- genericdocname %>/edit/<%- genericdoc._id %>"> Edit </a> &rsaquo; 
+				Revisions 				
+			</h2>
+			
+			<div class="_pea-document">
+				<h3>Changes for: <%- genericdoc.title%></h3>
+				<div class="_pea-text-left">
+					<%if(genericdoc && genericdoc.changes && genericdoc.changes.length>0){
+						genericdoc.changes.reverse();
+						%><div class="_pea-row"><%
+							genericdoc.changes.forEach(function(changeset,index){
+									var changedprops=[],
+										changesetdata = changeset.changeset;
+									for(var prop in changesetdata){
+										changedprops.push(prop);
+									}
+									%>
+								<div class="_pea-row">
+									<small><%- (genericdoc.changes.length - index)%>. 
+										<a href="/p-admin/<%- genericdocname %>/edit/<%- genericdoc._id %>/revision/<%- (genericdoc.changes.length - index)%>"><%- changeset.createdat%></a> 
+										<div style="padding-left:1.5em;">
+											<%- changeset.editor_username %> changed:  
+											 <%- JSON.stringify(changedprops, null, 1) %>  </div>
+									</small>
+								</div>
+							<%});
+						%></div><%
+						}
+						else{
+							%><h3>No Changes</h3><%
+						}%>
+				</div>
+			</div>
+		</div>
+		<div class="_pea-col-span2 _pea-pull-right">
+			<% include content_revision_meta %>
+		</div>
+	</div>
+</div>

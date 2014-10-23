@@ -9,7 +9,5 @@
 		var genericdocTitle = "Item"; 
 		var mediaassettitle = "<h2>Content Media</h2>";
 	%>
-	<form class="_pea-form _pea-ajax-form " id="edit-item-form" name="edit-item-form" method="post" action="/item/edit" data-successfunction="updateContentTypes" onsubmit="return false;" enctype='multipart/form-data'>
-		<% include ../../shared/content_revision %>
-	</form>
+	<% include ../../shared/content_revision_list %>
 <% include ../../shared/footer %>

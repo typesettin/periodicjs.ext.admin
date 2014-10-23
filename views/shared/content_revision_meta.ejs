@@ -1,0 +1,18 @@
+<h2>Revision Meta</h2>
+<div class="_pea-document">
+	<% if(genericdoc){%>
+	<div class="_pea-row _pea-container-forminput no-margin">
+		<div class="_pea-col-span2">
+			<small>ID:</small>
+		</div>
+		<input type="text" id="docidlabel" disabled="disabled" class="_pea-col-span10" value="<%= genericdoc._id %>" >
+	</div>
+	<%}%>
+	
+	<% if(typeof genericdocname === "string" && genericdoc){%>
+		
+<!-- 		<div class="_pea-text-center">
+					<a data-href="/<%= genericdocname %>/<%= genericdoc._id %>/delete" class="_pea-button _pea-color-error _pea-text-small _pea-dialog-delete" data-successfunction="<%= genericdocdeletefunction %>" style="line-height:2em">Delete</a>
+		</div> -->
+	<%}%>
+</div>
