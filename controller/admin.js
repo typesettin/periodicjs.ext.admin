@@ -747,6 +747,93 @@ var collection_edit = function (req, res) {
 		}
 	);
 };
+
+
+/**
+ * review collection revision page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
+var collection_review_revision = function (req, res) {
+	CoreController.getPluginViewDefaultTemplate({
+			viewname: 'p-admin/collections/review_revision',
+			themefileext: appSettings.templatefileextension,
+			extname: 'periodicjs.ext.admin'
+		},
+		function (err, templatepath) {
+			if (!err && !User.hasPrivilege(req.user, 110)) {
+				err = new Error('You don\'t have access to view content');
+			}
+			if (err) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: err,
+					res: res,
+					req: req
+				});
+			}
+			else {
+				CoreController.handleDocumentQueryRender({
+					res: res,
+					req: req,
+					renderView: templatepath,
+					responseData: {
+						pagedata: {
+							title: 'Revision (' + req.params.changeset + ') for ' + req.controllerData.collection.title + ' - Edit Item',
+							headerjs: ['/extensions/periodicjs.ext.admin/js/content_revision.min.js'],
+							extensions: CoreUtilities.getAdminMenu()
+						},
+						collection: req.controllerData.collection,
+						user: req.user
+					}
+				});
+			}
+		}
+	);
+};
+
+/**
+ * review collection revision page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
+var collection_revisions = function (req, res) {
+	CoreController.getPluginViewDefaultTemplate({
+			viewname: 'p-admin/collections/revisions',
+			themefileext: appSettings.templatefileextension,
+			extname: 'periodicjs.ext.admin'
+		},
+		function (err, templatepath) {
+			if (!err && !User.hasPrivilege(req.user, 110)) {
+				err = new Error('You don\'t have access to view content');
+			}
+			if (err) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: err,
+					res: res,
+					req: req
+				});
+			}
+			else {
+				CoreController.handleDocumentQueryRender({
+					res: res,
+					req: req,
+					renderView: templatepath,
+					responseData: {
+						pagedata: {
+							title: 'Revisions for ' + req.controllerData.collection.title + ' - Edit Item',
+							headerjs: ['/extensions/periodicjs.ext.admin/js/content_revision.min.js'],
+							extensions: CoreUtilities.getAdminMenu()
+						},
+						collection: req.controllerData.collection,
+						user: req.user
+					}
+				});
+			}
+		}
+	);
+};
 /**
  * list libraries page
  * @param  {object} req
@@ -885,6 +972,92 @@ var library_edit = function (req, res) {
 					});
 				}
 			});
+		}
+	);
+};
+
+/**
+ * review library revision page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
+var library_review_revision = function (req, res) {
+	CoreController.getPluginViewDefaultTemplate({
+			viewname: 'p-admin/libraries/review_revision',
+			themefileext: appSettings.templatefileextension,
+			extname: 'periodicjs.ext.admin'
+		},
+		function (err, templatepath) {
+			if (!err && !User.hasPrivilege(req.user, 110)) {
+				err = new Error('You don\'t have access to view content');
+			}
+			if (err) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: err,
+					res: res,
+					req: req
+				});
+			}
+			else {
+				CoreController.handleDocumentQueryRender({
+					res: res,
+					req: req,
+					renderView: templatepath,
+					responseData: {
+						pagedata: {
+							title: 'Revision (' + req.params.changeset + ') for ' + req.controllerData.library.title + ' - Edit Item',
+							headerjs: ['/extensions/periodicjs.ext.admin/js/content_revision.min.js'],
+							extensions: CoreUtilities.getAdminMenu()
+						},
+						library: req.controllerData.library,
+						user: req.user
+					}
+				});
+			}
+		}
+	);
+};
+
+/**
+ * review library revision page
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
+var library_revisions = function (req, res) {
+	CoreController.getPluginViewDefaultTemplate({
+			viewname: 'p-admin/libraries/revisions',
+			themefileext: appSettings.templatefileextension,
+			extname: 'periodicjs.ext.admin'
+		},
+		function (err, templatepath) {
+			if (!err && !User.hasPrivilege(req.user, 110)) {
+				err = new Error('You don\'t have access to view content');
+			}
+			if (err) {
+				CoreController.handleDocumentQueryErrorResponse({
+					err: err,
+					res: res,
+					req: req
+				});
+			}
+			else {
+				CoreController.handleDocumentQueryRender({
+					res: res,
+					req: req,
+					renderView: templatepath,
+					responseData: {
+						pagedata: {
+							title: 'Revisions for ' + req.controllerData.library.title + ' - Edit Item',
+							headerjs: ['/extensions/periodicjs.ext.admin/js/content_revision.min.js'],
+							extensions: CoreUtilities.getAdminMenu()
+						},
+						library: req.controllerData.library,
+						user: req.user
+					}
+				});
+			}
 		}
 	);
 };
@@ -1810,10 +1983,14 @@ var controller = function (resources) {
 		collection_loadItem: collection_loadItem,
 		collection_new: collection_new,
 		collection_edit: collection_edit,
+		collection_review_revision: collection_review_revision,
+		collection_revisions: collection_revisions,
 		libraries_index: libraries_index,
 		library_new: library_new,
 		library_edit: library_edit,
 		library_content_search_index: library_content_search_index,
+		library_review_revision: library_review_revision,
+		library_revisions: library_revisions,
 		extensions_index: extensions_index,
 		loadExtensions: loadExtensions,
 		loadExtension: loadExtension,

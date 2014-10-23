@@ -1,6 +1,11 @@
 <input type="hidden" name="_csrf" value=<%= locals.token %> >
 <input type="hidden" name="content_entity_type" value="<% genericdocname %>">
 <input type="hidden" name="docid" value="<%= genericdoc._id %>">
+<style>
+	._pea-col-span12 ._pea-document{
+		margin-bottom: 2em;
+	}
+</style>
 <div class="_pea-container">
 	<% var changedprops=[],
 			changesetnum = request.params.changeset,
@@ -10,9 +15,9 @@
 		} 
 	%>
 	<div class="_pea-row">
-		<div class="_pea-col-span9">
+		<div class="_pea-col-span12">
 			<h2 style="margin-bottom:2em;">
-				<a href="/p-admin/<%- genericdocnamelink %>/"> Item </a> &rsaquo; 
+				<a href="/p-admin/<%- genericdocnamelink %>/"> <%- genericdocTitle %> </a> &rsaquo; 
 				<a href="/p-admin/<%- genericdocname %>/edit/<%- genericdoc._id %>"> Edit </a> &rsaquo; 
 				<a href="/p-admin/<%- genericdocname %>/edit/<%- genericdoc._id %>/revisions"> Revisions </a> &rsaquo;
 				Changeset <%- changesetnum %>
@@ -20,19 +25,23 @@
 				<input type="submit" name="save_button" style="font-size: 65%;" value="Revert Changes" class="_pea-button _pea-color-success _pea-pull-right">
 				
 			</h2>
+			<div class="_pea-col-span12">
+				<% include content_revision_meta %>
+			</div>
 			<%
 				for(var i in changedprops){
+					var changeTitle =  changedprops[i];
 					%>
-					<h3><%- changedprops[i].toUpperCase() %></h3>
+					<h2><%- changeTitle %></h2>
 					<%
-						if(changedprops[i]==='categories' || changedprops[i]==='tags' || changedprops[i]==='contenttypes' || changedprops[i]==='authors'){
+						if(changedprops[i]==='categories' || changedprops[i]==='tags'  || changedprops[i]==='assets' || changedprops[i]==='contenttypes' || changedprops[i]==='authors'){
 							var changedproplabel = changedprops[i];
 							%>
 							<div class="_pea-row _pea-container-forminput">
 								<div class="_pea-document">
 									<div class="_pea-row">
-										<div class="_pea-col-span6"><h4>Current</h4></div>
-										<div class="_pea-col-span6"><h4>Revision (<%- changesetnum %>)</h4></div>
+										<div class="_pea-col-span6"><h3>Current</h3></div>
+										<div class="_pea-col-span6"><h3>Revision (<%- changesetnum %>)</h3></div>
 									</div>
 									<div class="_pea-row">
 										<div class="_pea-col-span6">
@@ -49,8 +58,113 @@
 										</div>
 										<div class="_pea-col-span6">
 											<% changesetdata.changeset[changedprops[i]].forEach(function(changesetitem){%>
-													<span class="_pea-button _pea-text-small" data-<%- changedproplabel %>-id="<%- changesetitem %>"><%- changesetitem  %></span>
+													<span class="_pea-button _pea-text-small" data-name="<%- changedproplabel %>" data-<%- changedproplabel %>-id="<%- changesetitem %>"><%- changesetitem  %></span>
 													<input id="lp-cbx_<%- changesetitem %>" style="display:none;" name="<%- changedproplabel %>" type="checkbox" value="<%- changesetitem %>" checked="checked"></input>
+											<%}); %>
+										</div>
+									</div>
+								</div>
+							</div>
+					<%}
+						else if(changedprops[i]==='primaryasset' ){
+							var changedproplabel = changedprops[i];
+							%>
+							<div class="_pea-row _pea-container-forminput">
+								<div class="_pea-document">
+									<div class="_pea-row">
+										<div class="_pea-col-span6"><h3>Current</h3></div>
+										<div class="_pea-col-span6"><h3>Revision (<%- changesetnum %>)</h3></div>
+									</div>
+									<div class="_pea-row">
+										<div class="_pea-col-span6">
+											<% changedpropitem = genericdoc[changedprops[i]]; %>
+											<span class="_pea-button _pea-text-small" data-<%- changedproplabel %>-id="<%- changedpropitem._id %>">
+											<% if(changedproplabel==='authors'){%>
+													<%- changedpropitem.username %>
+												<%}
+												else{%>
+													<%- changedpropitem.name %>
+												<%}%>
+											</span>
+										</div>
+										<div class="_pea-col-span6">
+											<% changesetitem = changesetdata.changeset[changedprops[i]];%>
+											<span class="_pea-button _pea-text-small" data-name="<%- changedproplabel %>" data-<%- changedproplabel %>-id="<%- changesetitem %>"><%- changesetitem  %></span>
+											<input id="lp-cbx_<%- changesetitem %>" style="display:none;" name="<%- changedproplabel %>" type="checkbox" value="<%- changesetitem %>" checked="checked"></input>
+										</div>
+									</div>
+								</div>
+							</div>
+					<%}
+						else if(changedprops[i]==='items'){
+							var changedproplabel = changedprops[i];
+							%>
+							<div class="_pea-row _pea-container-forminput">
+								<div class="_pea-document">
+									<div class="_pea-row">
+										<div class="_pea-col-span6"><h3>Current</h3></div>
+										<div class="_pea-col-span6"><h3>Revision (<%- changesetnum %>)</h3></div>
+									</div>
+									<div class="_pea-row">
+										<div class="_pea-col-span6">
+											<% genericdoc[changedprops[i]].forEach(function(changedpropitem){ %>
+											<div>
+												<span class="_pea-button _pea-text-small" data-<%- changedproplabel %>-id="<%- changedpropitem.item._id %>">
+													<%- changedpropitem.order %>	| <%- changedpropitem.item.name %>
+												</span>
+											</div>
+											<% }); %>
+										</div>
+										<div class="_pea-col-span6">
+											<% changesetdata.changeset[changedprops[i]].forEach(function(changesetitem){%>
+												<div>
+													<span class="_pea-button _pea-text-small" data-name="<%- changedproplabel %>" data-<%- changedproplabel %>-id="<%- changesetitem.item %>"><%- changesetitem.order  %> | <%- changesetitem.item  %></span>
+													<input id="lp-cbx_<%- changesetitem.item %>" style="display:none;" data-docid="<%- changesetitem.item %>" name="<%- changedproplabel %>" type="checkbox" value="{'item':'<%- changesetitem.item %>','order':'<%- changesetitem.order %>','additionalattributes':'<%- changesetitem.additionalattributes %>'}" checked="checked"></input>
+												</div>
+											<%}); %>
+										</div>
+									</div>
+								</div>
+							</div>
+					<%}
+						else if(changedprops[i]==='content_entities'){
+							var changedproplabel = changedprops[i];
+							%>
+							<div class="_pea-row _pea-container-forminput">
+								<div class="_pea-document">
+									<div class="_pea-row">
+										<div class="_pea-col-span6"><h3>Current</h3></div>
+										<div class="_pea-col-span6"><h3>Revision (<%- changesetnum %>)</h3></div>
+									</div>
+									<div class="_pea-row">
+										<div class="_pea-col-span6">
+											<% genericdoc[changedprops[i]].forEach(function(changedpropitem){ %>
+											<div>
+												<% if(changedpropitem.entitytype === 'item'){%>
+													<span class="_pea-button _pea-text-small" data-<%- changedproplabel %>-id="<%- changedpropitem.entity_item._id %>">
+														<%- changedpropitem.order %>	| <%- changedpropitem.entity_item.name %>	| <%- changedpropitem.entitytype %>
+													</span>
+												<%}
+												else{%>
+													<span class="_pea-button _pea-text-small" data-<%- changedproplabel %>-id="<%- changedpropitem.entity_collection._id %>">
+														<%- changedpropitem.order %>	| <%- changedpropitem.entity_collection.name %>	| <%- changedpropitem.entitytype %>
+													</span>
+												<%}%>
+											</div>
+											<% }); %>
+										</div>
+										<div class="_pea-col-span6">
+											<% changesetdata.changeset[changedprops[i]].forEach(function(changesetitem){%>
+												<div>
+													<% if(changesetitem.entitytype === 'item'){%>
+														<span class="_pea-button _pea-text-small" data-name="<%- changedproplabel %>" data-<%- changedproplabel %>-id="<%- changesetitem.entity_item %>"><%- changesetitem.order  %> | <%- changesetitem.entity_item  %> | <%- changesetitem.entitytype %></span>
+														<input id="lp-cbx_<%- changesetitem.entity_item %>" data-entitytype="<%- changesetitem.entitytype %>" data-docid="<%- changesetitem.entity_item %>" style="display:none;" name="<%- changedproplabel %>" type="checkbox" value="{'entity_item':'<%- changesetitem.entity_item %>','order':'<%- changesetitem.order %>','entitytype':'<%- changesetitem.entitytype %>','additionalattributes':'<%- changesetitem.additionalattributes %>'}" checked="checked"></input>
+													<%}
+													else{%>
+														<span class="_pea-button _pea-text-small" data-name="<%- changedproplabel %>" data-<%- changedproplabel %>-id="<%- changesetitem.entity_collection %>"><%- changesetitem.order  %> | <%- changesetitem.entity_collection  %> | <%- changesetitem.entitytype %></span>
+														<input id="lp-cbx_<%- changesetitem.entity_collection %>" data-entitytype="<%- changesetitem.entitytype %>" data-docid="<%- changesetitem.entity_collection %>" style="display:none;" name="<%- changedproplabel %>" type="checkbox" value="{'entity_collection':'<%- changesetitem.entity_collection %>','order':'<%- changesetitem.order %>','entitytype':'<%- changesetitem.entitytype %>','additionalattributes':'<%- changesetitem.additionalattributes %>'}" checked="checked"></input>
+													<%}%>
+												</div>
 											<%}); %>
 										</div>
 									</div>
@@ -63,9 +177,9 @@
 									<table>
 										<thead>
 											<tr>
-												<th class="_pea-col-span4">Current</th>
-												<th class="_pea-col-span4">Revision</th>
-												<th class="_pea-col-span4">diff</th>
+												<th class="_pea-col-span4"><h3>Current</h3></th>
+												<th class="_pea-col-span4"><h3>Revision</h3></th>
+												<th class="_pea-col-span4"><h3>diff</h3></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -78,7 +192,7 @@
 													<input type="hidden" name="contenttypeattributes" value="<%JSON.stringify(changesetdata.changeset[changedprops[i]])%>">
 												</td>
 												<td class="_pea-col-span4">
-													<div class=" compare-revision-diff" data-diff-element="result" data-diff-attribute="<%- changedprops[i] %>" >&nbsp;</div>
+													<pre class="_pea-console compare-revision-diff" data-diff-element="result" data-diff-attribute="<%- changedprops[i] %>" >&nbsp;</pre>
 												</td>
 											</tr>
 										</tbody>
@@ -88,12 +202,12 @@
 					<%}else{%>
 							<div class="_pea-row _pea-container-forminput">
 								<div class="_pea-document">
-									<table>
+									<table class="_pea-table">
 										<thead>
 											<tr>
-												<th class="_pea-col-span4">Current</th>
-												<th class="_pea-col-span4">Revision</th>
-												<th class="_pea-col-span4">diff</th>
+												<th class="_pea-col-span4"><h3>Current</h3></th>
+												<th class="_pea-col-span4"><h3>Revision</h3></th>
+												<th class="_pea-col-span4"><h3>diff</h3></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -110,9 +224,6 @@
 					<%
 				}
 			%>
-		</div>
-		<div class="_pea-col-span2 _pea-pull-right">
-			<% include content_revision_meta %>
 		</div>
 	</div>
 </div>

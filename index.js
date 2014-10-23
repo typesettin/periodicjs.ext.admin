@@ -108,6 +108,7 @@ module.exports = function (periodic) {
 	/**
 	 * admin/item manager routes
 	 */
+	adminRouter.get('/items/search', itemController.loadItems, adminController.items_index);
 	adminRouter.get('/item/new', adminController.item_new);
 	adminRouter.get('/item/edit/:id', itemController.loadFullItem, adminController.item_edit);
 	adminRouter.get('/item/edit/:id/revision/:changeset', itemController.loadFullItem, adminController.item_review_revision);
@@ -119,8 +120,11 @@ module.exports = function (periodic) {
 	/**
 	 * admin/collection manager routes
 	 */
+	adminRouter.get('/collections/search', collectionController.loadCollections, adminController.collections_index);
 	adminRouter.get('/collection/new', adminController.collection_new);
 	adminRouter.get('/collection/edit/:id', collectionController.loadCollection, adminController.collection_edit);
+	adminRouter.get('/collection/edit/:id/revision/:changeset', collectionController.loadCollection, adminController.collection_review_revision);
+	adminRouter.get('/collection/edit/:id/revisions', collectionController.loadCollection, adminController.collection_revisions);
 	adminRouter.get('/collection/search', adminController.setSearchLimitTo1000, collectionController.loadCollections, collectionController.index);
 	collectionRouter.post('/new', collectionController.create);
 	//collectionRouter.post('/edit', collectionController.update);
@@ -132,6 +136,8 @@ module.exports = function (periodic) {
 	 */
 	adminRouter.get('/library/new', adminController.library_new);
 	adminRouter.get('/library/edit/:id', libraryController.loadLibrary, adminController.library_edit);
+	adminRouter.get('/library/edit/:id/revision/:changeset', libraryController.loadLibrary, adminController.library_review_revision);
+	adminRouter.get('/library/edit/:id/revisions', libraryController.loadLibrary, adminController.library_revisions);
 	adminRouter.get('/library/search', adminController.setSearchLimitTo1000, libraryController.loadLibraries, libraryController.index);
 	adminRouter.get('/library/search_content', adminController.setSearchLimitTo1000, itemController.loadItems, collectionController.loadCollections, adminController.library_content_search_index);
 	libraryRouter.post('/new', libraryController.create);
@@ -143,6 +149,7 @@ module.exports = function (periodic) {
 	/**
 	 * admin/tag manager routes
 	 */
+	adminRouter.get('/tags/search', tagController.loadTags, adminController.tags_index);
 	tagRouter.post('/new/:id', tagController.loadTag, tagController.create);
 	tagRouter.post('/new', tagController.loadTag, tagController.create);
 	tagRouter.post('/:id/delete', tagController.loadTag, tagController.remove);
@@ -153,6 +160,7 @@ module.exports = function (periodic) {
 	/**
 	 * admin/category manager routes
 	 */
+	adminRouter.get('/categories/search', categoryController.loadCategories, adminController.categories_index);
 	categoryRouter.post('/new/:id', categoryController.loadCategory, categoryController.create);
 	categoryRouter.post('/new', categoryController.loadCategory, categoryController.create);
 	categoryRouter.post('/:id/delete', categoryController.loadCategory, categoryController.remove);
@@ -163,6 +171,7 @@ module.exports = function (periodic) {
 	/**
 	 * admin/categorytype manager routes
 	 */
+	adminRouter.get('/contenttypes/search', contenttypeController.loadContenttypes, adminController.contenttypes_index);
 	contenttypeRouter.post('/new/:id', contenttypeController.loadContenttype, contenttypeController.create);
 	contenttypeRouter.post('/new', contenttypeController.loadContenttype, contenttypeController.create);
 	contenttypeRouter.post('/:id/delete', contenttypeController.loadContenttype, contenttypeController.remove);
@@ -173,6 +182,7 @@ module.exports = function (periodic) {
 	/**
 	 * admin/media manager routes
 	 */
+	adminRouter.get('/assets/search', mediaassetController.loadAssets, adminController.assets_index);
 	mediaRouter.post('/new', mediaassetController.upload, mediaassetController.createassetfile);
 	mediaRouter.post('/:id/delete', mediaassetController.loadAsset, mediaassetController.remove);
 	mediaRouter.post('/edit', mediaassetController.update);
@@ -182,6 +192,7 @@ module.exports = function (periodic) {
 	/**
 	 * admin/user routes
 	 */
+	adminRouter.get('/users/search', userController.loadUsers, adminController.users_index);
 	userAdminRouter.get('/new', adminController.users_new);
 	userAdminRouter.get('/:id', userController.loadUser, adminController.users_show);
 	userAdminRouter.get('/:id/edit', userController.loadUser, adminController.users_edit);
