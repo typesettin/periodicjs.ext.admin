@@ -2831,6 +2831,9 @@ var getNameFromAJAX = function (options, getNameFromAJAXcallback) {
 		data = options.data,
 		elements = options.elements,
 		attributestringreplace = options.attributestringreplace,
+		htmltoreplace,
+		idstringtoreplace,
+		nametoreplaceidwith,
 		dataobject = options.dataobject;
 	data.format = 'json';
 	request
@@ -2846,11 +2849,16 @@ var getNameFromAJAX = function (options, getNameFromAJAXcallback) {
 			}
 			else {
 				for (var z = 0; z < elements.length; z++) {
+					htmltoreplace = elements[z].innerHTML;
+					idstringtoreplace = elements[z].getAttribute(attributestringreplace);
 					for (var w = 0; w < res.body[dataobject].length; w++) {
-						elements[z].innerHTML = elements[z].innerHTML.replace(elements[z].getAttribute(attributestringreplace), res.body[dataobject][w].name);
+						nametoreplaceidwith = res.body[dataobject][w].name;
+						if (idstringtoreplace === res.body[dataobject][w]._id) {
+							elements[z].innerHTML = htmltoreplace.replace(idstringtoreplace, nametoreplaceidwith);
+						}
 					}
 				}
-				console.log('elements', elements, 'res.body[' + dataobject + ']', res.body[dataobject]);
+				// console.log('elements', elements, 'res.body[' + dataobject + ']', res.body[dataobject]);
 			}
 			getNameFromAJAXcallback(null, 'got name from url:' + url);
 		});
@@ -2859,26 +2867,116 @@ var getNameFromAJAX = function (options, getNameFromAJAXcallback) {
 var grabNamesFromIds = function () {
 	async.series({
 		categories: function (cb) {
-			getNameFromAJAX({
-				url: '/p-admin/categories/search',
-				elements: document.querySelectorAll('[data-name="categories"]'),
-				dataobject: 'categories',
-				attributestringreplace: 'data-categories-id',
-				data: {
-					ids: categories
-				}
-			}, cb);
+			if (categories && categories.length > 0) {
+				getNameFromAJAX({
+					url: '/p-admin/categories/search',
+					elements: document.querySelectorAll('[data-name="categories"]'),
+					dataobject: 'categories',
+					attributestringreplace: 'data-categories-id',
+					data: {
+						ids: categories
+					}
+				}, cb);
+			}
+			else {
+				cb(null, 'no categories');
+			}
 		},
 		tags: function (cb) {
-			getNameFromAJAX({
-				url: '/p-admin/tags/search',
-				elements: document.querySelectorAll('[data-name="tags"]'),
-				dataobject: 'tags',
-				attributestringreplace: 'data-tags-id',
-				data: {
-					ids: tags
-				}
-			}, cb);
+			if (tags && tags.length > 0) {
+				getNameFromAJAX({
+					url: '/p-admin/tags/search',
+					elements: document.querySelectorAll('[data-name="tags"]'),
+					dataobject: 'tags',
+					attributestringreplace: 'data-tags-id',
+					data: {
+						ids: tags
+					}
+				}, cb);
+			}
+			else {
+				cb(null, 'no tags');
+			}
+		},
+		contenttypes: function (cb) {
+			if (contenttypes && contenttypes.length > 0) {
+				getNameFromAJAX({
+					url: '/p-admin/contenttypes/search',
+					elements: document.querySelectorAll('[data-name="contenttypes"]'),
+					dataobject: 'contenttypes',
+					attributestringreplace: 'data-contenttypes-id',
+					data: {
+						ids: contenttypes
+					}
+				}, cb);
+			}
+			else {
+				cb(null, 'no contenttypes');
+			}
+		},
+		authors: function (cb) {
+			if (authors && authors.length > 0) {
+				getNameFromAJAX({
+					url: '/p-admin/users/search',
+					elements: document.querySelectorAll('[data-name="authors"]'),
+					dataobject: 'authors',
+					attributestringreplace: 'data-authors-id',
+					data: {
+						ids: authors
+					}
+				}, cb);
+			}
+			else {
+				cb(null, 'no tags');
+			}
+		},
+		items: function (cb) {
+			if (items && items.length > 0) {
+				getNameFromAJAX({
+					url: '/p-admin/items/search',
+					elements: document.querySelectorAll('[data-name="items"]'),
+					dataobject: 'items',
+					attributestringreplace: 'data-items-id',
+					data: {
+						ids: items
+					}
+				}, cb);
+			}
+			else {
+				cb(null, 'no items');
+			}
+		},
+		libraryitems: function (cb) {
+			if (libraryitems && libraryitems.length > 0) {
+				getNameFromAJAX({
+					url: '/p-admin/items/search',
+					elements: document.querySelectorAll('[data-name="content_entities"][data-entitytype="item"]'),
+					dataobject: 'items',
+					attributestringreplace: 'data-content_entities-id',
+					data: {
+						ids: libraryitems
+					}
+				}, cb);
+			}
+			else {
+				cb(null, 'no libraryitems');
+			}
+		},
+		collections: function (cb) {
+			if (collections && collections.length > 0) {
+				getNameFromAJAX({
+					url: '/p-admin/collections/search',
+					elements: document.querySelectorAll('[data-name="content_entities"][data-entitytype="collection"]'),
+					dataobject: 'collections',
+					attributestringreplace: 'data-content_entities-id',
+					data: {
+						ids: collections
+					}
+				}, cb);
+			}
+			else {
+				cb(null, 'no collections');
+			}
 		}
 	}, function (err, status) {
 		if (err) {
