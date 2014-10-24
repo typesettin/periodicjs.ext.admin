@@ -3071,7 +3071,7 @@ var getIdsFromElements = function (options) {
 	var returnArray = [],
 		elements = options.elements,
 		element = options.element;
-	if (elements) {
+	if (elements && elements.length > 0) {
 		for (var u = 0; u < elements.length; u++) {
 			if (options.attribute) {
 				returnArray.push(elements[u].getAttribute(options.attribute));
@@ -3082,13 +3082,16 @@ var getIdsFromElements = function (options) {
 		}
 		return returnArray;
 	}
-	else {
+	else if (element && element.length > 0) {
 		if (options.attribute) {
 			return element[0].getAttribute(options.attribute);
 		}
 		else {
 			return element[0].getAttribute('value');
 		}
+	}
+	else {
+		return false;
 	}
 };
 
@@ -3123,7 +3126,7 @@ var replaceIdsWithNames = function () {
 	primaryasset = getIdsFromElements({
 		element: primaryassetInput
 	});
-	console.log('primaryasset', primaryasset);
+	// console.log('primaryasset', primaryasset);
 
 	// console.log('categories', categories);
 	// console.log('tags', tags);
