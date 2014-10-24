@@ -11,11 +11,15 @@ var jsdiff = require('diff'),
 	contententities_itemCheckboxes,
 	contententities_collectionCheckboxes,
 	itemsCheckboxes,
+	assetCheckboxes,
+	primaryassetInput,
+	primaryasset,
 	items = [],
 	collections = [],
 	categories = [],
 	tags = [],
 	authors = [],
+	assets = [],
 	contenttypes = [],
 	libraryitems = [],
 	diffObjs = [];
@@ -49,6 +53,12 @@ var getNameFromAJAX = function (options, getNameFromAJAXcallback) {
 						nametoreplaceidwith = res.body[dataobject][w].name;
 						if (idstringtoreplace === res.body[dataobject][w]._id) {
 							elements[z].innerHTML = htmltoreplace.replace(idstringtoreplace, nametoreplaceidwith);
+							if ((attributestringreplace === 'data-assets-id' || attributestringreplace === 'data-primaryasset-id') && res.body[dataobject][w].assettype.match(/image/gi)) {
+								var imagediv = document.createElement('div');
+								imagediv.setAttribute('class', '_pea-text-center');
+								imagediv.innerHTML = '<img class="_pea-col-span3" src="' + res.body[dataobject][w].fileurl + '"/>';
+								elements[z].appendChild(imagediv);
+							}
 						}
 					}
 				}
@@ -124,6 +134,38 @@ var grabNamesFromIds = function () {
 				cb(null, 'no tags');
 			}
 		},
+		assets: function (cb) {
+			if (assets && assets.length > 0) {
+				getNameFromAJAX({
+					url: '/p-admin/assets/search',
+					elements: document.querySelectorAll('[data-name="assets"]'),
+					dataobject: 'assets',
+					attributestringreplace: 'data-assets-id',
+					data: {
+						ids: assets
+					}
+				}, cb);
+			}
+			else {
+				cb(null, 'no tags');
+			}
+		},
+		primaryasset: function (cb) {
+			if (primaryasset) {
+				getNameFromAJAX({
+					url: '/p-admin/assets/search',
+					elements: document.querySelectorAll('[data-name="primaryasset"]'),
+					dataobject: 'assets',
+					attributestringreplace: 'data-primaryasset-id',
+					data: {
+						ids: primaryasset
+					}
+				}, cb);
+			}
+			else {
+				cb(null, 'no primary assset');
+			}
+		},
 		items: function (cb) {
 			if (items && items.length > 0) {
 				getNameFromAJAX({
@@ -176,9 +218,9 @@ var grabNamesFromIds = function () {
 		if (err) {
 			window.ribbonNotification.showRibbon(err.message, 4000, 'error');
 		}
-		else {
-			console.log('status', status);
-		}
+		// else {
+		// 	console.log('status', status);
+		// }
 	});
 };
 
@@ -221,16 +263,27 @@ var initDiffs = function () {
 
 var getIdsFromElements = function (options) {
 	var returnArray = [],
-		elements = options.elements;
-	for (var u = 0; u < elements.length; u++) {
+		elements = options.elements,
+		element = options.element;
+	if (elements) {
+		for (var u = 0; u < elements.length; u++) {
+			if (options.attribute) {
+				returnArray.push(elements[u].getAttribute(options.attribute));
+			}
+			else {
+				returnArray.push(elements[u].value);
+			}
+		}
+		return returnArray;
+	}
+	else {
 		if (options.attribute) {
-			returnArray.push(elements[u].getAttribute(options.attribute));
+			return element[0].getAttribute(options.attribute);
 		}
 		else {
-			returnArray.push(elements[u].value);
+			return element[0].getAttribute('value');
 		}
 	}
-	return returnArray;
 };
 
 var replaceIdsWithNames = function () {
@@ -246,6 +299,9 @@ var replaceIdsWithNames = function () {
 	contenttypes = getIdsFromElements({
 		elements: contenttypeCheckboxes
 	});
+	assets = getIdsFromElements({
+		elements: assetCheckboxes
+	});
 	items = getIdsFromElements({
 		elements: itemsCheckboxes,
 		attribute: 'data-docid'
@@ -258,14 +314,18 @@ var replaceIdsWithNames = function () {
 		elements: contententities_collectionCheckboxes,
 		attribute: 'data-docid'
 	});
+	primaryasset = getIdsFromElements({
+		element: primaryassetInput
+	});
+	console.log('primaryasset', primaryasset);
 
-	console.log('categories', categories);
-	console.log('tags', tags);
-	console.log('authors', authors);
-	console.log('contenttypes', contenttypes);
-	console.log('items', items);
-	console.log('libraryitems', libraryitems);
-	console.log('collections', collections);
+	// console.log('categories', categories);
+	// console.log('tags', tags);
+	// console.log('authors', authors);
+	// console.log('contenttypes', contenttypes);
+	// console.log('items', items);
+	// console.log('libraryitems', libraryitems);
+	// console.log('collections', collections);
 	grabNamesFromIds();
 };
 
@@ -280,8 +340,10 @@ window.addEventListener('load', function () {
 	authorCheckboxes = document.querySelectorAll('[name="authors"]');
 	contenttypeCheckboxes = document.querySelectorAll('[name="contenttypes"]');
 	itemsCheckboxes = document.querySelectorAll('[name="items"]');
+	assetCheckboxes = document.querySelectorAll('[name="assets"]');
 	contententities_itemCheckboxes = document.querySelectorAll('[name="content_entities"][data-entitytype="item"]');
 	contententities_collectionCheckboxes = document.querySelectorAll('[name="content_entities"][data-entitytype="collection"]');
+	primaryassetInput = document.querySelectorAll('[name="primaryasset"]');
 	initDiffs();
 	replaceIdsWithNames();
 	window.ajaxFormEventListers('._pea-ajax-form');
