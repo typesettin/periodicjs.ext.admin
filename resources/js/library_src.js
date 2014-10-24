@@ -106,7 +106,7 @@ var generateSearchResult = function (documents) {
 		var docresult = documents[x];
 		docresulthtml += '<tr>';
 		docresulthtml += '<td><a data-docid="' + docresult._id + '" data-entitytype="' + docresult.entitytype + '" class="_pea-button add-doc-to-library _pea-color-success">+</a></td>';
-		docresulthtml += '<td>' + docresult.title + ' <small>(' + docresult.entitytype + ')</small>';
+		docresulthtml += '<td>' + docresult.title + ' <small class="_pea-color-inverse">' + docresult.entitytype + '</small>';
 		docresulthtml += '<div><small>';
 		if (docresult.authors) {
 			docresulthtml += '<strong>authors:</strong> ';

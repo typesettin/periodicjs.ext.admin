@@ -1,0 +1,15 @@
+<% include ../../shared/header %>
+<% include ../../shared/nav %>
+	<script type="text/javascript"></script>
+	<% 
+		var genericdoc = library; 
+		var genericdocname = "library"; 
+		var genericdocdeletefunction = "backToLibraryLanding"; 
+		var genericdocnamelink = "libraries"; 
+		var genericdocTitle = "Library"; 
+		var mediaassettitle = "<h2>Content Media</h2>";
+	%>
+	<form class="_pea-form " id="edit-item-form" name="edit-item-form" method="post" action="/item/edit" data-successfunction="updateContentTypes" onsubmit="return false;" enctype='multipart/form-data'>
+		<% include ../../shared/content_revision %>
+	</form>
+<% include ../../shared/footer %>

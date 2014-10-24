@@ -2,11 +2,11 @@
 <% include ../../shared/nav %>
 	<script type="text/javascript"></script>
 	<% 
-		var genericdoc = item; 
-		var genericdocname = "item"; 
-		var genericdocdeletefunction = "backToItemLanding"; 
-		var genericdocnamelink = "items"; 
-		var genericdocTitle = "Item"; 
+		var genericdoc = collection; 
+		var genericdocname = "collection"; 
+		var genericdocdeletefunction = "backToCollectionLanding"; 
+		var genericdocnamelink = "collections"; 
+		var genericdocTitle = "Collection"; 
 		var mediaassettitle = "<h2>Content Media</h2>";
 	%>
 	<form class="_pea-form" id="edit-<%- genericdocname %>-form" name="edit-<%- genericdocname %>-form" method="post" action="/<%- genericdocname %>/edit" data-successfunction="updateContentTypes" >
