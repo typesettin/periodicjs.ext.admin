@@ -1,5 +1,5 @@
 <input type="hidden" name="_csrf" value=<%= locals.token %> >
-<input type="hidden" name="content_entity_type" value="<% genericdocname %>">
+<input type="hidden" name="content_entity_type" value="<%= genericdocname %>">
 <input type="hidden" name="docid" value="<%= genericdoc._id %>">
 <style>
 	._pea-col-span12 ._pea-document{
@@ -166,7 +166,7 @@
 												<div>
 													<% if(changesetitem.entitytype === 'item'){%>
 														<span class="_pea-button _pea-text-small" data-name="<%- changedproplabel %>" data-<%- changedproplabel %>-id="<%- changesetitem.entity_item %>" data-entitytype="<%- changesetitem.entitytype %>"><%- changesetitem.order  %> | <%- changesetitem.entity_item  %> | <%- changesetitem.entitytype %></span>
-														<input id="lp-cbx_<%- changesetitem.entity_item %>" data-entitytype="<%- changesetitem.entitytype %>" data-docid="<%- changesetitem.entity_item %>" style="display:none;" name="<%- changedproplabel %>" type="checkbox" value="{'entity_item':'<%- changesetitem.entity_item %>','order':'<%- changesetitem.order %>','entitytype':'<%- changesetitem.entitytype %>','additionalattributes':'<%- changesetitem.additionalattributes %>'}" checked="checked"></input>
+														<input id="lp-cbx_<%- changesetitem.entity_item %>" data-entitytype="<%- changesetitem.entitytype %>" data-docid="<%- changesetitem.entity_item %>" style="display:none;" name="<%- changedproplabel %>" type="checkbox" value='{"entity_item":"<%- changesetitem.entity_item %>","order":"<%- changesetitem.order %>","entitytype":"<%- changesetitem.entitytype %>","additionalattributes":"<%- changesetitem.additionalattributes %>"}' checked="checked"></input>
 													<%}
 													else{%>
 														<span class="_pea-button _pea-text-small" data-name="<%- changedproplabel %>" data-<%- changedproplabel %>-id="<%- changesetitem.entity_collection %>" data-entitytype="<%- changesetitem.entitytype %>"><%- changesetitem.order  %> | <%- changesetitem.entity_collection  %> | <%- changesetitem.entitytype %></span>

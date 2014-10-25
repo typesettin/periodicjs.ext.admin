@@ -17,18 +17,18 @@
 		<%}
 		else{%>
 			<%- request.query.pagenum %>
-		<%}%> of <%- librarypages %> 
+		<%}%> of <%- compilationpages %> 
 
-		<% if(libraries && libraries.length>0 && libraries.length >= request.query.limit){%>
+		<% if(compilations && compilations.length>0 && compilations.length >= request.query.limit){%>
 			<a href="<%= nextlink %>">&raquo;</a>
 		<%}%>
 	</th>
 	<th colspan="4" class="_pea-text-right "> 
-		<a href="/p-admin/libraries">Reset Filters</a>
+		<a href="/p-admin/compilations">Reset Filters</a>
 		<% if(editlistingprops){%>
 		 | 
 			<span >
-				<% var librariesperpage = [{
+				<% var compilationsperpage = [{
 					"value":"15",
 					"label":"15"
 					},{
@@ -38,16 +38,16 @@
 					"value":"50",
 					"label":"50"
 					}]; %>
-				<select name="librariesperpage"  class="autoFormSubmit">
-					<% librariesperpage.forEach(function(iperpage){
+				<select name="compilationsperpage"  class="autoFormSubmit">
+					<% compilationsperpage.forEach(function(iperpage){
 						%>
-							<option <% if(request.query.librariesperpage === iperpage.value ){%> selected="selected"
+							<option <% if(request.query.compilationsperpage === iperpage.value ){%> selected="selected"
 							<%}%> value="<%= iperpage.value %>"><%= iperpage.label %></option>
 						<%
 						}); %>
 				</select> per page
 			</span> | 
-			<span><%- librariescount %> libraries</span>
+			<span><%- compilationscount %> compilations</span>
 		<%}%>
 	</th>
 </tr>

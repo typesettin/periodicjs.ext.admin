@@ -1,0 +1,9 @@
+<% include ../../shared/header %>
+<% include ../../shared/nav %>
+<script type="text/javascript">
+	<%- locals.viewhelper.passObjToClient(default_contentypes,"compilationcontenttypes") %>
+	</script>
+	<form class="_pea-form" method="post" action="/compilation/new">
+		<% include compose_compilation_form %>
+	</form>
+<% include ../../shared/footer %>

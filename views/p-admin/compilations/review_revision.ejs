@@ -1,0 +1,15 @@
+<% include ../../shared/header %>
+<% include ../../shared/nav %>
+	<script type="text/javascript"></script>
+	<% 
+		var genericdoc = compilation; 
+		var genericdocname = "compilation"; 
+		var genericdocdeletefunction = "backToCompilationLanding"; 
+		var genericdocnamelink = "compilations"; 
+		var genericdocTitle = "Compilation"; 
+		var mediaassettitle = "<h2>Content Media</h2>";
+	%>
+	<form class="_pea-form" id="edit-<%- genericdocname %>-form" name="edit-<%- genericdocname %>-form" method="post" action="/<%- genericdocname %>/edit" data-successfunction="updateContentTypes" >
+		<% include ../../shared/content_revision %>
+	</form>
+<% include ../../shared/footer %>

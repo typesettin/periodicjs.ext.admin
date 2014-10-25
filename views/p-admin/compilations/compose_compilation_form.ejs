@@ -3,22 +3,22 @@
 	<div class="_pea-row">
 		<div class="_pea-col-span8">
 			<% 
-				var genericdoc = library; 
-				var genericdocname = "library"; 
-				var genericdocdeletefunction = "backToLibraryLanding"; 
-				var genericdocnamelink = "libraries"; 
-				var genericdocTitle = "Library"; 
+				var genericdoc = compilation; 
+				var genericdocname = "compilation"; 
+				var genericdocdeletefunction = "backToCompilationLanding"; 
+				var genericdocnamelink = "compilations"; 
+				var genericdocTitle = "Compilation"; 
 				var mediaassettitle = "<h2>Content Media</h2>";
 			%>
 			
 			<% include ../../shared/compose_content %>
-			<h2>Library Items</h2>
-			<div class="_pea-document" id="library-content_entities">
-				<div id="library-item-documents" class="_pea-row _pea-container-forminput">
+			<h2>Compilation Items</h2>
+			<div class="_pea-document" id="compilation-content_entities">
+				<div id="compilation-item-documents" class="_pea-row _pea-container-forminput">
 					<table class="_pea-table _pea-form">
-					<tbody id="library-table-content_entities">
-					<%if(library && library.content_entities){ %>
-						<% library.content_entities.forEach(function(docresult,index){
+					<tbody id="compilation-table-content_entities">
+					<%if(compilation && compilation.content_entities){ %>
+						<% compilation.content_entities.forEach(function(docresult,index){
 							var content_entity,appendInfo;
 							if(docresult.entity_item){
 								content_entity = docresult.entity_item ;
@@ -68,7 +68,7 @@
 										</small></div>
 									</td>
 									<td class="_pea-col-span3 _pea-text-right">
-										<a data-docid="<%= content_entity._id%>" class="_pea-button remove-doc-to-library _pea-color-error">x</a>
+										<a data-docid="<%= content_entity._id%>" class="_pea-button remove-doc-to-compilation _pea-color-error">x</a>
 									</td>
 								</tr>
 							<%		
@@ -82,7 +82,7 @@
 					<input type="text" placeholder="search documents" class="_pea-col-span10" id="searchdocumentstext" name="search"/>
 					<input type="button" id="searchdocumentsbutton" name="searchdocumentsbutton" value="search" class="_pea-col-span2"  />
 				</div>
-				<div id="library-item-searchresult" class="_pea-row _pea-container-forminput">
+				<div id="compilation-item-searchresult" class="_pea-row _pea-container-forminput">
 					
 				</div>
 			</div>

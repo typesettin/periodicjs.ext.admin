@@ -3246,6 +3246,7 @@ var searchDocs = function () {
 		.query({
 			format: 'json',
 			sort: 'title',
+			limit: '25',
 			search: searchDocInputText.value
 		})
 		.end(function (error, res) {

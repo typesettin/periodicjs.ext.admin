@@ -10,19 +10,19 @@ var request = require('superagent'),
 	searchDocButton,
 	searchDocInputText,
 	searchDocResults,
-	libraryDocs,
-	libraryDocsResults,
-	libraryDocsItemTable;
+	compilationDocs,
+	compilationDocsResults,
+	compilationDocsItemTable;
 
 
-var generateLibraryDoc = function (documentstoadd) {
+var generateCompilationDoc = function (documentstoadd) {
 	documentstoadd.style.display = 'none';
-	var aelementoflibrarydoc = documentstoadd.firstChild.firstChild;
-	var docid = aelementoflibrarydoc.getAttribute('data-docid');
-	var docentitytype = aelementoflibrarydoc.getAttribute('data-entitytype');
+	var aelementofcompilationdoc = documentstoadd.firstChild.firstChild;
+	var docid = aelementofcompilationdoc.getAttribute('data-docid');
+	var docentitytype = aelementofcompilationdoc.getAttribute('data-entitytype');
 	var removecolumn = document.createElement('td');
 	removecolumn.setAttribute('class', '_pea-col-span3 _pea-text-right');
-	removecolumn.innerHTML = '<a data-docid="' + docid + '" class="_pea-button remove-doc-to-library _pea-color-error">x</a>';
+	removecolumn.innerHTML = '<a data-docid="' + docid + '" class="_pea-button remove-doc-to-compilation _pea-color-error">x</a>';
 	// console.log("removecolumn",removecolumn);
 	documentstoadd.removeChild(documentstoadd.firstChild);
 	documentstoadd.appendChild(removecolumn);
@@ -41,14 +41,14 @@ var generateLibraryDoc = function (documentstoadd) {
 	documentstoadd.firstChild.appendChild(docidinput);
 	// console.log('docidinput', docidinput);
 	// console.log('documentstoadd', documentstoadd.firstChild);
-	libraryDocsItemTable.appendChild(documentstoadd);
+	compilationDocsItemTable.appendChild(documentstoadd);
 	documentstoadd.style.display = 'table-row';
 	documentstoadd.style.width = '100%';
 };
 
-var libraryDocsCLick = function (e) {
+var compilationDocsCLick = function (e) {
 	var eTarget = e.target;
-	if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('add-doc-to-library')) {
+	if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('add-doc-to-compilation')) {
 		if (document.querySelector('input[name=docid]')) {
 			var entityTypeToAdd = eTarget.getAttribute('data-entitytype'),
 				contentEntityData = {
@@ -63,13 +63,14 @@ var libraryDocsCLick = function (e) {
 			}
 
 			request
-				.post('/library/append/' + document.querySelector('input[name=docid]').value)
+				.post('/compilation/append/' + document.querySelector('input[name=docid]').value)
 				.send({
 					_csrf: document.querySelector('input[name=_csrf]').value,
 					content_entities: contentEntityData
 				})
 				.set('Accept', 'application/json')
 				.query({
+					limit: '25',
 					format: 'json'
 				})
 				.end(function (error, res) {
@@ -84,16 +85,16 @@ var libraryDocsCLick = function (e) {
 							window.ribbonNotification.showRibbon(res.body.data.error, 4000, 'error');
 						}
 						else {
-							generateLibraryDoc(eTarget.parentElement.parentElement, eTarget.getAttribute('data-docid'));
+							generateCompilationDoc(eTarget.parentElement.parentElement, eTarget.getAttribute('data-docid'));
 						}
 					}
 				});
 		}
 		else {
-			window.ribbonNotification.showRibbon('You have to save and create a library before adding items to it', 4000, 'error');
+			window.ribbonNotification.showRibbon('You have to save and create a compilation before adding items to it', 4000, 'error');
 		}
 	}
-	else if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('remove-doc-to-library')) {
+	else if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('remove-doc-to-compilation')) {
 		// var elemtoremove = document.getElementById("tr-docid-"+eTarget.getAttribute("data-docid"));
 		var elemtoremove = eTarget.parentElement.parentElement;
 		elemtoremove.parentElement.removeChild(elemtoremove);
@@ -105,7 +106,7 @@ var generateSearchResult = function (documents) {
 	for (var x in documents) {
 		var docresult = documents[x];
 		docresulthtml += '<tr>';
-		docresulthtml += '<td><a data-docid="' + docresult._id + '" data-entitytype="' + docresult.entitytype + '" class="_pea-button add-doc-to-library _pea-color-success">+</a></td>';
+		docresulthtml += '<td><a data-docid="' + docresult._id + '" data-entitytype="' + docresult.entitytype + '" class="_pea-button add-doc-to-compilation _pea-color-success">+</a></td>';
 		docresulthtml += '<td>' + docresult.title + ' <small class="_pea-color-inverse">' + docresult.entitytype + '</small>';
 		docresulthtml += '<div><small>';
 		if (docresult.authors) {
@@ -142,7 +143,7 @@ var generateSearchResult = function (documents) {
 var searchDocs = function () {
 	// var etarget = e.target;
 	request
-		.get('/p-admin/library/search_content')
+		.get('/p-admin/compilation/search_content')
 		.set('Accept', 'application/json')
 		.query({
 			format: 'json',
@@ -168,13 +169,13 @@ var searchDocs = function () {
 
 window.cnt_lp = cnt_lp;
 
-window.backToLibraryLanding = function () {
-	window.location = '/p-admin/libraries';
+window.backToCompilationLanding = function () {
+	window.location = '/p-admin/compilations';
 };
 
 window.addEventListener('load', function () {
 	contententry = new contentEntryModule({
-		ajaxFormToSubmit: document.getElementById('edit-library-form'),
+		ajaxFormToSubmit: document.getElementById('edit-compilation-form'),
 		mediafileinput: document.getElementById('padmin-mediafiles'),
 		mediafilesresult: document.getElementById('media-files-result')
 	});
@@ -186,25 +187,25 @@ window.addEventListener('load', function () {
 	cat_lp.init();
 	athr_lp.init();
 	cnt_lp.init();
-	if (window.librarytags && typeof window.librarytags === 'object') {
-		tag_lp.setPreloadDataObject(window.librarytags);
+	if (window.compilationtags && typeof window.compilationtags === 'object') {
+		tag_lp.setPreloadDataObject(window.compilationtags);
 	}
-	if (window.librarycategories && typeof window.librarycategories === 'object') {
-		cat_lp.setPreloadDataObject(window.librarycategories);
+	if (window.compilationcategories && typeof window.compilationcategories === 'object') {
+		cat_lp.setPreloadDataObject(window.compilationcategories);
 	}
-	if (window.libraryauthors && typeof window.libraryauthors === 'object') {
-		athr_lp.setPreloadDataObject(window.libraryauthors);
+	if (window.compilationauthors && typeof window.compilationauthors === 'object') {
+		athr_lp.setPreloadDataObject(window.compilationauthors);
 	}
-	if (window.librarycontenttypes && typeof window.librarycontenttypes === 'object') {
-		cnt_lp.setPreloadDataObject(window.librarycontenttypes);
+	if (window.compilationcontenttypes && typeof window.compilationcontenttypes === 'object') {
+		cnt_lp.setPreloadDataObject(window.compilationcontenttypes);
 	}
 	window.ajaxFormEventListers('._pea-ajax-form');
 	searchDocButton = document.getElementById('searchdocumentsbutton');
 	searchDocInputText = document.getElementById('searchdocumentstext');
-	searchDocResults = document.getElementById('library-item-searchresult');
-	libraryDocs = document.getElementById('library-content_entities');
-	libraryDocsResults = document.getElementById('library-item-documents');
-	libraryDocsItemTable = document.getElementById('library-table-content_entities');
+	searchDocResults = document.getElementById('compilation-item-searchresult');
+	compilationDocs = document.getElementById('compilation-content_entities');
+	compilationDocsResults = document.getElementById('compilation-item-documents');
+	compilationDocsItemTable = document.getElementById('compilation-table-content_entities');
 	searchDocButton.addEventListener('click', searchDocs, false);
-	libraryDocs.addEventListener('click', libraryDocsCLick, false);
+	compilationDocs.addEventListener('click', compilationDocsCLick, false);
 });

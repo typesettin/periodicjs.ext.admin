@@ -20,7 +20,7 @@ var path = require('path'),
 	mongoose,
 	User,
 	Collection,
-	Library,
+	Compilation,
 	Item, //Item
 	AppDBSetting,
 	Contenttype,
@@ -228,12 +228,12 @@ var remove_changeset_from_content = function (req, res, next) {
 	try {
 		changesetindex = req.params.changesetnum - 1;
 		switch (req.params.contententity) {
-		case 'library':
-			removedchangeset = req.controllerData.library.changes.splice(changesetindex, 1);
-			req.redirectpath = '/p-admin/library/edit/' + req.controllerData.library._id + '/revisions';
+		case 'compilation':
+			removedchangeset = req.controllerData.compilation.changes.splice(changesetindex, 1);
+			req.redirectpath = '/p-admin/compilation/edit/' + req.controllerData.compilation._id + '/revisions';
 			requestbody = {
-				changes: req.controllerData.library.changes,
-				docid: req.controllerData.library._id
+				changes: req.controllerData.compilation.changes,
+				docid: req.controllerData.compilation._id
 			};
 			break;
 		case 'item':
@@ -889,14 +889,14 @@ var collection_revisions = function (req, res) {
 	);
 };
 /**
- * list libraries page
+ * list compilations page
  * @param  {object} req
  * @param  {object} res
  * @return {object} reponds with an error page or sends user to authenicated in resource
  */
-var libraries_index = function (req, res) {
+var compilations_index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
-			viewname: 'p-admin/libraries/index',
+			viewname: 'p-admin/compilations/index',
 			themefileext: appSettings.templatefileextension,
 			extname: 'periodicjs.ext.admin'
 		},
@@ -907,12 +907,12 @@ var libraries_index = function (req, res) {
 				renderView: templatepath,
 				responseData: {
 					pagedata: {
-						title: 'Librarys',
+						title: 'Compilations',
 						extensions: CoreUtilities.getAdminMenu()
 					},
-					libraries: req.controllerData.libraries,
-					librariescount: req.controllerData.librariescount,
-					librarypages: Math.ceil(req.controllerData.librariescount / req.query.limit),
+					compilations: req.controllerData.compilations,
+					compilationscount: req.controllerData.compilationscount,
+					compilationpages: Math.ceil(req.controllerData.compilationscount / req.query.limit),
 					user: req.user
 				}
 			});
@@ -921,19 +921,19 @@ var libraries_index = function (req, res) {
 };
 
 /**
- * new library page
+ * new compilation page
  * @param  {object} req
  * @param  {object} res
  * @return {object} reponds with an error page or sends user to authenicated in resource
  */
-var library_new = function (req, res) {
+var compilation_new = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
-			viewname: 'p-admin/libraries/new',
+			viewname: 'p-admin/compilations/new',
 			themefileext: appSettings.templatefileextension,
 			extname: 'periodicjs.ext.admin'
 		},
 		function (err, templatepath) {
-			getDefaultContentTypes('library_default_contenttypes', function (err, defaultcontenttypes) {
+			getDefaultContentTypes('compilation_default_contenttypes', function (err, defaultcontenttypes) {
 				if (err) {
 					CoreController.handleDocumentQueryErrorResponse({
 						err: err,
@@ -948,11 +948,11 @@ var library_new = function (req, res) {
 						renderView: templatepath,
 						responseData: {
 							pagedata: {
-								title: 'New Library',
-								headerjs: ['/extensions/periodicjs.ext.admin/js/library.min.js'],
+								title: 'New Compilation',
+								headerjs: ['/extensions/periodicjs.ext.admin/js/compilation.min.js'],
 								extensions: CoreUtilities.getAdminMenu()
 							},
-							library: null,
+							compilation: null,
 							default_contentypes: defaultcontenttypes,
 							serverdate: moment().format('YYYY-MM-DD'),
 							servertime: moment().format('HH:mm'),
@@ -967,19 +967,19 @@ var library_new = function (req, res) {
 };
 
 /**
- * edit library page
+ * edit compilation page
  * @param  {object} req
  * @param  {object} res
  * @return {object} reponds with an error page or sends user to authenicated in resource
  */
-var library_edit = function (req, res) {
+var compilation_edit = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
-			viewname: 'p-admin/libraries/edit',
+			viewname: 'p-admin/compilations/edit',
 			themefileext: appSettings.templatefileextension,
 			extname: 'periodicjs.ext.admin'
 		},
 		function (err, templatepath) {
-			getDefaultContentTypes('library_default_contenttypes', function (err, defaultcontenttypes) {
+			getDefaultContentTypes('compilation_default_contenttypes', function (err, defaultcontenttypes) {
 				if (err) {
 					CoreController.handleDocumentQueryErrorResponse({
 						err: err,
@@ -989,22 +989,22 @@ var library_edit = function (req, res) {
 				}
 				else {
 					if (defaultcontenttypes && defaultcontenttypes.length > 0) {
-						if (req.controllerData.library.contenttypes && req.controllerData.library.contenttypes.length > 0) {
+						if (req.controllerData.compilation.contenttypes && req.controllerData.compilation.contenttypes.length > 0) {
 							for (var a in defaultcontenttypes) {
 								var alreadyHasContenttype = false;
-								for (var b in req.controllerData.library.contenttypes) {
-									if (defaultcontenttypes[a]._id.equals(req.controllerData.library.contenttypes[b]._id)) {
+								for (var b in req.controllerData.compilation.contenttypes) {
+									if (defaultcontenttypes[a]._id.equals(req.controllerData.compilation.contenttypes[b]._id)) {
 										alreadyHasContenttype = true;
 									}
-									// console.log('a',a,'defaultcontenttypes[a]._id',defaultcontenttypes[a]._id,'b',b,req.controllerData.library.contenttypes[b]._id,'alreadyHasContenttype',alreadyHasContenttype);
+									// console.log('a',a,'defaultcontenttypes[a]._id',defaultcontenttypes[a]._id,'b',b,req.controllerData.compilation.contenttypes[b]._id,'alreadyHasContenttype',alreadyHasContenttype);
 								}
 								if (alreadyHasContenttype === false) {
-									req.controllerData.library.contenttypes.push(defaultcontenttypes[a]);
+									req.controllerData.compilation.contenttypes.push(defaultcontenttypes[a]);
 								}
 							}
 						}
 						else {
-							req.controllerData.library.contenttypes = defaultcontenttypes;
+							req.controllerData.compilation.contenttypes = defaultcontenttypes;
 						}
 					}
 					CoreController.handleDocumentQueryRender({
@@ -1013,13 +1013,13 @@ var library_edit = function (req, res) {
 						renderView: templatepath,
 						responseData: {
 							pagedata: {
-								title: req.controllerData.library.title + ' - Edit Library',
-								headerjs: ['/extensions/periodicjs.ext.admin/js/library.min.js'],
+								title: req.controllerData.compilation.title + ' - Edit Compilation',
+								headerjs: ['/extensions/periodicjs.ext.admin/js/compilation.min.js'],
 								extensions: CoreUtilities.getAdminMenu()
 							},
-							library: req.controllerData.library,
-							serverdate: moment(req.controllerData.library.publishat).format('YYYY-MM-DD'),
-							servertime: moment(req.controllerData.library.publishat).format('HH:mm'),
+							compilation: req.controllerData.compilation,
+							serverdate: moment(req.controllerData.compilation.publishat).format('YYYY-MM-DD'),
+							servertime: moment(req.controllerData.compilation.publishat).format('HH:mm'),
 							adminSettings: adminSettings,
 							user: req.user
 						}
@@ -1031,14 +1031,14 @@ var library_edit = function (req, res) {
 };
 
 /**
- * review library revision page
+ * review compilation revision page
  * @param  {object} req
  * @param  {object} res
  * @return {object} reponds with an error page or sends user to authenicated in resource
  */
-var library_review_revision = function (req, res) {
+var compilation_review_revision = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
-			viewname: 'p-admin/libraries/review_revision',
+			viewname: 'p-admin/compilations/review_revision',
 			themefileext: appSettings.templatefileextension,
 			extname: 'periodicjs.ext.admin'
 		},
@@ -1060,11 +1060,11 @@ var library_review_revision = function (req, res) {
 					renderView: templatepath,
 					responseData: {
 						pagedata: {
-							title: 'Revision (' + req.params.changeset + ') for ' + req.controllerData.library.title + ' - Edit Item',
+							title: 'Revision (' + req.params.changeset + ') for ' + req.controllerData.compilation.title + ' - Edit Item',
 							headerjs: ['/extensions/periodicjs.ext.admin/js/content_revision.min.js'],
 							extensions: CoreUtilities.getAdminMenu()
 						},
-						library: req.controllerData.library,
+						compilation: req.controllerData.compilation,
 						user: req.user
 					}
 				});
@@ -1074,14 +1074,14 @@ var library_review_revision = function (req, res) {
 };
 
 /**
- * review library revision page
+ * review compilation revision page
  * @param  {object} req
  * @param  {object} res
  * @return {object} reponds with an error page or sends user to authenicated in resource
  */
-var library_revisions = function (req, res) {
+var compilation_revisions = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
-			viewname: 'p-admin/libraries/revisions',
+			viewname: 'p-admin/compilations/revisions',
 			themefileext: appSettings.templatefileextension,
 			extname: 'periodicjs.ext.admin'
 		},
@@ -1103,11 +1103,11 @@ var library_revisions = function (req, res) {
 					renderView: templatepath,
 					responseData: {
 						pagedata: {
-							title: 'Revisions for ' + req.controllerData.library.title + ' - Edit Item',
+							title: 'Revisions for ' + req.controllerData.compilation.title + ' - Edit Item',
 							headerjs: ['/extensions/periodicjs.ext.admin/js/content_revision.min.js'],
 							extensions: CoreUtilities.getAdminMenu()
 						},
-						library: req.controllerData.library,
+						compilation: req.controllerData.compilation,
 						user: req.user
 					}
 				});
@@ -1116,9 +1116,9 @@ var library_revisions = function (req, res) {
 	);
 };
 
-var library_content_search_index = function (req, res) {
+var compilation_content_search_index = function (req, res) {
 	CoreController.getPluginViewDefaultTemplate({
-			viewname: 'p-admin/libraries/index',
+			viewname: 'p-admin/compilations/index',
 			themefileext: appSettings.templatefileextension,
 			extname: 'periodicjs.ext.admin'
 		},
@@ -1130,7 +1130,7 @@ var library_content_search_index = function (req, res) {
 				renderView: templatepath,
 				responseData: {
 					pagedata: {
-						title: 'Library Search Result',
+						title: 'Compilation Search Result',
 						extensions: CoreUtilities.getAdminMenu()
 					},
 					content_entities: content_entities.sort(CoreUtilities.sortObject('asc', 'name')),
@@ -2014,7 +2014,7 @@ var controller = function (resources) {
 	CoreUtilities = new Utilities(resources);
 	Item = mongoose.model('Item');
 	Collection = mongoose.model('Collection');
-	Library = mongoose.model('Library');
+	Compilation = mongoose.model('Compilation');
 	User = mongoose.model('User');
 	AppDBSetting = mongoose.model('Setting');
 	Contenttype = mongoose.model('Contenttype');
@@ -2040,12 +2040,12 @@ var controller = function (resources) {
 		collection_edit: collection_edit,
 		collection_review_revision: collection_review_revision,
 		collection_revisions: collection_revisions,
-		libraries_index: libraries_index,
-		library_new: library_new,
-		library_edit: library_edit,
-		library_content_search_index: library_content_search_index,
-		library_review_revision: library_review_revision,
-		library_revisions: library_revisions,
+		compilations_index: compilations_index,
+		compilation_new: compilation_new,
+		compilation_edit: compilation_edit,
+		compilation_content_search_index: compilation_content_search_index,
+		compilation_review_revision: compilation_review_revision,
+		compilation_revisions: compilation_revisions,
 		extensions_index: extensions_index,
 		loadExtensions: loadExtensions,
 		loadExtension: loadExtension,

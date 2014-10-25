@@ -25,7 +25,7 @@ module.exports = function (periodic) {
 		categoryRouter = periodic.express.Router(),
 		categoryAdminRouter = periodic.express.Router(),
 		collectionRouter = periodic.express.Router(),
-		libraryRouter = periodic.express.Router(),
+		compilationRouter = periodic.express.Router(),
 		settingsRouter = periodic.express.Router(),
 		extensionAdminRouter = periodic.express.Router(),
 		themeAdminRouter = periodic.express.Router(),
@@ -39,7 +39,7 @@ module.exports = function (periodic) {
 		userController = require(path.resolve(process.cwd(), './app/controller/user'))(periodic),
 		contenttypeController = require(path.resolve(process.cwd(), './app/controller/contenttype'))(periodic),
 		collectionController = require(path.resolve(process.cwd(), './app/controller/collection'))(periodic),
-		libraryController = require(path.resolve(process.cwd(), './app/controller/library'))(periodic),
+		compilationController = require(path.resolve(process.cwd(), './app/controller/compilation'))(periodic),
 		adminController = require('./controller/admin')(periodic),
 		adminSettingsController = require('./controller/settings')(periodic),
 		authController = require('../periodicjs.ext.login/controller/auth')(periodic),
@@ -52,7 +52,7 @@ module.exports = function (periodic) {
 	themeAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	itemRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	collectionRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	libraryRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	compilationRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	tagRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	tagAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	categoryRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
@@ -70,7 +70,7 @@ module.exports = function (periodic) {
 	adminRouter.get('/', adminController.getMarkdownReleases, adminController.getHomepageStats, adminController.index);
 	adminRouter.get('/items', itemController.loadItemsWithCount, itemController.loadItemsWithDefaultLimit, itemController.loadItems, adminController.items_index);
 	adminRouter.get('/collections', collectionController.loadCollectionsWithCount, collectionController.loadCollectionsWithDefaultLimit, collectionController.loadCollections, adminController.collections_index);
-	adminRouter.get('/libraries', libraryController.loadLibrariesWithCount, libraryController.loadLibrariesWithDefaultLimit, libraryController.loadLibraries, adminController.libraries_index);
+	adminRouter.get('/compilations', compilationController.loadCompilationsWithCount, compilationController.loadCompilationsWithDefaultLimit, compilationController.loadCompilations, adminController.compilations_index);
 	adminRouter.get('/contenttypes', contenttypeController.loadContenttypeWithCount, contenttypeController.loadContenttypeWithDefaultLimit, contenttypeController.loadContenttypes, adminController.contenttypes_index);
 	adminRouter.get('/tags', tagController.loadTagsWithCount, tagController.loadTagsWithDefaultLimit, tagController.loadTags, adminController.tags_index);
 	adminRouter.get('/categories', categoryController.loadCategoriesWithCount, categoryController.loadCategoriesWithDefaultLimit, categoryController.loadCategories, adminController.categories_index);
@@ -133,19 +133,19 @@ module.exports = function (periodic) {
 	collectionRouter.post('/removechangeset/:id/:contententity/:changesetnum', collectionController.loadCollection, adminController.remove_changeset_from_content, collectionController.update);
 	collectionRouter.post('/:id/delete', collectionController.loadCollection, collectionController.remove);
 	/**
-	 * admin/library manager routes
+	 * admin/compilation manager routes
 	 */
-	adminRouter.get('/library/new', adminController.library_new);
-	adminRouter.get('/library/edit/:id', libraryController.loadLibrary, adminController.library_edit);
-	adminRouter.get('/library/edit/:id/revision/:changeset', libraryController.loadLibrary, adminController.library_review_revision);
-	adminRouter.get('/library/edit/:id/revisions', libraryController.loadLibrary, adminController.library_revisions);
-	adminRouter.get('/library/search', adminController.setSearchLimitTo1000, libraryController.loadLibraries, libraryController.index);
-	adminRouter.get('/library/search_content', adminController.setSearchLimitTo1000, itemController.loadItems, collectionController.loadCollections, adminController.library_content_search_index);
-	libraryRouter.post('/new', libraryController.create);
-	libraryRouter.post('/edit', adminController.collection_loadItem, libraryController.loadLibrary, libraryController.update);
-	libraryRouter.post('/append/:id', libraryController.loadLibrary, libraryController.append);
-	libraryRouter.post('/removechangeset/:id/:contententity/:changesetnum', libraryController.loadLibrary, adminController.remove_changeset_from_content, libraryController.update);
-	libraryRouter.post('/:id/delete', libraryController.loadLibrary, libraryController.remove);
+	adminRouter.get('/compilation/new', adminController.compilation_new);
+	adminRouter.get('/compilation/edit/:id', compilationController.loadCompilation, adminController.compilation_edit);
+	adminRouter.get('/compilation/edit/:id/revision/:changeset', compilationController.loadCompilation, adminController.compilation_review_revision);
+	adminRouter.get('/compilation/edit/:id/revisions', compilationController.loadCompilation, adminController.compilation_revisions);
+	adminRouter.get('/compilation/search', adminController.setSearchLimitTo1000, compilationController.loadCompilations, compilationController.index);
+	adminRouter.get('/compilation/search_content', adminController.setSearchLimitTo1000, itemController.loadItems, collectionController.loadCollections, adminController.compilation_content_search_index);
+	compilationRouter.post('/new', compilationController.create);
+	compilationRouter.post('/edit', adminController.collection_loadItem, compilationController.loadCompilation, compilationController.update);
+	compilationRouter.post('/append/:id', compilationController.loadCompilation, compilationController.append);
+	compilationRouter.post('/removechangeset/:id/:contententity/:changesetnum', compilationController.loadCompilation, adminController.remove_changeset_from_content, compilationController.update);
+	compilationRouter.post('/:id/delete', compilationController.loadCompilation, compilationController.remove);
 
 	/**
 	 * admin/tag manager routes
@@ -240,7 +240,7 @@ module.exports = function (periodic) {
 	periodic.app.use('/p-admin', adminRouter);
 	periodic.app.use('/item', itemRouter);
 	periodic.app.use('/collection', collectionRouter);
-	periodic.app.use('/library', libraryRouter);
+	periodic.app.use('/compilation', compilationRouter);
 	periodic.app.use('/tag', tagRouter);
 	periodic.app.use('/category', categoryRouter);
 	periodic.app.use('/contenttype', contenttypeRouter);
