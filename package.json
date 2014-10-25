@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.admin",
   "description": "Admin for periodicjs",
-  "version": "1.90.495",
+  "version": "1.90.500",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
@@ -37,7 +37,7 @@
     "fs-extra": "0.9.1",
     "letterpressjs": "0.0.3",
     "periodicjs.component.tabs": "^1.1.0",
-    "periodicjs.core.controller": "~1.90.119",
+    "periodicjs.core.controller": "~1.90.200",
     "periodicjs.core.extensions": "~1.90.16",
     "periodicjs.core.mailer": "~1.90.15",
     "periodicjs.core.utilities": "~1.90.10",
