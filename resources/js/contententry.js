@@ -16,6 +16,7 @@ var contententry = function (options) {
 contententry.prototype.init = function (options) {
 	uploadmediaCallback = options.uploadmediaCallback;
 	ajaxFormToSubmit = options.ajaxFormToSubmit;
+	window.ajaxFormToSubmit = options.ajaxFormToSubmit;
 	mediafileinput = options.mediafileinput;
 	mediafilesresult = options.mediafilesresult;
 	if (mediafileinput) {

@@ -116,6 +116,7 @@ module.exports = function (periodic) {
 	adminRouter.get('/item/search', adminController.setSearchLimitTo1000, itemController.loadItems, itemController.index);
 	itemRouter.post('/new', itemController.create);
 	itemRouter.post('/edit', adminController.item_loadItem, itemController.loadItem, itemController.update);
+	itemRouter.post('/removechangeset/:id/:contententity/:changesetnum', itemController.loadItem, adminController.remove_changeset_from_content, itemController.update);
 	itemRouter.post('/:id/delete', itemController.loadItem, itemController.remove);
 	/**
 	 * admin/collection manager routes
@@ -127,9 +128,9 @@ module.exports = function (periodic) {
 	adminRouter.get('/collection/edit/:id/revisions', collectionController.loadCollection, adminController.collection_revisions);
 	adminRouter.get('/collection/search', adminController.setSearchLimitTo1000, collectionController.loadCollections, collectionController.index);
 	collectionRouter.post('/new', collectionController.create);
-	//collectionRouter.post('/edit', collectionController.update);
 	collectionRouter.post('/edit', adminController.collection_loadItem, collectionController.loadCollection, collectionController.update);
 	collectionRouter.post('/append/:id', collectionController.loadCollection, collectionController.append);
+	collectionRouter.post('/removechangeset/:id/:contententity/:changesetnum', collectionController.loadCollection, adminController.remove_changeset_from_content, collectionController.update);
 	collectionRouter.post('/:id/delete', collectionController.loadCollection, collectionController.remove);
 	/**
 	 * admin/library manager routes
@@ -141,9 +142,9 @@ module.exports = function (periodic) {
 	adminRouter.get('/library/search', adminController.setSearchLimitTo1000, libraryController.loadLibraries, libraryController.index);
 	adminRouter.get('/library/search_content', adminController.setSearchLimitTo1000, itemController.loadItems, collectionController.loadCollections, adminController.library_content_search_index);
 	libraryRouter.post('/new', libraryController.create);
-	//libraryRouter.post('/edit', libraryController.update);
 	libraryRouter.post('/edit', adminController.collection_loadItem, libraryController.loadLibrary, libraryController.update);
 	libraryRouter.post('/append/:id', libraryController.loadLibrary, libraryController.append);
+	libraryRouter.post('/removechangeset/:id/:contententity/:changesetnum', libraryController.loadLibrary, adminController.remove_changeset_from_content, libraryController.update);
 	libraryRouter.post('/:id/delete', libraryController.loadLibrary, libraryController.remove);
 
 	/**

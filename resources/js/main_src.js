@@ -180,6 +180,10 @@ var addMediaItem = function (e) {
 	mediafilessearchresult.innerHTML = '';
 	classie.addClass(mediafilessearchresult, '_pea-hidden');
 	updatemedia(mediafilesresult, clickedMediaItem);
+
+	if (window.ajaxFormToSubmit) {
+		window.ajaxFormSubmit(null, window.ajaxFormToSubmit);
+	}
 };
 
 var addMediaListeners = function () {
@@ -266,10 +270,16 @@ window.mediaSearchResult = function (searchData) {
 };
 
 window.updateContentTypes = function (AjaxDataResponse) {
-	// console.log("runing post update");
 	var contenttypeContainer = document.getElementById('doc-ct-attr'),
 		updatedDoc = AjaxDataResponse.doc,
-		contentTypeHtml = '';
+		contentTypeHtml = '',
+		trackchangesmessageContainer = document.getElementById('latest_content_revision');
+
+	if (trackchangesmessageContainer) {
+		trackchangesmessageContainer.style.display = 'block';
+	}
+
+
 	for (var x in updatedDoc.contenttypes) {
 		var contentTypeData = updatedDoc.contenttypes[x];
 		contentTypeHtml += '<div>';

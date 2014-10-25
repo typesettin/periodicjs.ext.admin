@@ -1552,7 +1552,7 @@ if (typeof window === "object" && typeof window.document === "object") {
 
 },{"classie":1,"events":3,"util":7,"util-extend":13}],13:[function(require,module,exports){
 module.exports=require(10)
-},{"/Users/yawetse/Developer/test/testinstances/periodicjs/node_modules/periodicjs.ext.admin/node_modules/ribbonjs/node_modules/util-extend/extend.js":10}],14:[function(require,module,exports){
+},{"/Users/yawetse/Developer/test/extwork/periodicjs/node_modules/periodicjs.ext.admin/node_modules/ribbonjs/node_modules/util-extend/extend.js":10}],14:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -3142,6 +3142,10 @@ var addMediaItem = function (e) {
 	mediafilessearchresult.innerHTML = '';
 	classie.addClass(mediafilessearchresult, '_pea-hidden');
 	updatemedia(mediafilesresult, clickedMediaItem);
+
+	if (window.ajaxFormToSubmit) {
+		window.ajaxFormSubmit(null, window.ajaxFormToSubmit);
+	}
 };
 
 var addMediaListeners = function () {
@@ -3228,10 +3232,16 @@ window.mediaSearchResult = function (searchData) {
 };
 
 window.updateContentTypes = function (AjaxDataResponse) {
-	// console.log("runing post update");
 	var contenttypeContainer = document.getElementById('doc-ct-attr'),
 		updatedDoc = AjaxDataResponse.doc,
-		contentTypeHtml = '';
+		contentTypeHtml = '',
+		trackchangesmessageContainer = document.getElementById('latest_content_revision');
+
+	if (trackchangesmessageContainer) {
+		trackchangesmessageContainer.style.display = 'block';
+	}
+
+
 	for (var x in updatedDoc.contenttypes) {
 		var contentTypeData = updatedDoc.contenttypes[x];
 		contentTypeHtml += '<div>';
@@ -3393,6 +3403,9 @@ updatemedia.handleMediaButtonClick = function (e) {
 	}
 	else if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('make-primary')) {
 		document.getElementById('primaryasset-input').value = eTarget.getAttribute('data-assetid');
+		if (window.ajaxFormToSubmit) {
+			window.ajaxFormSubmit(null, window.ajaxFormToSubmit);
+		}
 		var mpbuttons = document.querySelectorAll('._pea-button.make-primary');
 		for (var x in mpbuttons) {
 			if (typeof mpbuttons[x] === 'object') {

@@ -3194,6 +3194,9 @@ updatemedia.handleMediaButtonClick = function (e) {
 	}
 	else if (eTarget.getAttribute('class') && eTarget.getAttribute('class').match('make-primary')) {
 		document.getElementById('primaryasset-input').value = eTarget.getAttribute('data-assetid');
+		if (window.ajaxFormToSubmit) {
+			window.ajaxFormSubmit(null, window.ajaxFormToSubmit);
+		}
 		var mpbuttons = document.querySelectorAll('._pea-button.make-primary');
 		for (var x in mpbuttons) {
 			if (typeof mpbuttons[x] === 'object') {

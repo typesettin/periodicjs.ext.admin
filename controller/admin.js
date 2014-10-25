@@ -216,6 +216,60 @@ var setSearchLimitTo1000 = function (req, res, next) {
 };
 
 /**
+ * remove changeset item from changes array
+ * @param  {object} req
+ * @param  {object} res
+ * @return {object} reponds with an error page or sends user to authenicated in resource
+ */
+var remove_changeset_from_content = function (req, res, next) {
+	var requestbody = {},
+		removedchangeset,
+		changesetindex;
+	try {
+		changesetindex = req.params.changesetnum - 1;
+		switch (req.params.contententity) {
+		case 'library':
+			removedchangeset = req.controllerData.library.changes.splice(changesetindex, 1);
+			req.redirectpath = '/p-admin/library/edit/' + req.controllerData.library._id + '/revisions';
+			requestbody = {
+				changes: req.controllerData.library.changes,
+				docid: req.controllerData.library._id
+			};
+			break;
+		case 'item':
+			removedchangeset = req.controllerData.item.changes.splice(changesetindex, 1);
+			req.redirectpath = '/p-admin/item/edit/' + req.controllerData.item._id + '/revisions';
+			requestbody = {
+				changes: req.controllerData.item.changes,
+				docid: req.controllerData.item._id
+			};
+			break;
+		case 'collection':
+			removedchangeset = req.controllerData.collection.changes.splice(changesetindex, 1);
+			req.redirectpath = '/p-admin/collection/edit/' + req.controllerData.collection._id + '/revisions';
+			requestbody = {
+				changes: req.controllerData.collection.changes,
+				docid: req.controllerData.collection._id
+			};
+			break;
+		default:
+			next(new Error('invalid entity type'));
+			break;
+		}
+		req.skipemptyvaluecheck = true;
+		req.saverevision = false;
+		req.forceupdate = true;
+		req.body = requestbody;
+		console.log('req.body', req.body);
+		next();
+	}
+	catch (e) {
+		console.error(e);
+		next(e);
+	}
+};
+
+/**
  * admin ext home page
  * @param  {object} req
  * @param  {object} res
@@ -1967,6 +2021,7 @@ var controller = function (resources) {
 
 	return {
 		index: index,
+		remove_changeset_from_content: remove_changeset_from_content,
 		setSearchLimitTo1000: setSearchLimitTo1000,
 		getMarkdownReleases: getMarkdownReleases,
 		getHomepageStats: getHomepageStats,

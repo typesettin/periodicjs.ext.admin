@@ -332,9 +332,9 @@ var replaceIdsWithNames = function () {
 	grabNamesFromIds();
 };
 
-// window.backToItemLanding = function () {
-// 	window.location = '/p-admin/items';
-// };
+window.removeChangesetCallback = function () {
+	window.location.reload();
+};
 
 window.addEventListener('load', function () {
 	compareDiffElements = document.querySelectorAll('[data-diff-element="current"]');
