@@ -50,16 +50,16 @@ module.exports = function (periodic) {
 	adminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	extensionAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	themeAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	itemRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	collectionRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	compilationRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	tagRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	itemRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	collectionRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	compilationRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	tagRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	tagAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	categoryRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	categoryRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	categoryAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	contenttypeRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	contenttypeRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	contenttypeAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	mediaRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	mediaRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	userAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	settingsRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 
