@@ -18,6 +18,13 @@
 		<div class="_pea-row">
 			<div class="_pea-col-span12">
 				<article class="_pea-col-span12">
+					<% if(locals.additionalPreContentHTML && locals.additionalPreContentHTML.length>0){%>
+						<section>
+							<div class="_pea-document">
+								<%- locals.viewhelper.getHTML(locals.additionalPreContentHTML) %>
+							</div>
+						</section>
+					<%} %>
 					<div id="tabs" class="tabs">
 				      <nav>
 					      <ul class="_pea-col-span12">
@@ -55,7 +62,14 @@
 									</div>
 				        </section>
 			        </div>
-		      </div>
+		      </div>  
+					<% if(locals.additionalPostContentHTML && locals.additionalPostContentHTML.length>0){%>
+						<section>
+							<div class="_pea-document">
+								<%- locals.viewhelper.getHTML(locals.additionalPostContentHTML) %>
+							</div>
+						</section>
+					<%} %>
 	      </article>
 			</div>
 		</div>

@@ -3,6 +3,13 @@
 	<div class="_pea-container">
 		<div class="_pea-row">
 			<article class="_pea-col-span12">
+				<% if(locals.additionalPreContentHTML && locals.additionalPreContentHTML.length>0){%>
+					<section>
+						<div class="_pea-document">
+							<%- locals.viewhelper.getHTML(locals.additionalPreContentHTML) %>
+						</div>
+					</section>
+				<%} %>
 				<div id="tabs" class="tabs">
 		      <nav>
 			      <ul class="_pea-col-span12">
@@ -100,6 +107,14 @@
 		        </section>
 	        </div>
 	      </div>
+	      
+				<% if(locals.additionalPostContentHTML && locals.additionalPostContentHTML.length>0){%>
+					<section>
+						<div class="_pea-document">
+							<%- locals.viewhelper.getHTML(locals.additionalPostContentHTML) %>
+						</div>
+					</section>
+				<%} %>
 			</article>
 		</div>
 	</div>
