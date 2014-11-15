@@ -187,6 +187,8 @@ module.exports = function (periodic) {
 	mediaRouter.post('/new', mediaassetController.upload, mediaassetController.createassetfile);
 	mediaRouter.post('/:id/delete', mediaassetController.loadAsset, mediaassetController.remove);
 	mediaRouter.post('/edit', mediaassetController.update);
+	mediaRouter.post('/removechangeset/:id/:contententity/:changesetnum', mediaassetController.loadAsset, adminController.remove_changeset_from_content, mediaassetController.update);
+
 	mediaAdminRouter.get('/edit/:id', mediaassetController.loadAsset, adminController.asset_show);
 	mediaAdminRouter.get('/:id', mediaassetController.loadAsset, adminController.asset_show);
 

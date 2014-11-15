@@ -2513,6 +2513,18 @@ window.addEventListener('load', function (e) {
 	uploadButton.addEventListener('change', uploadMediaFiles, false);
 });
 
+window.deletedThemeCallback = function (deletedata) {
+	window.ribbonNotification.showRibbon('deleted', 4000, 'warn');
+	document.getElementById('theme-console').style.display = 'block';
+	deletedata.data = deletedata;
+	getConsoleOutput(deletedata, deletedata.repo, deletedata.themename, 'remove');
+	console.log(deletedata);
+};
+
+window.backToThemeLanding = function () {
+	window.location = '/p-admin/themes';
+};
+
 var uploadMediaFiles = function (e) {
 	// fetch FileList object
 	var files = e.target.files || e.dataTransfer.files;

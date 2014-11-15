@@ -252,6 +252,14 @@ var remove_changeset_from_content = function (req, res, next) {
 				docid: req.controllerData.collection._id
 			};
 			break;
+		case 'asset':
+			removedchangeset = req.controllerData.asset.changes.splice(changesetindex, 1);
+			req.redirectpath = '/p-admin/asset/edit/' + req.controllerData.asset._id + '/revisions';
+			requestbody = {
+				changes: req.controllerData.asset.changes,
+				docid: req.controllerData.asset._id
+			};
+			break;
 		default:
 			next(new Error('invalid entity type'));
 			break;

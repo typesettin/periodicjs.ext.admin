@@ -15,6 +15,15 @@
 	<div class="_pea-row _pea-container-forminput">
 		<input type="text" id="padmin-contenttypes" class="_pea-col-span12" placeholder="Content Types" name="contenttypes"/>
 	</div>
+	<div class="_pea-row _pea-container-forminput">
+		<input type="text" class="_pea-col-span12" id="padmin-tags" placeholder="Tags" name="tags"/>
+	</div>
+	<div class="_pea-row _pea-container-forminput">
+		<input type="text" class="_pea-col-span12" id="padmin-categories"  placeholder="Categories" name="categories"/>
+	</div>
+	<div class="_pea-row _pea-container-forminput">
+		<input type="text" id="padmin-authors"class="_pea-col-span12" placeholder="Authors" name="authors"/>
+	</div>
 	<div class="_pea-row _pea-text-center">
 		<input type="submit" name="save_button" value="<% if(genericdoc){%>Update<%}else{%>Save<%}%>" class="_pea-button _pea-color-success"/>
 		<% if(genericdoc){%> <a href="/asset/<%= genericdoc.name %>" target="_blank" class="_pea-button _pea-color-default"/>Preview</a> <%}%>

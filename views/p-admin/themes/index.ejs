@@ -2,6 +2,7 @@
 <% include ../../shared/nav %>
 	<div class="_pea-container">
 		<div class="_pea-row">
+			<input type="hidden" name="_csrf" value=<%= locals.token %> >
 			<article class="_pea-col-span12">
 				<% if(locals.additionalPreContentHTML && locals.additionalPreContentHTML.length>0){%>
 					<section>
@@ -43,7 +44,9 @@
 															else{%>
 																<a data-themename="<%= theme %>" data-href="/p-admin/theme/<%= theme %>/enable" class="_pea-button switch-theme-button enable-theme-button">switch</a>
 															<%}%>
-															<a data-themename="<%= theme %>" data-token="<%= locals.token %>" data-href="/p-admin/theme/<%= theme %>/delete" class="_pea-button _pea-color-error delete-theme-button">delete</a>
+															<!-- <a data-themename="<%= theme %>" data-token="<%= locals.token %>" data-href="/p-admin/theme/<%= theme %>/delete" class="_pea-button _pea-color-error delete-theme-button">delete</a> -->
+															<a data-themename="<%= theme %>" data-href="/p-admin/theme/<%= theme %>/delete" class="_pea-button _pea-color-error _pea-dialog-delete" data-successfunction="deletedThemeCallback" >delete</a>
+
 														</td>
 													</tr>
 													<%

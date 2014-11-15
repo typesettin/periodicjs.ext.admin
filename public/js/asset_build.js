@@ -3121,6 +3121,9 @@ var request = require('superagent'),
 	contententry,
 	request = require('superagent'),
 	cnt_lp,
+	tag_lp,
+	cat_lp,
+	athr_lp,
 	assetTable,
 	mediafileinput,
 	mediafilesresult;
@@ -3216,8 +3219,29 @@ window.addEventListener('load', function () {
 		cnt_lp = contententry.cnt_lp({});
 		cnt_lp.init();
 	}
+	if (document.querySelector('#padmin-categories')) {
+		cat_lp = contententry.cat_lp({});
+		cat_lp.init();
+	}
+	if (document.querySelector('#padmin-tags')) {
+		tag_lp = contententry.tag_lp({});
+		tag_lp.init();
+	}
+	if (document.querySelector('#padmin-authors')) {
+		athr_lp = contententry.athr_lp({});
+		athr_lp.init();
+	}
 	if (typeof assetcontenttypes === 'object') {
 		cnt_lp.setPreloadDataObject(window.assetcontenttypes);
+	}
+	if (window.assettags && typeof window.assettags === 'object') {
+		tag_lp.setPreloadDataObject(window.assettags);
+	}
+	if (window.assetcategories && typeof window.assetcategories === 'object') {
+		cat_lp.setPreloadDataObject(window.assetcategories);
+	}
+	if (window.assetauthors && typeof window.assetauthors === 'object') {
+		athr_lp.setPreloadDataObject(window.assetauthors);
 	}
 });
 

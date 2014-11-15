@@ -2,6 +2,9 @@
 <% include ../../shared/nav %>
 	<script type="text/javascript">
 		<%- locals.viewhelper.passObjToClient(asset.contenttypes,"assetcontenttypes") %>
+	<%- locals.viewhelper.passObjToClient(asset.tags,"assettags") %>
+	<%- locals.viewhelper.passObjToClient(asset.categories,"assetcategories") %>
+	<%- locals.viewhelper.passObjToClient(asset.authors,"assetauthors") %>
 	</script>
 	<form class="_pea-form _pea-ajax-form noFormSubmit" id="edit-asset-form" name="edit-asset-form" method="post" action="/mediaasset/edit" data-successfunction="updateContentTypes" onsubmit="return false;" enctype='multipart/form-data'>
 		<% include compose_asset_form %>
