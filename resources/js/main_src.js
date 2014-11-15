@@ -186,6 +186,8 @@ var ajaxDeleteButtonListeners = function () {
 	}
 };
 
+window.ajaxDeleteButtonListeners = ajaxDeleteButtonListeners;
+
 var addMediaItem = function (e) {
 	var eTarget = e.target,
 		mediaitemid = eTarget.getAttribute('data-id'),

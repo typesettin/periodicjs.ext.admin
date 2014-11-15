@@ -23,20 +23,18 @@
 								<table id="installed-theme-table" class="_pea-table _pea-no-bottomborder  _pea-form">
 									<thead>
 										<tr class="_pea-text-left">
-											<th class="_pea-col-span9">Name</th>
-											<th class="_pea-col-span1 _pea-text-right"><!--Version--></th>
-											<th class="_pea-col-span2"></th>
+											<th class="_pea-col-span12" colspan="3">Name</th>
 										</tr>
 									</thead>
 									<tbody id="installed-theme-tablebody">
 										<% if(themes.length>0){
 												themes.forEach(function(theme){ %>
 													<tr id="tr-theme-<%= theme %>">
-														<td class="_pea-col-span9"> 
-															<a href="/p-admin/theme/<%= theme %>/"> <%= theme %>
+														<td class="_pea-col-span6"> 
+															<a data-themename="<%= theme %>" href="/p-admin/theme/<%= theme %>/"> <%= theme %>
 															</a>
 														</td>
-														<td class="_pea-col-span1 _pea-text-right">
+														<td class="_pea-col-span4 _pea-text-right">
 														</td>
 														<td class="_pea-col-span2 _pea-text-right">
 															<%if(theme === activetheme){%>
