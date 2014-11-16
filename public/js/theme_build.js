@@ -2754,7 +2754,7 @@ var getConsoleOutput = function (responsebody, fullrepo, extname, operation, opt
 	else {
 		var getRequest = (operation === 'remove') ? '/p-admin/theme/remove/log/' + repo + '/' + time : '/p-admin/theme/install/log/' + repo + '/' + time;
 	}
-	consoleOutput.innerHTML = '';
+	consoleOutput.innerHTML = '<pre>loading..</pre>';
 
 	var getOutputFromFile = function (repo, time, options) {
 		request

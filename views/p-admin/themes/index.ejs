@@ -3,6 +3,19 @@
 	<div class="_pea-container">
 		<div class="_pea-row">
 			<input type="hidden" name="_csrf" value=<%= locals.token %> >
+			<div id="theme-console" class="_pea-hidden _pea-document">
+				<div class="_pea_row">
+					<div class="_pea-col-span12">
+						<h2>Console Output <small><a id="hide-theme-console" class="">(hide)</a></small></h2>
+					</div>
+				</div>
+				<div class="_pea_row">
+					<div class="_pea-col-span12" id="theme-console-output">
+					loading data...
+					</div>
+					<hr/>
+				</div>
+			</div>
 			<article class="_pea-col-span12">
 				<% if(locals.additionalPreContentHTML && locals.additionalPreContentHTML.length>0){%>
 					<section>
@@ -61,18 +74,6 @@
 		        </section>
 		        <section>
 		        	<div class="_pea-document">
-								<div id="theme-console" class="_pea-hidden">
-									<div class="_pea_row">
-										<div class="_pea-col-span12">
-											<h2>Console Output <small><a id="hide-theme-console" class="">(hide)</a></small></h2>
-										</div>
-									</div>
-									<div class="_pea_row">
-										<div class="_pea-col-span12" id="theme-console-output">
-										</div>
-										<hr/>
-									</div>
-								</div>
 								<div class="_pea-row">
 									<div class="_pea-col-span9">
 										<div class="_pea-row _pea-container-forminput _pea-text-center _pea-form">

@@ -425,6 +425,7 @@ var load_app_settings = function (req, res, next) {
 			sessions: appSettings.sessions,
 			version: appSettings.version,
 		},
+		environment: appSettings.application.environment,
 		configuration: {
 			adminnotificationemail: appSettings.adminnotificationemail,
 			serverfromemail: appSettings.serverfromemail,
@@ -448,7 +449,14 @@ var load_app_settings = function (req, res, next) {
  */
 var load_theme_settings = function (req, res, next) {
 	var themesettings = {
-		readonly: {
+		readonly: {},
+		environment: appSettings.application.environment,
+		configuration: {}
+	};
+
+	if (appSettings.themeSettings && appSettings.themeSettings.settings) {
+		themesettings.configuration = appSettings.themeSettings.settings[appSettings.application.environment];
+		themesettings.readonly = {
 			name: appSettings.themeSettings.name,
 			periodicCompatibility: appSettings.themeSettings.periodicCompatibility,
 			author: appSettings.themeSettings.author,
@@ -456,11 +464,8 @@ var load_theme_settings = function (req, res, next) {
 			templatefileextension: appSettings.templatefileextension,
 			templateengine: appSettings.templateengine,
 			themepath: appSettings.themepath
-		},
-		configuration: {
-			settings: appSettings.themeSettings.settings,
-		}
-	};
+		};
+	}
 
 	req.controllerData = (req.controllerData) ? req.controllerData : {};
 	req.controllerData.themesettings = themesettings;
@@ -476,11 +481,12 @@ var load_theme_settings = function (req, res, next) {
  */
 var update_app_settings = function (req, res) {
 	var updatedAppSettings = CoreUtilities.removeEmptyObjectValues(req.body),
-		appsettingsfile = path.join(process.cwd(), 'content/config/config.json');
+		appsettingsfile = path.join(process.cwd(), 'content/config/environment/' + appSettings.application.environment + '.json');
 
 	updatedAppSettings = CoreUtilities.replaceBooleanStringObjectValues(updatedAppSettings);
 	delete updatedAppSettings._csrf;
 
+	fs.ensureFileSync(appsettingsfile);
 	fs.readJson(appsettingsfile, function (err, appconfig) {
 		if (err) {
 			CoreController.handleDocumentQueryErrorResponse({
@@ -491,7 +497,7 @@ var update_app_settings = function (req, res) {
 		}
 		else {
 			updatedAppSettings = str2json.convert(updatedAppSettings);
-			var originalconfig = appconfig,
+			var originalconfig = appconfig || {},
 				mergedconfig = merge(originalconfig, updatedAppSettings);
 
 			fs.writeJson(appsettingsfile, mergedconfig, function (err) {
@@ -561,7 +567,7 @@ var update_app_settings = function (req, res) {
  */
 var update_theme_settings = function (req, res) {
 	var updatedThemeSettings = CoreUtilities.removeEmptyObjectValues(req.body),
-		themesettingsfile = path.join(process.cwd(), 'content/themes', appSettings.theme, 'periodicjs.theme.json');
+		themesettingsfile = path.join(process.cwd(), 'content/config/themes', appSettings.theme, 'periodicjs.theme.json');
 
 	updatedThemeSettings = CoreUtilities.replaceBooleanStringObjectValues(updatedThemeSettings);
 	delete updatedThemeSettings._csrf;
@@ -576,10 +582,10 @@ var update_theme_settings = function (req, res) {
 		}
 		else {
 			updatedThemeSettings = str2json.convert(updatedThemeSettings);
-			var originalsettings = themeconfig.settings,
-				mergedsettings = merge(originalsettings, updatedThemeSettings.settings),
+			var originalsettings = themeconfig.settings[appSettings.application.environment],
+				mergedsettings = merge(originalsettings, updatedThemeSettings),
 				newthemeconfig = themeconfig;
-			newthemeconfig.settings = mergedsettings;
+			newthemeconfig.settings[appSettings.application.environment] = mergedsettings;
 
 			fs.writeJson(themesettingsfile, newthemeconfig, function (err) {
 				if (err) {
