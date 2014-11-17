@@ -1,0 +1,10 @@
+<% if(locals.additionalPreContentHTML && locals.additionalPreContentHTML.length>0){%>
+	<section class="_pea-row">
+		<div class="_pea-col-span12">
+			<%- locals.viewhelper.getHTML(locals.additionalPreContentHTML) %>
+		</div>
+	</section>
+<%}
+else{%>
+<!-- no pre content html -->
+<%} %>

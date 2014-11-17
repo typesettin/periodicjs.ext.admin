@@ -9,6 +9,7 @@
 				<h2>Edit <a href="/p-admin/contenttypes/">Content Type</a>: <%= contenttype.name %></h2>
 			</div>
 		</div>
+		<% include ../../shared/html_inject_precontent %>
 		<div class="_pea-row">
 			<div class="_pea-col-span12">
 				<div class="_pea-document">
@@ -97,5 +98,6 @@
 				</div>
 			</div>
 		</div>
+		<% include ../../shared/html_inject_postcontent %>
 	</div>
 <% include ../../shared/footer %>

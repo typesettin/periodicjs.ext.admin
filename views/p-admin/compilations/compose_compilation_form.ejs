@@ -10,7 +10,7 @@
 				var genericdocTitle = "Compilation"; 
 				var mediaassettitle = "<h2>Content Media</h2>";
 			%>
-			
+			<% include ../../shared/html_inject_precontent %>
 			<% include ../../shared/compose_content %>
 			<h2>Compilation Items</h2>
 			<div class="_pea-document" id="compilation-content_entities">
@@ -88,6 +88,8 @@
 			</div>
 			<% include ../../shared/content_attributes %>
 			<% include ../../shared/media_asset %>
+			<% include ../../shared/html_inject_postcontent %>
+
 		</div>
 		<div class="_pea-col-span3 _pea-pull-right">
 			<% include ../../shared/content_options %>

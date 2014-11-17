@@ -3,23 +3,24 @@
 	<div class="_pea-container _pea-theme">
 		<div class="_pea-row">
 			<div class="_pea-col-span6">
+				<% include ../../shared/html_inject_precontent %>
 				<h1>What's new</h1>
 				<div class="_pea-row">
-
-				<% markdownpages.forEach( function(mdhtml){%>
-					<div class="_pea-col-span12">
-						<div class="_pea-document">
-							<%- mdhtml %>
+					<% markdownpages.forEach( function(mdhtml){%>
+						<div class="_pea-col-span12">
+							<div class="_pea-document">
+								<%- mdhtml %>
+							</div>
 						</div>
-					</div>
-				<%} );%>
+					<%} );%>
 				</div>
-					<div class="_pea-document">
-						<div class="_pea-row">
-							<h3>More Updates</h3>
-								<p class="extra-padding">Check out the <a href="https://github.com/typesettin/periodicjs/tree/master/releases" target="_blank">release history on github.</a></p>
-						</div>
+				<div class="_pea-document">
+					<div class="_pea-row">
+						<h3>More Updates</h3>
+							<p class="extra-padding">Check out the <a href="https://github.com/typesettin/periodicjs/tree/master/releases" target="_blank">release history on github.</a></p>
 					</div>
+				</div>
+				<% include ../../shared/html_inject_postcontent %>
 			</div>
 			<div class="_pea-col-span5 _pea-pull-right">
 				<h1>Quick Stats</h1>

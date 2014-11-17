@@ -1,5 +1,6 @@
 <input type="hidden" name="_csrf" value=<%= locals.token %> >
 <div class="_pea-container">
+	<% include ../../shared/html_inject_precontent %>
 	<div class="_pea-row">
 		<div class="_pea-col-span10 _pea-col-nofloat">
 			<% 
@@ -37,4 +38,5 @@
 			</div>
 		</div>
 	</div>
+	<% include ../../shared/html_inject_postcontent %>
 </div>

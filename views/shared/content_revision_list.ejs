@@ -1,6 +1,7 @@
 <input type="hidden" name="_csrf" value=<%= locals.token %> >
 <div class="_pea-container">
 	<div class="_pea-row">
+		<% include html_inject_precontent %>
 		<div class="_pea-col-span9">
 			<h2>
 				<a href="/p-admin/<%- genericdocnamelink %>/"> <%- genericdocTitle %> </a> &rsaquo; 
@@ -39,6 +40,7 @@
 						}%>
 				</div>
 			</div>
+			<% include html_inject_postcontent %>
 		</div>
 		<div class="_pea-col-span2 _pea-pull-right">
 			<% include content_revision_meta %>
