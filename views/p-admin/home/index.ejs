@@ -62,21 +62,26 @@
 				<div class="_pea-document">
 					<div class="_pea-row">
 						<!-- <h3>Your Instance</h3> -->
-						<div class="_pea-row">
+						<div class="_pea-row  _pea-container-forminput">
 							<p class="_pea-text-small">Go to <span class="_pea-button _pea-text-small">admin->extensions</span> to search for and add these new extensions or install via the command line</p>
 						</div>
-						<div class="_pea-row">
-							<div class="_pea-col-span5"><strong>clouduploads:</strong></div><div class="_pea-col-span7">upload documents to amazon, rackspace and more</div>
+					</div>
+				</div>
+				<h1>New Themes</h1>
+				<div class="_pea-document">
+					<div class="_pea-row">
+						<!-- <h3>Your Instance</h3> -->
+						<div class="_pea-row  _pea-container-forminput">
+							<p class="_pea-text-small">Go to <span class="_pea-button _pea-text-small">admin->themes</span> to search for and add these new themes or install via the command line</p>
 						</div>
-						<div class="_pea-row">
-							<div class="_pea-col-span5"><strong>backup:</strong></div><div class="_pea-col-span7">backup and restore, configuration, themes, extensions and public files</div>
-						</div>
-						<!-- <div class="_pea-row">
-							<div class="_pea-col-span5"><strong>clouduploads:</strong></div><div class="_pea-col-span7">upload documents to amazon, rackspace and more</div>
-						</div> -->
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<script>
+	window.addEventListener('load',function(){
+		window.checkPeriodicVersion();
+	},false);
+	</script>
 <% include ../../shared/footer %>
