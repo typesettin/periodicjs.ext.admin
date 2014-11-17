@@ -423,6 +423,7 @@ var load_app_settings = function (req, res, next) {
 			templatefileextension: appSettings.templatefileextension,
 			templateengine: appSettings.templateengine,
 			sessions: appSettings.sessions,
+			node_modules: appSettings.node_modules,
 			version: appSettings.version,
 		},
 		environment: appSettings.application.environment,
