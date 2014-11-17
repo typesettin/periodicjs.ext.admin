@@ -1690,11 +1690,12 @@ var themes_index = function (req, res) {
 				responseData: {
 					pagedata: {
 						title: 'Themes',
-						headerjs: ['/extensions/periodicjs.ext.admin/js/theme.min.js'],
+						headerjs: ['/extensions/periodicjs.ext.admin/js/theme.min.js', '/extensions/periodicjs.ext.admin/js/settings.min.js'],
 						extensions: CoreUtilities.getAdminMenu()
 					},
 					items: false,
 					themes: req.controllerData.themes,
+					themesettings: req.controllerData.themesettings,
 					activetheme: appSettings.theme,
 					user: req.user
 				}
@@ -1711,7 +1712,7 @@ var themes_index = function (req, res) {
 var theme_show = function (req, res) {
 	var themename = req.params.id,
 		themeRouteConf = path.join(process.cwd(), 'content/themes', themename, 'routes.js'),
-		themePackageConf = path.join(process.cwd(), 'content/themes', themename, 'periodicjs.theme.json');
+		themePackageConf = path.join(process.cwd(), 'content/config/themes', themename, 'periodicjs.theme.json');
 
 	// an example using an object instead of an array
 	async.parallel({

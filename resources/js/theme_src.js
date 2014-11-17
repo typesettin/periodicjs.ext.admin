@@ -38,6 +38,7 @@ window.addEventListener('load', function (e) {
 	installedtable.addEventListener('click', installedTableClick, false);
 	hideConsoleOutput.addEventListener('click', hideConsoleOutputClick, false);
 	uploadButton.addEventListener('change', uploadMediaFiles, false);
+	window.themespagetabs = componentTab1;
 });
 
 window.deletedThemeCallback = function (deletedata) {

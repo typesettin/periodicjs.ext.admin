@@ -26,7 +26,7 @@ module.exports = function (periodic) {
 		categoryAdminRouter = periodic.express.Router(),
 		collectionRouter = periodic.express.Router(),
 		compilationRouter = periodic.express.Router(),
-		settingsRouter = periodic.express.Router(),
+		settingsAdminRouter = periodic.express.Router(),
 		extensionAdminRouter = periodic.express.Router(),
 		themeAdminRouter = periodic.express.Router(),
 		periodicRouter = periodic.express.Router(),
@@ -61,7 +61,7 @@ module.exports = function (periodic) {
 	contenttypeAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	mediaRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 	userAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	settingsRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	settingsAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
 
 	/**
 	 * admin routes
@@ -76,7 +76,7 @@ module.exports = function (periodic) {
 	adminRouter.get('/categories', categoryController.loadCategoriesWithCount, categoryController.loadCategoriesWithDefaultLimit, categoryController.loadCategories, adminController.categories_index);
 	adminRouter.get('/assets', mediaassetController.loadAssetWithCount, mediaassetController.loadAssetWithDefaultLimit, mediaassetController.loadAssets, adminController.assets_index);
 	adminRouter.get('/extensions', adminController.loadExtensions, adminController.extensions_index);
-	adminRouter.get('/themes', adminController.loadThemes, adminController.themes_index);
+	adminRouter.get('/themes', adminController.loadThemes, adminSettingsController.load_theme_settings, adminController.themes_index);
 	adminRouter.get('/users', userController.loadUsersWithCount, userController.loadUsersWithDefaultLimit, uacController.loadUacUsers, adminController.users_index);
 	adminRouter.get('/mailer', adminController.mail_index);
 	adminRouter.get('/check_periodic_version', adminController.check_periodic_version);
@@ -207,15 +207,15 @@ module.exports = function (periodic) {
 	/**
 	 * admin/settings routes
 	 */
-	settingsRouter.get('/', adminSettingsController.load_app_settings, adminSettingsController.load_theme_settings, adminController.settings_index);
-	settingsRouter.get('/faq', adminController.settings_faq);
-	settingsRouter.post('/restart', adminSettingsController.restart_app);
-	settingsRouter.post('/updateapp', adminSettingsController.update_app);
-	settingsRouter.post('/updateappsettings', adminSettingsController.update_app_settings);
-	settingsRouter.post('/updatethemesettings', adminSettingsController.update_theme_settings);
+	settingsAdminRouter.get('/', adminSettingsController.load_app_settings, adminSettingsController.load_theme_settings, adminController.settings_index);
+	settingsAdminRouter.get('/faq', adminController.settings_faq);
+	settingsAdminRouter.post('/restart', adminSettingsController.restart_app);
+	settingsAdminRouter.post('/updateapp', adminSettingsController.update_app);
+	settingsAdminRouter.post('/updateappsettings', adminSettingsController.update_app_settings);
+	settingsAdminRouter.post('/updatethemesettings', adminSettingsController.update_theme_settings);
 
-	settingsRouter.post('/updateextfiledata', adminSettingsController.update_ext_filedata);
-	settingsRouter.post('/themefiledata', adminSettingsController.update_theme_filedata);
+	settingsAdminRouter.post('/updateextfiledata', adminSettingsController.update_ext_filedata);
+	settingsAdminRouter.post('/themefiledata', adminSettingsController.update_theme_filedata);
 
 	/**
 	 * periodic routes
@@ -238,7 +238,7 @@ module.exports = function (periodic) {
 	adminRouter.use('/tag', tagAdminRouter);
 	adminRouter.use('/category', categoryAdminRouter);
 	adminRouter.use('/user', userAdminRouter);
-	adminRouter.use('/settings', settingsRouter);
+	adminRouter.use('/settings', settingsAdminRouter);
 	periodic.app.use('/p-admin', adminRouter);
 	periodic.app.use('/item', itemRouter);
 	periodic.app.use('/collection', collectionRouter);

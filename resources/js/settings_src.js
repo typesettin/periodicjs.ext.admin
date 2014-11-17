@@ -13,10 +13,15 @@ var updatestatus,
 
 var jumptotab = function () {
 	var jumptosection = window.location.href.split('#')[1];
-	if (tabelement) {
+	if (tabelement || window.settingspage === 'themes') {
 		switch (jumptosection) {
 		case 'theme-settings':
-			componentTab1.showTab(1);
+			if (window.settingspage === 'themes') {
+				window.themespagetabs.showTab(2);
+			}
+			else {
+				componentTab1.showTab(1);
+			}
 			break;
 		case 'restart-application':
 			componentTab1.showTab(2);
@@ -27,7 +32,9 @@ var jumptotab = function () {
 
 window.addEventListener('load', function () {
 	updatestatus = document.getElementById('update-status');
-	tabelement = document.getElementById('tabs');
+	if (window.settingspage !== 'themes') {
+		tabelement = document.getElementById('tabs');
+	}
 	window.checkPeriodicVersion(function (err, periodicversion) {
 		if (periodicversion.status === 'needupdate') {
 			updatestatus.style.display = 'block';
@@ -42,24 +49,28 @@ window.addEventListener('load', function () {
 	if (tabelement) {
 		componentTab1 = new ComponentTabs(tabelement);
 	}
-	appsettingsConfiguration.innerHTML = jsonFormElements({
-		jsonobject: window.appsettings.configuration,
-		idnameprepend: 'asc'
-	});
-	appsettingsReadOnly.innerHTML = jsonFormElements({
-		jsonobject: window.appsettings.readonly,
-		readonly: true,
-		idnameprepend: 'asro'
-	});
-	themesettingsConfiguration.innerHTML = jsonFormElements({
-		jsonobject: window.themesettings.configuration,
-		idnameprepend: 'tsc'
-	});
-	themesettingsReadOnly.innerHTML = jsonFormElements({
-		jsonobject: window.themesettings.readonly,
-		readonly: true,
-		idnameprepend: 'tsro'
-	});
+	if (window.appsettings) {
+		appsettingsConfiguration.innerHTML = jsonFormElements({
+			jsonobject: window.appsettings.configuration,
+			idnameprepend: 'asc'
+		});
+		appsettingsReadOnly.innerHTML = jsonFormElements({
+			jsonobject: window.appsettings.readonly,
+			readonly: true,
+			idnameprepend: 'asro'
+		});
+	}
+	if (window.themesettings) {
+		themesettingsConfiguration.innerHTML = jsonFormElements({
+			jsonobject: window.themesettings.configuration,
+			idnameprepend: 'tsc'
+		});
+		themesettingsReadOnly.innerHTML = jsonFormElements({
+			jsonobject: window.themesettings.readonly,
+			readonly: true,
+			idnameprepend: 'tsro'
+		});
+	}
 	jumptotab();
 });
 

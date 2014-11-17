@@ -1,5 +1,9 @@
 <% include ../../shared/header %>
 <% include ../../shared/nav %>
+<script type="text/javascript">
+<%- locals.viewhelper.passObjToClient(themesettings,"themesettings") %>
+window.settingspage = "themes";
+</script>
 	<div class="_pea-container">
 		<div class="_pea-row">
 			<input type="hidden" name="_csrf" value=<%= locals.token %> >
@@ -27,8 +31,9 @@
 				<div id="tabs" class="tabs">
 		      <nav>
 			      <ul class="_pea-col-span12">
-			      	<li class="_pea-col-span6">Installed Themes</li>
-			      	<li class="_pea-col-span6">Add New Themes</li>
+			      	<li class="_pea-col-span4">Switch Themes</li>
+			      	<li class="_pea-col-span4">Add New Themes</li>
+			      	<li class="_pea-col-span4">Theme Settings</li>
 			      </ul>
 		      </nav>
 		      <div class="content">
@@ -106,6 +111,31 @@
 									</tbody>
 								</table>
 							</div>
+		        </section>
+		        <section>
+		        	<form class="_pea-form _pea-ajax-form noFormSubmit" method="post" action="/p-admin/settings/updatethemesettings">
+								<input type="hidden" name="_csrf" value=<%= locals.token %> >
+								<div class="_pea-document">
+									<div class="_pea-row">
+										<p>Updates <a class="_pea-button">content/config/themes/<%- themesettings.readonly.name %>/periodicjs.theme.json</a> and restarts your application.</p>
+										<h3>Configuration Options [<%- themesettings.environment %>]</h3>
+										<p class="extra-padding">
+											<div id="themesettings-config"></div>
+										</p>
+										<h3>Advanced Settings</h3>
+										<p class="extra-padding">
+												<a href="/p-admin/theme/<%- themesettings.readonly.name %>" class=" _pea-button _pea-color-success " style="font-size: 110%;">Edit Advanced Theme Settings</a>
+										</p>
+										<h3>Read Only</h3>
+										<p class="extra-padding">
+											<div id="themesettings-readonly"></div>
+										</p>
+										<p class="_pea-text-center">
+												<button type="submit" class=" _pea-button _pea-color-info " style="font-size: 110%;">Update Theme Settings</button>
+										</p>
+									</div>
+								</div>
+							</form>
 		        </section>
 	        </div>
 	      </div>
