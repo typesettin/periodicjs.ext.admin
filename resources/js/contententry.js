@@ -32,6 +32,12 @@ contententry.prototype.init = function (options) {
 			parserRules: window.wysihtml5ParserRules // defined in parser rules set 
 		});
 	}
+	if (window.$) {
+		var $ = window.$;
+		$(document).ready(function () {
+			$('#content-textarea').summernote();
+		});
+	}
 };
 
 contententry.prototype.autoSaveItem = function (options) {

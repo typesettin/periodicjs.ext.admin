@@ -1,0 +1,3 @@
+#just wrapped bootstrap around a #bootstrap selector
+lessc less/bootstrap.less > bs-namespaced.css
+lessc less/bootstrap.less > bs-namespaced.min.css -x
