@@ -29,7 +29,7 @@ module.exports = function (periodic) {
 		settingsAdminRouter = periodic.express.Router(),
 		extensionAdminRouter = periodic.express.Router(),
 		themeAdminRouter = periodic.express.Router(),
-		periodicRouter = periodic.express.Router(),
+		// periodicRouter = periodic.express.Router(),
 		themeController = require(path.resolve(process.cwd(), './app/controller/theme'))(periodic),
 		extController = require(path.resolve(process.cwd(), './app/controller/extension'))(periodic),
 		itemController = require(path.resolve(process.cwd(), './app/controller/item'))(periodic),
@@ -47,21 +47,22 @@ module.exports = function (periodic) {
 	/**
 	 * access control routes
 	 */
-	adminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	extensionAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	themeAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	itemRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	collectionRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	compilationRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	tagRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	tagAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	categoryRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	categoryAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	contenttypeRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	contenttypeAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	mediaRouter.post('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	userAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
-	settingsAdminRouter.all('*', authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	adminRouter.all('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	extensionAdminRouter.all('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	themeAdminRouter.all('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	itemRouter.post('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	collectionRouter.post('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	compilationRouter.post('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	tagRouter.post('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	tagAdminRouter.all('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	categoryRouter.post('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	categoryAdminRouter.all('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	contenttypeRouter.post('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	contenttypeAdminRouter.all('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	mediaRouter.post('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	userAdminRouter.all('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	settingsAdminRouter.all('*', global.CoreCache.disableCache, authController.ensureAuthenticated, uacController.loadUserRoles, uacController.check_user_access);
+	// periodicRouter.get('*', global.CoreCache.disableCache);
 
 	/**
 	 * admin routes
@@ -220,16 +221,16 @@ module.exports = function (periodic) {
 	/**
 	 * periodic routes
 	 */
-	periodicRouter.get('/user/search.:ext', userController.loadUsers, userController.searchResults);
-	periodicRouter.get('/user/search', userController.loadUsers, userController.searchResults);
-	periodicRouter.get('/category/search.:ext', categoryController.loadCategories, categoryController.searchResults);
-	periodicRouter.get('/category/search', categoryController.loadCategories, categoryController.searchResults);
-	periodicRouter.get('/category/:id/children', categoryController.loadCategory, categoryController.loadChildren, categoryController.showChildren);
-	periodicRouter.get('/contenttype/search.:ext', contenttypeController.loadContenttypes, contenttypeController.searchResults);
-	periodicRouter.get('/contenttype/search', contenttypeController.loadContenttypes, contenttypeController.searchResults);
-	periodicRouter.get('/tag/search.:ext', tagController.loadTags, tagController.searchResults);
-	periodicRouter.get('/tag/search', tagController.loadTags, tagController.searchResults);
-	periodicRouter.get('/tag/:id/children', tagController.loadTag, tagController.loadChildren, tagController.showChildren);
+	adminRouter.get('/user/search.:ext', global.CoreCache.disableCache, userController.loadUsers, userController.searchResults);
+	adminRouter.get('/user/search', global.CoreCache.disableCache, userController.loadUsers, userController.searchResults);
+	adminRouter.get('/category/search.:ext', global.CoreCache.disableCache, categoryController.loadCategories, categoryController.searchResults);
+	adminRouter.get('/category/search', global.CoreCache.disableCache, categoryController.loadCategories, categoryController.searchResults);
+	adminRouter.get('/category/:id/children', global.CoreCache.disableCache, categoryController.loadCategory, categoryController.loadChildren, categoryController.showChildren);
+	adminRouter.get('/contenttype/search.:ext', global.CoreCache.disableCache, contenttypeController.loadContenttypes, contenttypeController.searchResults);
+	adminRouter.get('/contenttype/search', global.CoreCache.disableCache, contenttypeController.loadContenttypes, contenttypeController.searchResults);
+	adminRouter.get('/tag/search.:ext', global.CoreCache.disableCache, tagController.loadTags, tagController.searchResults);
+	adminRouter.get('/tag/search', global.CoreCache.disableCache, tagController.loadTags, tagController.searchResults);
+	adminRouter.get('/tag/:id/children', global.CoreCache.disableCache, tagController.loadTag, tagController.loadChildren, tagController.showChildren);
 
 	adminRouter.use('/asset', mediaAdminRouter);
 	adminRouter.use('/extension', extensionAdminRouter);
@@ -246,7 +247,6 @@ module.exports = function (periodic) {
 	periodic.app.use('/tag', tagRouter);
 	periodic.app.use('/category', categoryRouter);
 	periodic.app.use('/contenttype', contenttypeRouter);
-	periodic.app.use('/contenttype', contenttypeRouter);
 	periodic.app.use('/mediaasset', mediaRouter);
-	periodic.app.use(periodicRouter);
+	// periodic.app.use(periodicRouter);
 };

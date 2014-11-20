@@ -1,16 +1,16 @@
 {
-	"periodicCompatibility": "2.9.0",
+	"periodicCompatibility": "3.0.0",
 	"periodicDependencies": [{
     	"extname":"periodicjs.ext.mailer",
-    	"version":"1.90.26"
+    	"version":"~3.0.0"
 	},{
     	"extname":"periodicjs.ext.login",
-        "version":"2.0.0"
+        "version":"~3.0.0"
 	},{
         "extname": "periodicjs.ext.scheduled_content",
-        "version":"2.0.1"
+        "version":"~3.0.0"
     },{
         "extname": "periodicjs.ext.user_access_control",
-        "version":"2.0.0"
+        "version":"~3.0.2"
   }]
 }

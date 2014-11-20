@@ -133,7 +133,7 @@ contententry.prototype.parent_lp = function (configoptions) {
 contententry.prototype.athr_lp = function (configoptions) {
 	var options = configoptions || {},
 		idSelector = options.idSelector || '#padmin-authors',
-		sourcedata = options.sourcedata || '/user/search.json',
+		sourcedata = options.sourcedata || '/p-admin/user/search.json',
 		sourcearrayname = options.sourcearrayname || 'users',
 		returnlp = new letterpress({
 			idSelector: idSelector,
@@ -161,7 +161,7 @@ contententry.prototype.athr_lp = function (configoptions) {
 contententry.prototype.cnt_lp = function (configoptions) {
 	var options = configoptions || {},
 		idSelector = options.idSelector || '#padmin-contenttypes',
-		sourcedata = options.sourcedata || '/contenttype/search.json',
+		sourcedata = options.sourcedata || '/p-admin/contenttype/search.json',
 		sourcearrayname = options.sourcearrayname || 'contenttypes',
 		tagposturl = options.tagposturl || '/contenttype/new/' + window.makeNiceName(document.querySelector('#padmin-contenttypes').value) + '/?format=json&limit=200',
 		type = options.type || 'contenttype',
@@ -180,7 +180,7 @@ contententry.prototype.cnt_lp = function (configoptions) {
 contententry.prototype.cat_lp = function (configoptions) {
 	var options = configoptions || {},
 		idSelector = options.idSelector || '#padmin-categories',
-		sourcedata = options.sourcedata || '/category/search.json',
+		sourcedata = options.sourcedata || '/p-admin/category/search.json',
 		sourcearrayname = options.sourcearrayname || 'categories',
 		categoryposturl = options.categoryposturl || '/category/new/' + window.makeNiceName(document.querySelector('#padmin-categories').value) + '/?format=json&limit=200',
 		type = options.type || 'category',
@@ -199,7 +199,7 @@ contententry.prototype.cat_lp = function (configoptions) {
 contententry.prototype.tag_lp = function (configoptions) {
 	var options = configoptions || {},
 		idSelector = options.idSelector || '#padmin-tags',
-		sourcedata = options.sourcedata || '/tag/search.json',
+		sourcedata = options.sourcedata || '/p-admin/tag/search.json',
 		sourcearrayname = options.sourcearrayname || 'tags',
 		tagposturl = options.tagposturl || '/tag/new/' + window.makeNiceName(document.querySelector('#padmin-tags').value) + '/?format=json&limit=200',
 		type = options.type || 'tag',

@@ -213,7 +213,7 @@ var searchTblClick = function (e) {
 		fullreponame = eTarget.getAttribute('data-gitname');
 
 		// console.log('themeModal',themeModal);
-		silkscreenModal.showSilkscreen('Install Theme', themeModal, null, 14);
+		window.silkscreenModal.showSilkscreen('Install Theme', themeModal, null, 14);
 
 		request
 			.get('https://api.github.com/repos/' + fullreponame + '/tags')
@@ -239,7 +239,7 @@ var searchTblClick = function (e) {
 var thememodalClick = function (e) {
 	var eTarget = e.target;
 	if (eTarget.getAttribute('class') === 'install-theme-link') {
-		silkscreenModal.hideSilkscreen();
+		window.silkscreenModal.hideSilkscreen();
 
 		request
 			.get('/p-admin/theme/install')
@@ -271,16 +271,17 @@ var getConsoleOutput = function (responsebody, fullrepo, extname, operation, opt
 		otf,
 		cnt = 0,
 		lastres = '',
+		getRequest,
 		repo = responsebody.data.repo,
 		time = responsebody.data.time;
 	if (options && options.getRequest) {
-		var getRequest = options.getRequest,
-			fullrepo = options.repo,
-			repo = options.repo,
-			time = options.time;
+		getRequest = options.getRequest;
+		fullrepo = options.repo;
+		repo = options.repo;
+		time = options.time;
 	}
 	else {
-		var getRequest = (operation === 'remove') ? '/p-admin/theme/remove/log/' + repo + '/' + time : '/p-admin/theme/install/log/' + repo + '/' + time;
+		getRequest = (operation === 'remove') ? '/p-admin/theme/remove/log/' + repo + '/' + time : '/p-admin/theme/install/log/' + repo + '/' + time;
 	}
 	consoleOutput.innerHTML = '<pre>loading..</pre>';
 
@@ -338,7 +339,7 @@ var getConsoleOutput = function (responsebody, fullrepo, extname, operation, opt
 					cnt++;
 				}
 			});
-	}
+	};
 
 	var cleanupLogFile = function (repo, time, mode, options) {
 		var makenice = (options) ? true : false;
@@ -359,5 +360,5 @@ var getConsoleOutput = function (responsebody, fullrepo, extname, operation, opt
 					window.ribbonNotification.showRibbon(error.message || res.text, 8000, 'error');
 				}
 			});
-	}
+	};
 };

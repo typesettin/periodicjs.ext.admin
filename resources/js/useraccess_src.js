@@ -3,7 +3,7 @@
 var letterpress = require('letterpressjs'),
 	privileges_lp = new letterpress({
 		idSelector: '#padmin-privileges',
-		sourcedata: '/userprivileges/search.json',
+		sourcedata: '/p-admin/userprivileges/search.json',
 		sourcearrayname: 'userprivileges',
 		valueLabel: 'name',
 		disablenewtags: true,

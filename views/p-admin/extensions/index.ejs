@@ -3,6 +3,18 @@
 	<div class="_pea-container">
 		<% include ../../shared/html_inject_precontent %>
 		<div class="_pea-row">
+  		<div id="ext-console" class="_pea-document _pea-hidden">
+				<div class="_pea_row">
+					<div class="_pea-col-span12">
+						<h2>Console Output <small><a id="hide-ext-console" class="">(hide)</a></small></h2>
+					</div>
+				</div>
+				<div class="_pea_row">
+					<div class="_pea-col-span12" id="ext-console-output">
+					</div>
+					<hr/>
+				</div>
+			</div>
 			<article class="_pea-col-span12">
 				<div id="tabs" class="tabs">
 		      <nav>
@@ -55,7 +67,8 @@
 															else{%>
 																<a data-href="/p-admin/extension/<%= extension.name %>/enable" class="_pea-button enable-ext-button">enable</a>
 															<%}%>
-															<a data-extname="<%= extension.name %>" data-token="<%= locals.token %>" data-href="/p-admin/extension/<%= extension.name %>/delete" class="_pea-button _pea-color-error delete-ext-button">delete</a>
+															<!-- <a data-extname="<%= extension.name %>" data-token="<%= locals.token %>" data-href="/p-admin/extension/<%= extension.name %>/delete" class="_pea-button _pea-color-error delete-ext-button">delete</a> -->
+															<a data-extname="<%= extension.name %>" data-token="<%= locals.token %>" data-href="/p-admin/extension/<%= extension.name %>/delete" class="_pea-button _pea-color-error _pea-dialog-delete" data-successfunction="deletedExtCallback" >delete</a>
 														</td>
 													</tr>
 													<%
@@ -80,18 +93,6 @@
 		        </section>
 		        <section>
 		        	<div class="_pea-document">
-		        		<div id="ext-console" class="_pea-hidden">
-									<div class="_pea_row">
-										<div class="_pea-col-span12">
-											<h2>Console Output <small><a id="hide-ext-console" class="">(hide)</a></small></h2>
-										</div>
-									</div>
-									<div class="_pea_row">
-										<div class="_pea-col-span12" id="ext-console-output">
-										</div>
-										<hr/>
-									</div>
-								</div>
 								<div class="_pea-row">
 									<div class="_pea-col-span9">
 										<div class="_pea-row _pea-container-forminput _pea-text-center _pea-form">

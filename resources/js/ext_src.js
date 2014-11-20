@@ -17,7 +17,18 @@ var request = require('superagent'),
 	componentTab1,
 	ComponentTabs = require('periodicjs.component.tabs');
 
+window.deletedExtCallback = function (deletedata) {
+	window.ribbonNotification.showRibbon('deleted', 4000, 'warn');
+	document.getElementById('ext-console').style.display = 'block';
+	deletedata.data = deletedata;
+	getConsoleOutput(deletedata, deletedata.repo, deletedata.extname, 'remove');
+	console.log(deletedata);
+};
 
+
+window.backToExtLanding = function () {
+	window.location = '/p-admin/extensions';
+};
 
 var hideConsoleOutputClick = function () {
 	document.getElementById('ext-console').style.display = 'none';
@@ -161,7 +172,7 @@ var getConsoleOutput = function (responsebody, fullrepo, extname, operation, opt
 					// console.log('error in ajax for file log data');
 					console.log('cnt', cnt);
 					console.log('res', res);
-					if (res.error || cnt > 5) {
+					if ((res && res.error) || cnt > 5) {
 						clearTimeout(t);
 					}
 				}

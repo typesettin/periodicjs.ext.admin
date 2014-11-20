@@ -4,7 +4,7 @@ var letterpress = require('letterpressjs'),
 	updatemedia = require('./updatemedia'),
 	roles_lp = new letterpress({
 		idSelector: '#padmin-userroles',
-		sourcedata: '/userroles/search.json',
+		sourcedata: '/p-admin/userroles/search.json',
 		sourcearrayname: 'userroles',
 		valueLabel: 'name',
 		disablenewtags: true,
