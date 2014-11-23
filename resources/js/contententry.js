@@ -3,7 +3,9 @@
 var request = require('superagent'),
 	updatemedia = require('./updatemedia'),
 	letterpress = require('letterpressjs'),
+	merge = require('utils-merge'),
 	uploadmediaCallback,
+	uploadfileoptions = {},
 	wysihtml5Editor,
 	ajaxFormToSubmit,
 	mediafileinput,
@@ -14,6 +16,7 @@ var contententry = function (options) {
 };
 
 contententry.prototype.init = function (options) {
+	uploadfileoptions = options.uploadfileoptions;
 	uploadmediaCallback = options.uploadmediaCallback;
 	ajaxFormToSubmit = options.ajaxFormToSubmit;
 	window.ajaxFormToSubmit = options.ajaxFormToSubmit;
@@ -107,7 +110,7 @@ contententry.prototype.createPeriodicTag = function (id, val, callback, url, typ
 contententry.prototype.parent_lp = function (configoptions) {
 	var options = configoptions || {},
 		idSelector = options.idSelector || '#padmin-parent',
-		sourcedata = '/' + options.doctypename + '/search.json',
+		sourcedata = '/p-admin/' + options.doctypename + '/search.json',
 		sourcearrayname = options.doctypenamelink,
 		returnlp = new letterpress({
 			idSelector: idSelector,
@@ -216,6 +219,7 @@ contententry.prototype.tag_lp = function (configoptions) {
 };
 
 contententry.prototype.uploadMediaFiles = function (e) {
+	// console.log('got to umf');
 	// fetch FileList object
 	var files = e.target.files || e.dataTransfer.files,
 		autouploadsettings = window.adminSettings || {},
@@ -226,16 +230,18 @@ contententry.prototype.uploadMediaFiles = function (e) {
 			contententry.prototype.autoSaveItem({
 				autosave: (autouploadsettings.autosave_compose_assets) || true
 			});
+		},
+		uploadoptions = {
+			callback: uploadmediafilecallback
 		};
 
+	uploadoptions = merge(uploadoptions, uploadfileoptions);
 	// process all File objects
 	for (var i = 0; i < files.length; i++) {
 		f = files[i];
 		// ParseFile(f);
 		// uploadFile(f);
-		updatemedia.uploadFile(mediafilesresult, f, {
-			callback: uploadmediafilecallback
-		});
+		updatemedia.uploadFile(mediafilesresult, f, uploadoptions);
 	}
 };
 

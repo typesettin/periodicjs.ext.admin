@@ -39,7 +39,7 @@ var getChildrenHtml = function (attributes) {
 var getChildren = function () {
 	var childHtmlContainer = document.getElementById('child-attributes');
 	request
-		.get('/' + doctypename.value + '/' + docid.value + '/children')
+		.get('/p-admin/' + doctypename.value + '/' + docid.value + '/children')
 		.query({
 			format: 'json'
 		})

@@ -3309,6 +3309,7 @@ updatemedia.handleMediaButtonClick = function (e) {
 };
 
 updatemedia.uploadFile = function (mediafilesresult, file, options) {
+	console.log('updatemedia.uploadFile options', options);
 	var reader = new FileReader(),
 		client = new XMLHttpRequest(),
 		formData = new FormData(),

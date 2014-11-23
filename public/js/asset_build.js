@@ -3136,6 +3136,31 @@ module.exports = function(arr, fn, initial){
   return curr;
 };
 },{}],16:[function(require,module,exports){
+/**
+ * Merge object b with object a.
+ *
+ *     var a = { foo: 'bar' }
+ *       , b = { bar: 'baz' };
+ *
+ *     merge(a, b);
+ *     // => { foo: 'bar', bar: 'baz' }
+ *
+ * @param {Object} a
+ * @param {Object} b
+ * @return {Object}
+ * @api public
+ */
+
+exports = module.exports = function(a, b){
+  if (a && b) {
+    for (var key in b) {
+      a[key] = b[key];
+    }
+  }
+  return a;
+};
+
+},{}],17:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent'),
@@ -3268,13 +3293,15 @@ window.addEventListener('load', function () {
 	}
 });
 
-},{"./contententry":17,"./updatemedia":18,"superagent":13}],17:[function(require,module,exports){
+},{"./contententry":18,"./updatemedia":19,"superagent":13}],18:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent'),
 	updatemedia = require('./updatemedia'),
 	letterpress = require('letterpressjs'),
+	merge = require('utils-merge'),
 	uploadmediaCallback,
+	uploadfileoptions = {},
 	wysihtml5Editor,
 	ajaxFormToSubmit,
 	mediafileinput,
@@ -3285,6 +3312,7 @@ var contententry = function (options) {
 };
 
 contententry.prototype.init = function (options) {
+	uploadfileoptions = options.uploadfileoptions;
 	uploadmediaCallback = options.uploadmediaCallback;
 	ajaxFormToSubmit = options.ajaxFormToSubmit;
 	window.ajaxFormToSubmit = options.ajaxFormToSubmit;
@@ -3378,7 +3406,7 @@ contententry.prototype.createPeriodicTag = function (id, val, callback, url, typ
 contententry.prototype.parent_lp = function (configoptions) {
 	var options = configoptions || {},
 		idSelector = options.idSelector || '#padmin-parent',
-		sourcedata = '/' + options.doctypename + '/search.json',
+		sourcedata = '/p-admin/' + options.doctypename + '/search.json',
 		sourcearrayname = options.doctypenamelink,
 		returnlp = new letterpress({
 			idSelector: idSelector,
@@ -3487,6 +3515,7 @@ contententry.prototype.tag_lp = function (configoptions) {
 };
 
 contententry.prototype.uploadMediaFiles = function (e) {
+	// console.log('got to umf');
 	// fetch FileList object
 	var files = e.target.files || e.dataTransfer.files,
 		autouploadsettings = window.adminSettings || {},
@@ -3497,23 +3526,25 @@ contententry.prototype.uploadMediaFiles = function (e) {
 			contententry.prototype.autoSaveItem({
 				autosave: (autouploadsettings.autosave_compose_assets) || true
 			});
+		},
+		uploadoptions = {
+			callback: uploadmediafilecallback
 		};
 
+	uploadoptions = merge(uploadoptions, uploadfileoptions);
 	// process all File objects
 	for (var i = 0; i < files.length; i++) {
 		f = files[i];
 		// ParseFile(f);
 		// uploadFile(f);
-		updatemedia.uploadFile(mediafilesresult, f, {
-			callback: uploadmediafilecallback
-		});
+		updatemedia.uploadFile(mediafilesresult, f, uploadoptions);
 	}
 };
 
 
 module.exports = contententry;
 
-},{"./updatemedia":18,"letterpressjs":8,"superagent":13}],18:[function(require,module,exports){
+},{"./updatemedia":19,"letterpressjs":8,"superagent":13,"utils-merge":16}],19:[function(require,module,exports){
 'use strict';
 
 var updatemedia = function (element, mediadoc, additem) {
@@ -3573,6 +3604,7 @@ updatemedia.handleMediaButtonClick = function (e) {
 };
 
 updatemedia.uploadFile = function (mediafilesresult, file, options) {
+	console.log('updatemedia.uploadFile options', options);
 	var reader = new FileReader(),
 		client = new XMLHttpRequest(),
 		formData = new FormData(),
@@ -3616,4 +3648,4 @@ updatemedia.uploadFile = function (mediafilesresult, file, options) {
 
 module.exports = updatemedia;
 
-},{}]},{},[16]);
+},{}]},{},[17]);
