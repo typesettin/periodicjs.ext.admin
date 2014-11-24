@@ -11,7 +11,7 @@ var path = require('path'),
 	Extensions = require('periodicjs.core.extensions'),
 	marked = require('marked'),
 	ExtensionCore = new Extensions({
-		extensionFilePath: path.resolve(process.cwd(), './content/extensions/extensions.json')
+		extensionFilePath: path.resolve(process.cwd(), './content/config/extensions.json')
 	}),
 	CoreUtilities,
 	CoreController,
@@ -1489,7 +1489,7 @@ var category_parent = function (req, res) {
  */
 var loadExtension = function (req, res, next) {
 	var extname = req.params.id,
-		extFilePath = path.resolve(process.cwd(), 'content/extensions/extensions.json'),
+		extFilePath = path.resolve(process.cwd(), 'content/config/extensions.json'),
 		z = false,
 		selectedExt,
 		currentExtensions;

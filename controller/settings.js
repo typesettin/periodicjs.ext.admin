@@ -16,11 +16,11 @@ var path = require('path'),
 	mongoose,
 	AppDBSetting,
 	logger,
-	restartfile = path.join(process.cwd(), '/content/extensions/restart.json'),
+	restartfile = path.join(process.cwd(), '/content/config/restart.json'),
 	CoreMailer = require('periodicjs.core.mailer'),
 	Extensions = require('periodicjs.core.extensions'),
 	ExtensionCore = new Extensions({
-		extensionFilePath: path.resolve(process.cwd(), './content/extensions/extensions.json')
+		extensionFilePath: path.resolve(process.cwd(), './content/config/extensions.json')
 	}),
 	changedemailtemplate,
 	emailtransport;
