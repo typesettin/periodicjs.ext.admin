@@ -13,6 +13,11 @@ var path = require('path');
  */
 module.exports = function (periodic) {
 	// express,app,logger,config,db,mongoose
+	periodic.app.controller.extension.admin = {
+		admin: require('./controller/admin')(periodic),
+		settings: require('./controller/settings')(periodic)
+	};
+
 	var adminRouter = periodic.express.Router(),
 		itemRouter = periodic.express.Router(),
 		tagRouter = periodic.express.Router(),
@@ -30,20 +35,20 @@ module.exports = function (periodic) {
 		extensionAdminRouter = periodic.express.Router(),
 		themeAdminRouter = periodic.express.Router(),
 		// periodicRouter = periodic.express.Router(),
-		themeController = require(path.resolve(process.cwd(), './app/controller/theme'))(periodic),
-		extController = require(path.resolve(process.cwd(), './app/controller/extension'))(periodic),
-		itemController = require(path.resolve(process.cwd(), './app/controller/item'))(periodic),
-		tagController = require(path.resolve(process.cwd(), './app/controller/tag'))(periodic),
-		mediaassetController = require(path.resolve(process.cwd(), './app/controller/asset'))(periodic),
-		categoryController = require(path.resolve(process.cwd(), './app/controller/category'))(periodic),
-		userController = require(path.resolve(process.cwd(), './app/controller/user'))(periodic),
-		contenttypeController = require(path.resolve(process.cwd(), './app/controller/contenttype'))(periodic),
-		collectionController = require(path.resolve(process.cwd(), './app/controller/collection'))(periodic),
-		compilationController = require(path.resolve(process.cwd(), './app/controller/compilation'))(periodic),
-		adminController = require('./controller/admin')(periodic),
-		adminSettingsController = require('./controller/settings')(periodic),
-		authController = require('../periodicjs.ext.login/controller/auth')(periodic),
-		uacController = require('../periodicjs.ext.user_access_control/controller/uac')(periodic);
+		themeController = periodic.app.controller.native.theme,
+		extController = periodic.app.controller.native.extension,
+		itemController = periodic.app.controller.native.item,
+		tagController = periodic.app.controller.native.tag,
+		mediaassetController = periodic.app.controller.native.asset,
+		categoryController = periodic.app.controller.native.category,
+		userController = periodic.app.controller.native.user,
+		contenttypeController = periodic.app.controller.native.contenttype,
+		collectionController = periodic.app.controller.native.collection,
+		compilationController = periodic.app.controller.native.compilation,
+		authController = periodic.app.controller.extension.login.auth,
+		uacController = periodic.app.controller.extension.user_access_control.uac,
+		adminController = periodic.app.controller.extension.admin.admin,
+		adminSettingsController = periodic.app.controller.extension.admin.settings;
 	/**
 	 * access control routes
 	 */
@@ -249,4 +254,5 @@ module.exports = function (periodic) {
 	periodic.app.use('/contenttype', contenttypeRouter);
 	periodic.app.use('/mediaasset', mediaRouter);
 	// periodic.app.use(periodicRouter);
+	return periodic;
 };

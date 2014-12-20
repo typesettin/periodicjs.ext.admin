@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.admin",
   "description": "Admin for periodicjs",
-  "version": "3.1.1",
+  "version": "4.0.0",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
@@ -38,7 +38,7 @@
     "letterpressjs": "0.0.3",
     "periodicjs.component.tabs": "^1.1.0",
     "periodicjs.core.controller": "~3.1.1",
-    "periodicjs.core.extensions": "~3.1.1",
+    "periodicjs.core.extensions": "~4.0.0",
     "periodicjs.core.mailer": "~3.1.1",
     "periodicjs.core.utilities": "~3.1.1",
     "ribbonjs": "0.1.3",

@@ -431,6 +431,7 @@ var load_app_settings = function (req, res, next) {
 			adminnotificationemail: appSettings.adminnotificationemail,
 			serverfromemail: appSettings.serverfromemail,
 			debug: appSettings.debug,
+			periodic_cache_status: appSettings.periodic_cache_status,
 			homepage: appSettings.homepage,
 			name: appSettings.name,
 		}
