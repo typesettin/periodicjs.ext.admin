@@ -1,7 +1,7 @@
 {
-  "name": "periodicjs.ext.admin",
-  "description": "Admin for periodicjs",
-  "version": "4.0.0",
+  "name": "periodicjs.ext.admin_async",
+  "description": "Next Gen Async Admin for periodicjs",
+  "version": "1.0.0",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
