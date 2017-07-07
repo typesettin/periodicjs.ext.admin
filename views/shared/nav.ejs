@@ -39,7 +39,7 @@
         <div>
           <ul>
           <% periodic.core_data_list[db_name].forEach(model=>{ %>
-            <li><a href="<%-locals.adminExt.adminRoute%>/data/<%- db_name %>/<%- pluralize(model) %>"><%- (capitalize(model)) %></a></li>
+            <li><a href="<%-locals.adminExt.adminRoute%>/data/<%- db_name %>_<%- pluralize(model) %>"><%- (capitalize(model)) %></a></li>
           <%}) %>
           </ul>
         </div>
