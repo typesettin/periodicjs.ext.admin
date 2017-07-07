@@ -3,22 +3,22 @@
 <aside>
   <details>
     <summary>
-    Configurations <%-locals.adminExt.adminRoute%>
+      <a href="<%-locals.adminExt.adminRoute%>/configurations" title="Configurations">Configurations</a> 
     </summary>
   </details>
   <details>
     <summary>
-    Extensions
+      <a href="<%-locals.adminExt.adminRoute%>/extensions" title="Configurations">Extensions</a> 
     </summary>
   </details>
   <details>
     <summary>
-    Settings
+      <a href="<%-locals.adminExt.adminRoute%>/settings" title="Settings">Settings</a>
     </summary>
   </details>
   <details>
     <summary>
-    Account
+      <a href="<%-locals.adminExt.adminRoute%>/account" title="Account">Account</a> 
     </summary>
   </details>
   <details>
@@ -39,7 +39,7 @@
         <div>
           <ul>
           <% periodic.core_data_list[db_name].forEach(model=>{ %>
-            <li><a href="/data/<%- db_name %>/<%- pluralize(model) %>"><%- (capitalize(model)) %></a></li>
+            <li><a href="<%-locals.adminExt.adminRoute%>/data/<%- db_name %>/<%- pluralize(model) %>"><%- (capitalize(model)) %></a></li>
           <%}) %>
           </ul>
         </div>

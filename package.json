@@ -17,7 +17,9 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "mocha -R spec --recursive"
+    "test": "mocha -R spec --recursive",
+    "postinstall": "periodicjs aex periodicjs.ext.admin",
+    "postuninstall": "periodicjs rex periodicjs.ext.admin"
   },
   "dependencies": {},
   "devDependencies": {
