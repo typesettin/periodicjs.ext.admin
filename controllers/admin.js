@@ -4,7 +4,7 @@ const periodic = require('periodicjs');
 function dashboardView(req, res) {
   const viewtemplate = {
     // themename,
-    viewname: 'auth/test',
+    viewname: 'admin/dashboard',
     extname: 'periodicjs.ext.admin',
     // fileext,
   };

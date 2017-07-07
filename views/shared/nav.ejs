@@ -1,0 +1,52 @@
+<%- include('../../../../app/views/shared/nav_header') %>
+<main>
+<aside>
+  <details>
+    <summary>
+    Configurations
+    </summary>
+  </details>
+  <details>
+    <summary>
+    Extensions
+    </summary>
+  </details>
+  <details>
+    <summary>
+    Settings
+    </summary>
+  </details>
+  <details>
+    <summary>
+    Account
+    </summary>
+  </details>
+  <details>
+    <summary>
+      Data
+    </summary>
+    <%if(locals.periodic && locals.periodic.core_data_list){ 
+    const pluralize = periodic.viewHelper.pluralize;
+    const capitalize = periodic.viewHelper.capitalize;
+    %>
+      <aside>
+      <% Object.keys(periodic.core_data_list).forEach(db_name=>{
+        %>
+      <details>
+        <summary>
+          <%- capitalize(db_name) %> DB
+        </summary>
+        <div>
+          <ul>
+          <% periodic.core_data_list[db_name].forEach(model=>{ %>
+            <li><a href="/data/<%- db_name %>/<%- pluralize(model) %>"><%- (capitalize(model)) %></a></li>
+          <%}) %>
+          </ul>
+        </div>
+      </details>
+        <%
+      }) %>
+      </aside>
+    <%}%>
+  </details>
+</aside>
