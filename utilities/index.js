@@ -1,5 +1,6 @@
 'use strict';
 const periodic = require('periodicjs');
+const data = require('./data');
 // const periodicRoutingUtil = periodic.utilities.routing;
 
 function getSettings() {
@@ -8,4 +9,5 @@ function getSettings() {
 
 module.exports = {
   getSettings,
+  data,
 };

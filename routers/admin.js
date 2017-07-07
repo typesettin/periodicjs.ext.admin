@@ -5,8 +5,12 @@ const periodic = require('periodicjs');
 const controllers = require('../controllers');
 const adminRouter = periodic.express.Router();
 // const adminSettings = utilities.getSettings();
+const extensionsRouter = require('./extensions');
+const dataRouter = require('./data');
 
 adminRouter.get('/', controllers.admin.dashboardView);
 adminRouter.get('/dashboard', controllers.admin.dashboardView);
+adminRouter.use('/extensions', extensionsRouter);
+adminRouter.use('/data', dataRouter);
 
 module.exports = adminRouter;

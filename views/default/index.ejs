@@ -1,0 +1,14 @@
+<%- include('../../../../app/views/shared/header') %>
+<%- include('../shared/nav') %>
+<% 
+const pluralize = periodic.viewHelper.pluralize;
+const entityFromURL = locals.request.parsed.pathname.replace(/\//gi,'');// const entityFromURL = locals.request.originalurl.split('/')[locals.request.originalurl.split('/').length-1];
+const singularEntity = pluralize.singular(entityFromURL);
+%>
+
+<%- include('../../../../app/views/shared/content',{
+	entitytype:singularEntity,
+	items: locals[entityFromURL],
+}); 
+%>
+<%- include('../../../../app/views/shared/footer') %>
