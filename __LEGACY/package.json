@@ -1,0 +1,96 @@
+{
+  "name": "periodicjs.ext.admin",
+  "description": "Admin for periodicjs",
+  "version": "6.0.0",
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.10.x"
+  },
+  "author": {
+    "name": "Yaw Joseph Etse",
+    "email": "yaw.etse@gmail.com",
+    "url": "http://about.me/yawjosephetse"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/typesettin/periodicjs.ext.admin.git"
+  },
+  "scripts": {
+    "test": "mocha -R spec --recursive",
+    "postinstall": "node install.js",
+    "postuninstall": "node uninstall.js"
+  },
+  "keywords": [
+    "periodicjs",
+    "content management system",
+    "cms",
+    "wordpress",
+    "drupal",
+    "ghost"
+  ],
+  "dependencies": {
+    "async": "^1.2.1",
+    "classie": ">=0.1.0",
+    "codemirror": "^5.4.0",
+    "colors": "^1.0.3",
+    "diff": "^1.0.8",
+    "fs-extra": "^0.20.1",
+    "letterpressjs": "0.0.3",
+    "periodicjs.component.tabs": "^1.1.0",
+    "periodicjs.core.controller": "~3.1.1",
+    "periodicjs.core.extensions": "~4.0.0",
+    "periodicjs.core.mailer": "~3.1.1",
+    "periodicjs.core.utilities": "~3.1.1",
+    "ribbonjs": "0.1.3",
+    "semver": "^4.3.6",
+    "silkscreenjs": ">=1.0.0",
+    "string-to-json": "^0.1.0",
+    "superagent": "^1.2.0",
+    "utils-merge": "1.0.0"
+  },
+  "devDependencies": {
+    "browserify": "^10.2.4",
+    "chai": "^3.0.0",
+    "grunt": ">=0.4.5",
+    "grunt-browserify": ">=2.1.3",
+    "grunt-contrib-copy": ">=0.5.0",
+    "grunt-contrib-cssmin": ">=0.9.0",
+    "grunt-contrib-jshint": ">=0.10.0",
+    "grunt-contrib-less": ">=0.11.3",
+    "grunt-contrib-uglify": ">=0.4.0",
+    "grunt-contrib-watch": ">=0.6.1",
+    "grunt-jsbeautifier": ">=0.2.7",
+    "grunt-jsdoc": ">=0.5.6",
+    "grunt-newer": ">=0.7.0",
+    "grunt-simple-mocha": ">=0.4.0",
+    "jsdoc": "^3.3.2",
+    "mocha": "^2.2.5",
+    "uglify-js": "^2.4.15",
+    "uglifyify": "^3.0.1"
+  },
+  "_id": "periodicjs.ext.admin@2.9.2",
+  "_shasum": "a49eff10b64d3e1b77a42b8da79c0c34a539a8de",
+  "_from": "periodicjs.ext.admin@2.9.2",
+  "_resolved": "https://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-2.9.2.tgz",
+  "gitHead": "23466172484b2277c691c4f2684dfdb1cb92cb23",
+  "bugs": {
+    "url": "https://github.com/typesettin/periodicjs.ext.admin/issues"
+  },
+  "homepage": "https://github.com/typesettin/periodicjs.ext.admin",
+  "_npmVersion": "2.0.0-beta.0",
+  "_npmUser": {
+    "name": "yawetse",
+    "email": "yaw.etse@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "yawetse",
+      "email": "yaw.etse@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "a49eff10b64d3e1b77a42b8da79c0c34a539a8de",
+    "tarball": "http://registry.npmjs.org/periodicjs.ext.admin/-/periodicjs.ext.admin-2.9.2.tgz"
+  },
+  "directories": {}
+}
