@@ -1,6 +1,10 @@
 <%- include('../../../../app/views/shared/header') %>
 <%- include('../shared/nav') %>
-<% //console.log(locals)
+<% 
+console.log(locals.countData)
+const pluralize = periodic.viewHelper.pluralize;
+const capitalize = periodic.viewHelper.capitalize;
+const path = periodic.viewHelper.path;
  %>
   <main>
     <article>
@@ -8,7 +12,34 @@
           <h3>Dashboard</h3>
         </section>
         <section>
-          docs
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Entity Type</th>
+                <th>Created</th>
+                <th>Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if(Array.isArray(dataDocs) && dataDocs.length){
+                dataDocs.map(item =>{%>
+                  <tr>
+                    <td><a href="<%- path.join(locals.adminExt.adminRoute,'data',item._id.toString()) %>"><%- item._id %></a></td>
+                    <td><%- item.title || item.name %></td>
+                    <td><%- item.entitytype %></td>
+                    <td><%- item.createdat %></td>
+                    <td><%- item.updatedat %></td>
+                  </tr>
+                <%});
+              } else{%>
+                <tr>
+                  <td colspan="5">No Data Available</td>
+                </tr>
+              <%}%>
+            </tbody>
+          </table>
         </section>
     </article>
   </main>
