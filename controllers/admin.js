@@ -28,6 +28,19 @@ function dashboardView(req, res) {
   periodic.core.controller.render(req, res, viewtemplate, viewdata);
 }
 
+function accountView(req, res) {
+  const viewtemplate = {
+    // themename,
+    viewname: 'admin/account',
+    extname: 'periodicjs.ext.admin',
+    // fileext,
+  };
+  const viewdata = {
+    passportUser: req.user,
+  };
+  periodic.core.controller.render(req, res, viewtemplate, viewdata);
+}
+
 function fixCodeMirrorSubmit(req, res, next) {
   try {
     if (req.body.genericdocjson) {
@@ -82,4 +95,5 @@ module.exports = {
   fixCodeMirrorSubmit,
   getAppSettings,
   appSettingsView,
+  accountView,
 };

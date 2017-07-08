@@ -1,0 +1,26 @@
+<%
+const pluralize = periodic.viewHelper.pluralize;
+const capitalize = periodic.viewHelper.capitalize;
+const path = periodic.viewHelper.path;
+%>
+<%- include('../../../../app/views/shared/header') %>
+<%- include('../shared/nav') %>
+  <article>
+    <main>
+      <form action="<%-locals.adminExt.adminRoute%>/data/standard_<%- pluralize(passportUser.entitytype)%>/<%-passportUser._id%>" method="POST">
+        <input type="hidden" name="_method" value="PUT" />
+        <input type="hidden" name="_csrf" value="<%- token %>"/>
+        <section>
+          <h3>My Account (<%- passportUser.name || passportUser.email %>)</h3>
+          <input type="submit" value="Edit">
+        </section>
+        <section>
+          <div>
+            <textarea name="genericdocjson"><%- JSON.stringify(passportUser,null,2)%></textarea>
+          </div>
+        </section>
+      </form>
+    </main>
+  </article>
+  
+<%- include('../../../../app/views/shared/footer') %>

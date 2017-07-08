@@ -13,6 +13,11 @@
   </details>
   <details>
     <summary>
+      <a href="<%-locals.adminExt.adminRoute%>/dashboard" title="Dashboard">Dashboard</a> 
+    </summary>
+  </details>
+  <details>
+    <summary>
       Data
     </summary>
     <%if(locals.periodic && locals.periodic.core_data_list){ 
@@ -41,18 +46,12 @@
   </details>
   <details>
     <summary>
-      <a href="<%-locals.adminExt.adminRoute%>/settings" title="Settings">Settings</a>
-    </summary>
-  </details>
-  <details>
-    <summary>
       <a href="<%-locals.adminExt.adminRoute%>/account" title="Account">My Account</a> 
     </summary>
   </details>
   <details>
     <summary>
-      <a href="<%-locals.logoutLink||'/auth/logout'%>
-" title="Log Out">Log Out</a> 
+      <a href="<%-locals.adminExt.adminRoute%>/settings" title="Settings">Settings</a>
     </summary>
   </details>
 </aside>
