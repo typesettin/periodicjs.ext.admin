@@ -37,19 +37,19 @@
 
   ### Installing the Extension
 
-  Install like any other extension, run `npm run install periodicjs.ext.admin` from your periodic application root directory and then run `periodicjs addExtension periodicjs.ext.admin`.
+  Install like any other extension, run `npm run install periodicjs.ext.admin` from your periodic application root directory and then normally you would run `periodicjs addExtension periodicjs.ext.admin` but this is handled in a npm post install script.
   ```
   $ cd path/to/application/root
   $ npm run install periodicjs.ext.admin
-  $ periodicjs addExtension periodicjs.ext.admin
+  $ periodicjs addExtension periodicjs.ext.admin  //this is handled as an npm post install script
   ```
   ### Uninstalling the Extension
 
-  Run `npm run uninstall periodicjs.ext.admin` from your periodic application root directory and then run `periodicjs removeExtension periodicjs.ext.admin`.
+  Run `npm run uninstall periodicjs.ext.admin` from your periodic application root directory and then normally you would run `periodicjs removeExtension periodicjs.ext.admin` but this is handled in a npm post install script.
   ```
   $ cd path/to/application/root
   $ npm run uninstall periodicjs.ext.admin
-  $ periodicjs removeExtension periodicjs.ext.admin
+  $ periodicjs removeExtension periodicjs.ext.admin //this is handled as an npm post install script
   ```
 
 
