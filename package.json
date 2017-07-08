@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.admin",
   "description": "sample extension.",
-  "version": "10.1.0",
+  "version": "10.1.1",
   "main": "index.js",
   "engines": {
     "node": "^6.x"
@@ -18,8 +18,8 @@
   "license": "MIT",
   "scripts": {
     "test": "mocha -R spec --recursive",
-    "postinstall": "periodicjs aex periodicjs.ext.admin",
-    "postuninstall": "periodicjs rex periodicjs.ext.admin"
+    "postinstall": "cd ../../ && periodicjs aex periodicjs.ext.admin",
+    "postuninstall": "cd ../../ && periodicjs rex periodicjs.ext.admin"
   },
   "dependencies": {},
   "devDependencies": {
