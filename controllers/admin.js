@@ -92,6 +92,96 @@ function appSettingsView(req, res) {
   periodic.core.controller.render(req, res, viewtemplate, viewdata);
 }
 
+function getDBStats(req, res, next) {
+  let databaseCountData = [];
+  let databaseFeedData = [];
+  req.controllerData = (req.controllerData) ? req.controllerData : {};
+  const DBModels = Object.keys(mongoose.models);
+  Promisie.parallel({
+      databaseFeed: () => {
+        return Promise.all(DBModels.map(model => {
+          return new Promise((resolve, reject) => {
+            mongoose.model(model)
+              .find({})
+              .limit(5)
+              .sort({ updatedat: 'desc', })
+              .exec((err, results) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve((results && results.length) ?
+                    results.map(result => {
+                      databaseFeedData.push(result);
+                      return result;
+                    }) :
+                    []);
+                }
+              });
+          });
+        }));
+      },
+      databaseCount: () => {
+        return Promise.all(DBModels.map(model => {
+          return new Promise((resolve, reject) => {
+            mongoose.model(model)
+              .count({}, (err, count) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  databaseCountData.push({
+                    collection: model,
+                    count: count,
+                  });
+                  resolve(count);
+                }
+              });
+          });
+        }));
+      },
+      extensions: () => {
+        return new Promise((resolve, reject) => {
+          CoreExtensions.getExtensions({
+              periodicsettings: appSettings,
+            },
+            function(err, extensions) {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(extensions);
+              }
+            });
+        });
+      },
+    })
+    .then(results => {
+      const totalItems = databaseCountData.map(datam => datam.count).reduce((result, key) => result + key, 0);
+      const data = databaseCountData.map((datum, i) => {
+        return {
+          name: capitalize(pluralize(datum.collection)),
+          docs: datum.count,
+          count: datum.count,
+          percent: ((datum.count / totalItems) * 100).toFixed(2),
+          fill: colors[i].HEX,
+        }
+      });
+      const numeralFormat = '0.0a';
+      databaseFeedData = databaseFeedData.sort(CoreUtilities.sortObject('desc', 'updatedat'));
+
+      req.controllerData.contentcounts = {
+        data,
+        databaseFeedData,
+        databaseCountData,
+        totalItems: numeral(totalItems).format(numeralFormat),
+        totalCollections: numeral(databaseCountData.length).format(numeralFormat),
+        totalExtensions: numeral(results.extensions.length).format(numeralFormat),
+        extensions: results.extensions,
+        appname: appSettings.name,
+      };
+      next();
+    })
+    .catch(next);
+};
+
 module.exports = {
   adminResLocals,
   dashboardView,
@@ -99,4 +189,5 @@ module.exports = {
   getAppSettings,
   appSettingsView,
   accountView,
+  getDBStats,
 };
