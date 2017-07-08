@@ -1,7 +1,7 @@
 <%- include('../../../../app/views/shared/header') %>
 <%- include('../shared/nav') %>
 <% 
-console.log(locals.countData)
+// console.log(locals.countData)
 const pluralize = periodic.viewHelper.pluralize;
 const capitalize = periodic.viewHelper.capitalize;
 const path = periodic.viewHelper.path;
@@ -10,6 +10,16 @@ const path = periodic.viewHelper.path;
     <article>
         <section>
           <h3>Dashboard</h3>
+        </section>
+        <section>
+          <div style="flex-flow:row wrap; align-content:flex-end; align-items:center; justify-content:center; display:flex; margin-bottom:2rem;">
+          <%countData.forEach((countDatum,i)=>{%>
+            <a href="<%- path.join(locals.adminExt.adminRoute,'data',pluralize(countDatum.modelName)) %>" style="display:block;width:20%; border:1px solid lightgrey; margin:1rem; padding:1rem; text-decoration:none;text-align:center;">
+            <h5><%-countDatum.modelName%></h5>
+            <p style="text-align:center; font-size:3rem; color:black;"><%-countDatum.collectionCount%></p>
+            </a>
+          <%})%>
+          </div>
         </section>
         <section>
           <table>
@@ -26,7 +36,7 @@ const path = periodic.viewHelper.path;
               <% if(Array.isArray(dataDocs) && dataDocs.length){
                 dataDocs.map(item =>{%>
                   <tr>
-                    <td><a href="<%- path.join(locals.adminExt.adminRoute,'data',item._id.toString()) %>"><%- item._id %></a></td>
+                    <td><a href="<%- path.join(locals.adminExt.adminRoute,'data',pluralize(item.modelName),item._id.toString()) %>"><%- item._id %></a></td>
                     <td><%- item.title || item.name %></td>
                     <td><%- item.entitytype %></td>
                     <td><%- item.createdat %></td>
