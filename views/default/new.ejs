@@ -1,0 +1,13 @@
+<%- include('../../../../app/views/shared/header') %>
+<%- include('../shared/nav') %>
+<% 
+const pluralize = periodic.viewHelper.pluralize;
+const entityFromURL = locals.request.originalurl.split('/')[locals.request.originalurl.split('/').length-2];
+const singularEntity = pluralize.singular(entityFromURL);
+console.log({singularEntity,entityFromURL})
+%>
+<%- include('../shared/create',{
+   entitytype:singularEntity,
+  })
+%>
+<%- include('../../../../app/views/shared/footer') %>

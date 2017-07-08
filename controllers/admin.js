@@ -37,7 +37,11 @@ function fixCodeMirrorSubmit(req, res, next) {
       req.redirectpath = req.headers.referer;
       const jsonbody = JSON.parse(req.body.genericdocjson);
       delete req.body.genericdocjson;
-      req.body.updatedoc = jsonbody; //Object.assign({}, req.body, jsonbody);
+      if (req.method === 'PUT') {
+        req.body.updatedoc = jsonbody; //Object.assign({}, req.body, jsonbody);
+      } else {
+        req.body = Object.assign({}, req.body, jsonbody); //Object.assign({}, req.body, jsonbody);
+      }
       // if (!req.body.docid) {
       //   req.body.docid = req.body._id;
       // }

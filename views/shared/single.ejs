@@ -1,6 +1,7 @@
 <%
 const pluralize = periodic.viewHelper.pluralize;
 const capitalize = periodic.viewHelper.capitalize;
+console.log({entitytype})
 %>
 <article>
   <main>
@@ -8,7 +9,7 @@ const capitalize = periodic.viewHelper.capitalize;
       <input type="hidden" name="_method" value="PUT" />
       <input type="hidden" name="_csrf" value="<%- token %>"/>
       <section>
-        <h3><a href="<%- request.originalurl.replace(data._id,'') %>"><%- (capitalize(entitytype)) %></a> &rsaquo; <%- data.title %> <small>(<%- data.name %>)</small></h3>
+        <h3><a href="<%- request.originalurl.replace(data._id,'') %>"><%- (capitalize(data.entitytype||entitytype)) %></a> &rsaquo; <small>(<%- data.title || data.name || data._id %>)</small></h3>
         <input type="submit" value="Edit">
       </section>
       <section>

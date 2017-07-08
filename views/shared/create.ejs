@@ -1,0 +1,25 @@
+<%
+const pluralize = periodic.viewHelper.pluralize;
+const capitalize = periodic.viewHelper.capitalize;
+const path = periodic.viewHelper.path;
+
+%>
+<article>
+  <main>
+    <form action="<%- path.join(request.baseurl,request.parsed.pathname).replace('s/new','s') %>" method="POST">
+      <input type="hidden" name="_csrf" value="<%- token %>"/>
+      <section>
+        <h3><a href="<%- path.join(request.baseurl,request.parsed.pathname).replace('s/new','s') %>"><%- (capitalize(entitytype)) %></a> &rsaquo;  <small>Create <%- (capitalize(entitytype)) %></small></h3>
+        <input type="submit" value="Create">
+      </section>
+      <section>
+      <div>
+        <textarea name="genericdocjson">{
+  title:'',
+  name:''
+}</textarea>
+        </div>
+      </section>
+    </form>
+  </main>
+</article>

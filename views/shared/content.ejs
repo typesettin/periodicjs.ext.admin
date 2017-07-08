@@ -24,8 +24,11 @@ const entityPage = {
 %>
 <article>
   <section>
-    <form method="GET">
-      <input placeholder="Search <%- entityName.pluralCapitalized %>" name="query" type="text" value="<%- request.query.query %>"/>
+    <form method="GET" style="flex-direction:row">
+        <input placeholder="Search <%- entityName.pluralCapitalized %>" name="query" type="text" value="<%- request.query.query %>"/>
+      <div style="display:flex; margin-bottom:1rem;">
+        <a href="<%- path.join(request.baseurl,request.parsed.pathname,'new') %>" style="display:flex;flex:1;align-items:center;padding: 0 0 0 1rem;">Create <%- entityName.capitalized %></a>
+      </div>
     </form>
     <table>
       <thead>
