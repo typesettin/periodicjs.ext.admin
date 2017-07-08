@@ -15,7 +15,7 @@ const path = periodic.viewHelper.path;
           <div style="flex-flow:row wrap; align-content:flex-end; align-items:center; justify-content:center; display:flex; margin-bottom:2rem;">
           <%countData.forEach((countDatum,i)=>{%>
             <a href="<%- path.join(locals.adminExt.adminRoute,'data',pluralize(countDatum.modelName)) %>" style="display:block;width:20%; border:1px solid lightgrey; margin:1rem; padding:1rem; text-decoration:none;text-align:center;">
-            <h5><%-countDatum.modelName%></h5>
+            <h5><%-pluralize(countDatum.modelName)%></h5>
             <p style="text-align:center; font-size:3rem; color:black;"><%-countDatum.collectionCount%></p>
             </a>
           <%})%>
