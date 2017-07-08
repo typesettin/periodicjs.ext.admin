@@ -1,0 +1,21 @@
+<%
+const pluralize = periodic.viewHelper.pluralize;
+const capitalize = periodic.viewHelper.capitalize;
+%>
+<article>
+  <main>
+    <form method="POST">
+      <input type="hidden" name="_method" value="PUT" />
+      <input type="hidden" name="_csrf" value="<%- token %>"/>
+      <section>
+        <h3><a href="<%- request.originalurl.replace(data._id,'') %>"><%- (capitalize(entitytype)) %></a> &rsaquo; <%- data.title %> <small>(<%- data.name %>)</small></h3>
+        <input type="submit" value="Edit">
+      </section>
+      <section>
+      <div>
+        <textarea name="genericdocjson"><%- JSON.stringify(data,null,2)%></textarea>
+        </div>
+      </section>
+    </form>
+  </main>
+</article>

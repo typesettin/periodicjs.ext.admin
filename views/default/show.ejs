@@ -5,7 +5,7 @@ const pluralize = periodic.viewHelper.pluralize;
 const entityFromURL = locals.request.originalurl.split('/')[locals.request.originalurl.split('/').length-1];
 const singularEntity = pluralize.singular(entityFromURL);
 %>
-<%- include('../../../../app/views/shared/single',{
+<%- include('../shared/single',{
    entitytype:singularEntity,
   })
 %>

@@ -6,7 +6,7 @@ const entityFromURL = locals.request.parsed.pathname.replace(/\//gi,'');// const
 const singularEntity = pluralize.singular(entityFromURL);
 %>
 
-<%- include('../../../../app/views/shared/content',{
+<%- include('../shared/content',{
 	entitytype:singularEntity,
 	items: locals[entityFromURL],
 }); 

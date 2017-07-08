@@ -1,6 +1,12 @@
 <%- include('../../../../app/views/shared/header') %>
 <%- include('../shared/nav') %>
-<% // console.log(locals.extensions) %>
+<%
+let extensionsArray = (Array.isArray(locals.extensions))
+  ? locals.extensions
+  : locals.extensions.extensions.documents;
+//  console.log(extensionsArray)
+ // console.log(locals.extensions) 
+ %>
   <main>
     <article>
         <section>
@@ -21,10 +27,10 @@
               </tr>
             </thead>
             <tbody>
-            <% if(Array.isArray(extensions) && extensions.length){
-              extensions.map(item=>{%>
+            <% if(Array.isArray(extensionsArray) && extensionsArray.length){
+              extensionsArray.map(item=>{%>
                 <tr>
-                  <td><a href="<%- locals.adminExt.adminRoute %>/extension/<%- item._id %>"><%- item.name %></a></td>
+                  <td><a href="<%- locals.adminExt.adminRoute %>/data/extensions/<%- item._id %>"><%- item.name %></a></td>
                   <td><%- item.source %></td>
                   <td><%- item.version %></td>
                   <td><%- item.periodic_type %></td>
