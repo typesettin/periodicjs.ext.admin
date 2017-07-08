@@ -1,0 +1,90 @@
+<%- include('../../../../app/views/shared/header') %>
+<%- include('../shared/nav') %>
+<%
+const path = periodic.viewHelper.path;
+const configurationsArray = (Array.isArray(locals.configurations))
+  ? locals.configurations
+  : locals.configurations.configurations.documents;
+//  console.log(configurationsArray)
+ // console.log(locals.configurations) 
+ %>
+  <article>
+      <section>
+        <h3>Configurations</h3>
+      </section>
+      <section>
+        <table>
+          <thead>
+            <tr>
+              <th>Filepath</th>
+              <th>Environment</th>
+              <th>Container</th>
+              <th>Config</th>
+              <th>Created</th>
+              <th>Updated</th>
+              <th> </th>
+            </tr>
+          </thead>
+          <tbody>
+          <% if(Array.isArray(configurationsArray) && configurationsArray.length){
+            configurationsArray.map(item=>{%>
+              <tr>
+                <td><a href="<%- locals.adminExt.adminRoute %>/data/configurations/<%- item._id %>"><%- item.filepath %></a></td>
+                <td><%- item.environment %></td>
+                <td><%- item.container %></td>
+                <td><%- `${JSON.stringify(item.config).substr(0,15)}...` %></td>
+                <td><%- item.createdat %></td>
+                <td><%- item.updatedat %></td>
+                <td>
+                  <form action="<%- path.join(request.baseurl,request.parsed.pathname,item._id.toString()) %>" method="POST">
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <input type="hidden" name="_csrf" value="<%- token %>"/>
+                    <section>
+                      <input type="submit" style="margin:0;" value="x"/>
+                    </section>
+                  </form>
+                </td>
+              </tr>
+            <%});
+          } else{%>
+            <tr>
+              <td colspan="4">No Configurations</td>
+            </tr>
+          <%}%>
+          </tbody>
+        </table>
+      </section>
+      <section>
+        <div>
+          <h4>Quick Help</h4>
+          <code>
+          <em>//creating configurations</em> <br>
+          $ periodicjs cco [type] [name] [environment] [path/to/output/config/json] <br>
+          $ periodicjs createConfig [type] [name] [environment] [path/to/output/config/json] <br>
+          <!--$ node index.js --cli --crud=ext --crud_op=create --crud_arg=[path/to/configuration/json] <br>-->
+          <br>
+          <em>//types: app|application|ext|extension|ext-local|extension-local|con|container|con-local|container-local</em> <br>
+          <br>
+          <em>//example creating configuration </em> <br>
+          $ periodicjs createConfig ext periodicjs.ext.dbseed development ~/Desktop/dev.dbseed-config.json <br>
+          <br>
+          <em>//add configuration</em> <br>
+          $ periodicjs aco [path/to/configuration/json] <br>
+          $ periodicjs addConfig [path/to/configuration/json] <br>
+          $ node index.js --cli --crud=ext --crud_op=create --crud_arg=[path/to/configuration/json] <br>
+          <br>
+          <em>//example manually adding configuration </em> <br>
+          $ periodicjs addConfig /home/myuser/documents/projects/appconfig-dev.json <br>
+          <br>
+          <em>//remove configuration</em> <br>
+          $ periodicjs rco [id-of-configuration-doc] <br>
+          $ periodicjs removeConfig [id-of-configuration-doc] <br>
+          $ node index.js --cli --crud=ext --crud_op=remove --crud_arg=[id-of-configuration-doc] <br>
+          <br>
+          <em>//example manually removing bdb7aa6485aebe8ac81992def07c6f96 </em> <br>
+          $ periodicjs removeConfig bdb7aa6485aebe8ac81992def07c6f96 <br>
+          </code>
+        </div>
+      </section>
+  </article>
+<%- include('../../../../app/views/shared/footer') %>

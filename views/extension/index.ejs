@@ -1,85 +1,94 @@
 <%- include('../../../../app/views/shared/header') %>
 <%- include('../shared/nav') %>
 <%
-let extensionsArray = (Array.isArray(locals.extensions))
+const path = periodic.viewHelper.path;
+const extensionsArray = (Array.isArray(locals.extensions))
   ? locals.extensions
   : locals.extensions.extensions.documents;
 //  console.log(extensionsArray)
  // console.log(locals.extensions) 
  %>
-  <main>
-    <article>
-        <section>
-          <h3>Extensions</h3>
-        </section>
-        <section>
-          <table>
-            <thead>
+  <article>
+      <section>
+        <h3>Extensions</h3>
+      </section>
+      <section>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Source</th>
+              <th>Version</th>
+              <th>Type</th>
+              <th>Priority</th>
+              <th>Compatibility</th>
+              <th>Created</th>
+              <th>Updated</th>
+              <th> </th>
+            </tr>
+          </thead>
+          <tbody>
+          <% if(Array.isArray(extensionsArray) && extensionsArray.length){
+            extensionsArray.map(item=>{%>
               <tr>
-                <th>Name</th>
-                <th>Source</th>
-                <th>Version</th>
-                <th>Type</th>
-                <th>Priority</th>
-                <th>Compatibility</th>
-                <th>Created</th>
-                <th>Updated</th>
+                <td><a href="<%- locals.adminExt.adminRoute %>/data/extensions/<%- item._id %>"><%- item.name %></a></td>
+                <td><%- item.source %></td>
+                <td><%- item.version %></td>
+                <td><%- item.periodic_type %></td>
+                <td><%- item.periodic_priority %></td>
+                <td><%- item.periodic_compatibility %></td>
+                <!-- <td>
+                  <details>
+                    <summary>more</summary>
+                    <pre>
+                    <%- JSON.stringify(item,null,2); %>
+                    </pre>
+                  </details>
+                </td>-->
+                <td><%- item.createdat %></td>
+                <td><%- item.updatedat %></td>
+                <td>
+                  <form action="<%- path.join(request.baseurl,request.parsed.pathname,item._id.toString()) %>" method="POST">
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <input type="hidden" name="_csrf" value="<%- token %>"/>
+                    <section>
+                      <input type="submit" style="margin:0;" value="x"/>
+                    </section>
+                  </form>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-            <% if(Array.isArray(extensionsArray) && extensionsArray.length){
-              extensionsArray.map(item=>{%>
-                <tr>
-                  <td><a href="<%- locals.adminExt.adminRoute %>/data/extensions/<%- item._id %>"><%- item.name %></a></td>
-                  <td><%- item.source %></td>
-                  <td><%- item.version %></td>
-                  <td><%- item.periodic_type %></td>
-                  <td><%- item.periodic_priority %></td>
-                  <td><%- item.periodic_compatibility %></td>
-                  <!-- <td>
-                    <details>
-                      <summary>more</summary>
-                      <pre>
-                      <%- JSON.stringify(item,null,2); %>
-                      </pre>
-                    </details>
-                  </td>-->
-                  <td><%- item.createdat %></td>
-                  <td><%- item.updatedat %></td>
-                </tr>
-              <%});
-            } else{%>
-              <tr>
-                <td colspan="4">No Extensions</td>
-              </tr>
-            <%}%>
-            </tbody>
-          </table>
-        </section>
-        <section>
-          <div>
-            <h4>Quick Help</h4>
-            <code>
-            <em>//add extension</em> <br>
-            $ periodicjs aex [name-of-extension] <br>
-            $ periodicjs addExtension [name-of-extension] <br>
-            $ node index.js --cli --crud=ext --crud_op=create --crud_arg=[name-of-extension] <br>
-            <br>
-            <em>//example manually adding periodicjs.ext.passport </em> <br>
-            $ npm i periodicjs.ext.passport <br>
-            $ periodicjs addExtension periodicjs.ext.passport <br>
-            <br>
-            <em>//remove extension</em> <br>
-            $ periodicjs rex [name-of-extension] <br>
-            $ periodicjs removeExtension [name-of-extension] <br>
-            $ node index.js --cli --crud=ext --crud_op=remove --crud_arg=[name-of-extension] <br>
-            <br>
-            <em>//example manually removing periodicjs.ext.passport </em> <br>
-            $ periodicjs removeExtension periodicjs.ext.passport <br>
-            $ npm rm periodicjs.ext.passport <br>
-            </code>
-          </div>
-        </section>
-    </article>
-  </main>
+            <%});
+          } else{%>
+            <tr>
+              <td colspan="4">No Extensions</td>
+            </tr>
+          <%}%>
+          </tbody>
+        </table>
+      </section>
+      <section>
+        <div>
+          <h4>Quick Help</h4>
+          <code>
+          <em>//add extension</em> <br>
+          $ periodicjs aex [name-of-extension] <br>
+          $ periodicjs addExtension [name-of-extension] <br>
+          $ node index.js --cli --crud=ext --crud_op=create --crud_arg=[name-of-extension] <br>
+          <br>
+          <em>//example manually adding periodicjs.ext.passport </em> <br>
+          $ npm i periodicjs.ext.passport <br>
+          $ periodicjs addExtension periodicjs.ext.passport <br>
+          <br>
+          <em>//remove extension</em> <br>
+          $ periodicjs rex [name-of-extension] <br>
+          $ periodicjs removeExtension [name-of-extension] <br>
+          $ node index.js --cli --crud=ext --crud_op=remove --crud_arg=[name-of-extension] <br>
+          <br>
+          <em>//example manually removing periodicjs.ext.passport </em> <br>
+          $ periodicjs removeExtension periodicjs.ext.passport <br>
+          $ npm rm periodicjs.ext.passport <br>
+          </code>
+        </div>
+      </section>
+  </article>
 <%- include('../../../../app/views/shared/footer') %>
