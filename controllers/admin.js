@@ -53,8 +53,29 @@ function fixCodeMirrorSubmit(req, res, next) {
   }
 }
 
+function getAppSettings(req, res, next) {
+  req.controllerData = Object.assign({}, req.controllerData);
+  req.controllerData.appSettings = periodic.settings;
+  next();
+}
+
+function appSettingsView(req, res) {
+  const viewtemplate = {
+    // themename,
+    viewname: 'admin/settings',
+    extname: 'periodicjs.ext.admin',
+    // fileext,
+  };
+  const viewdata = Object.assign({
+    passportUser: req.user,
+  }, req.controllerData);
+  periodic.core.controller.render(req, res, viewtemplate, viewdata);
+}
+
 module.exports = {
   adminResLocals,
   dashboardView,
   fixCodeMirrorSubmit,
+  getAppSettings,
+  appSettingsView,
 };

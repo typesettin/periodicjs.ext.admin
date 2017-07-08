@@ -1,0 +1,32 @@
+<%- include('../../../../app/views/shared/header') %>
+<%- include('../shared/nav') %>
+<%
+  const appenv = locals.appSettings.application.environment;
+  const appname = locals.appSettings.name;
+%>
+  <article>
+    <main>
+      <form>
+        <section>
+          <h3><%-appname%> [<%-appenv%>] Settings</h3>
+        </section>
+        <section>
+          <div>
+            <textarea readonly><%- JSON.stringify(locals.appSettings,null,2)%></textarea>
+          </div>
+        </section>
+        <div>
+          <h4>Quick Help</h4>
+          <code>
+          <em>//example create new application [env(<%-appenv%>)] configuration </em> <br>
+          $ periodicjs createConfig application "<%-appname%>" <%-appenv%> ~/Desktop/appconfig-<%-appenv%>-config.json <br>
+          <br>
+          <em>//example manually add configuration </em> <br>
+          $ periodicjs addConfig ~/Desktop/appconfig-<%-appenv%>-config.json <br>
+          </code>
+        </div>
+      </form>
+    </main>
+  </article>
+  
+<%- include('../../../../app/views/shared/footer') %>

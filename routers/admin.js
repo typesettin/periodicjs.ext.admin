@@ -11,6 +11,7 @@ const dataRouter = require('./data');
 adminRouter.get('/', controllers.admin.dashboardView);
 adminRouter.get('/dashboard', controllers.admin.dashboardView);
 adminRouter.use('/extensions', extensionsRouter);
+adminRouter.use('/settings', controllers.admin.getAppSettings, controllers.admin.appSettingsView);
 adminRouter.use('/data', controllers.admin.fixCodeMirrorSubmit, dataRouter);
 
 module.exports = adminRouter;
