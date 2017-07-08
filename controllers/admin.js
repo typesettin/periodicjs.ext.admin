@@ -55,6 +55,9 @@ function fixCodeMirrorSubmit(req, res, next) {
       } else {
         req.body = Object.assign({}, req.body, jsonbody); //Object.assign({}, req.body, jsonbody);
       }
+      if (req.method === 'POST') {
+        req.redirectpath = req.headers.referer.replace('/new', '');
+      }
       // if (!req.body.docid) {
       //   req.body.docid = req.body._id;
       // }
