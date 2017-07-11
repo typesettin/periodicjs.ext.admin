@@ -92,47 +92,14 @@ function appSettingsView(req, res) {
   periodic.core.controller.render(req, res, viewtemplate, viewdata);
 }
 
-function getDatasFromMap(dataMapArray) {
-  return {
-    modelName: dataMapArray[0],
-    data: dataMapArray[1],
-  };
-}
-
-function getRecentData(options) {
-  const { data, modelName, } = options;
-  return new Promise((resolve, reject) => {
-    try {
-      data.search({ limit: 5, paginate: true, })
-        .then(resultData => {
-          const returnData = resultData[0].documents.map(resultDoc => {
-            resultDoc.modelName = modelName;
-            resultDoc.collectionCount = resultData.collection_count;
-            return resultDoc;
-          });
-          resolve({
-            docs: returnData || [],
-            modelData: {
-              modelName,
-              collectionCount: resultData.collection_count,
-            },
-          });
-        })
-        .catch(reject);
-    } catch (e) {
-      reject(e);
-    }
-  });
-}
-
 function getDBStats(req, res, next) {
   const datas = Array.from(periodic.datas.entries());
-  const datasList = datas.map(getDatasFromMap);
+  const datasList = datas.map(utilities.data.getDatasFromMap);
   const dataDocs = [];
   const countData = [];
   req.controllerData = Object.assign({}, req.controllerData);
 
-  Promisie.map(datasList, 5, getRecentData)
+  Promisie.map(datasList, 5, utilities.data.getRecentData)
     .then(result => {
       // result.forEach(addDataToReturnArray.bind(dataDocs));
       result.forEach(recentData => {
@@ -164,6 +131,4 @@ module.exports = {
   appSettingsView,
   accountView,
   getDBStats,
-  getDatasFromMap,
-  getRecentData,
 };

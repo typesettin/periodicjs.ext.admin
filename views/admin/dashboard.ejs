@@ -37,7 +37,7 @@ const path = periodic.viewHelper.path;
                 dataDocs.map(item =>{%>
                   <tr>
                     <td><a href="<%- path.join(locals.adminExt.adminRoute,'data',pluralize(item.modelName),item._id.toString()) %>"><%- item._id %></a></td>
-                    <td><%- item.title || item.name %></td>
+                    <td><%- (item.identification && item.identification.guid) ? item.identification.guid : item.title || item.name || item._id %></td>
                     <td><%- item.entitytype %></td>
                     <td><%- item.createdat %></td>
                     <td><%- item.updatedat %></td>
