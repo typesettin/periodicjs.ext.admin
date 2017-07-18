@@ -1,7 +1,7 @@
 {
   "name": "periodicjs.ext.admin",
-  "description": "sample extension.",
-  "version": "10.3.0",
+  "description": "Basic admin extension",
+  "version": "10.4.0",
   "main": "index.js",
   "engines": {
     "node": "^6.x"

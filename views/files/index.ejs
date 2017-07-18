@@ -1,0 +1,45 @@
+<%- include('../../../../app/views/shared/header') %>
+<%- include('../shared/nav') %>
+  <article>
+    <main>
+      <form method="POST" action="<%- locals.adminExt.adminRoute %>/data/standard_assets?_csrf=<%- token %>" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<%- token %>"/>
+        <section>
+          <h3>Upload a new file</h3>
+        </section>
+        <section>
+          <p>
+            <input style="display:inline-flex" type="checkbox" name="existing-file-name" value="Bike"> Use existing file name
+          </p>
+          <p>
+            <input style="display:inline-flex" type="checkbox" name="exclude-userstamp" value="Bike"> Exclude userstamp
+          </p>
+        </section>
+        <section>
+          <p>
+            <input style="display:inline-flex" type="checkbox" name="exclude-timestamp" value="Bike"> Exclude timestamp
+          </p>
+          <p>
+            <input style="display:inline-flex" type="text" name="ts-format" value="YYYY/MM"> Timestamp format
+          </p>
+        </section>
+        <section>
+          <p>
+            <input style="display:inline-flex" type="checkbox" name="encrypt-file" value="Bike"> Encrypt files
+          </p>
+        </section>
+        <section>
+          <div>
+            <input name="assetFile" type="file" multiple/>
+            
+          </div>
+    
+          <div>
+            <input type="submit" value="Upload">
+          </div>
+        </section>
+      </form>
+    </main>
+  </article>
+  
+<%- include('../../../../app/views/shared/footer') %>

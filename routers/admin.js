@@ -11,6 +11,7 @@ const dataRouter = require('./data');
 adminRouter.get('/', controllers.admin.getDBStats, controllers.admin.dashboardView);
 adminRouter.get('/dashboard', controllers.admin.getDBStats, controllers.admin.dashboardView);
 adminRouter.use('/extensions', extensionsRouter);
+adminRouter.use('/files', controllers.admin.fileView);
 adminRouter.use('/settings', controllers.admin.getAppSettings, controllers.admin.appSettingsView);
 adminRouter.use('/account', controllers.admin.accountView);
 adminRouter.use('/data', controllers.admin.fixCodeMirrorSubmit, dataRouter);

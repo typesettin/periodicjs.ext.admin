@@ -15,7 +15,12 @@ console.log({entitytype})
       <section>
       <div>
         <textarea name="genericdocjson"><%- JSON.stringify(data,null,2)%></textarea>
-        </div>
+      </div>
+      <%if(data && data.fileurl && data.assettype.search(/image/) >- 1){%>
+        <figure>
+          <image src="<%- data.fileurl %>"/>
+        </figure>
+      <%}%>
       </section>
     </form>
   </main>
