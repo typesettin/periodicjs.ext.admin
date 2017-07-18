@@ -7,8 +7,14 @@ const CoreControllerModule = require('periodicjs.core.controller');
 function getDataCoreController() {
   try {
     const dataCoreControllers = new Map();
-    for (let [dataName, datum] of periodic.datas) {
-      // console.log({ datum });
+    for (let [ dataName, datum ] of periodic.datas) {
+      const override = (dataName === 'standard_asset')
+        ? {
+          create: periodic.core.files.uploadMiddlewareHandler({
+            periodic,
+          }),
+        }
+        : false;
       const CoreController = new CoreControllerModule(periodic, {
         compatibility: false,
         skip_responder: true,
@@ -27,6 +33,7 @@ function getDataCoreController() {
         controller: CoreController,
         router: CoreController.protocol.api.implement({
           model_name: dataName,
+          override,
           dirname: path.join(periodic.config.app_root, '/node_modules/periodicjs.ext.admin/views'),
         }).router,
       });
