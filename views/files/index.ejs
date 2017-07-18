@@ -8,35 +8,37 @@
           <h3>Upload a new file</h3>
         </section>
         <section>
-          <p>
-            <input style="display:inline-flex" type="checkbox" name="existing-file-name" value="Bike"> Use existing file name
-          </p>
-          <p>
-            <input style="display:inline-flex" type="checkbox" name="exclude-userstamp" value="Bike"> Exclude userstamp
-          </p>
-        </section>
-        <section>
-          <p>
-            <input style="display:inline-flex" type="checkbox" name="exclude-timestamp" value="Bike"> Exclude timestamp
-          </p>
-          <p>
-            <input style="display:inline-flex" type="text" name="ts-format" value="YYYY/MM"> Timestamp format
-          </p>
-        </section>
-        <section>
-          <p>
-            <input style="display:inline-flex" type="checkbox" name="encrypt-file" value="Bike"> Encrypt files
-          </p>
-        </section>
-        <section>
-          <div>
-            <input name="assetFile" type="file" multiple/>
-            
-          </div>
-    
-          <div>
-            <input type="submit" value="Upload">
-          </div>
+          <table>
+            <tr>
+              <td>
+                <input style="display:inline-flex" type="checkbox" name="existing-file-name" value="Bike"> Use existing file name
+              </td>
+              <td>
+                <input style="display:inline-flex" type="checkbox" name="exclude-userstamp" value="Bike"> Exclude userstamp
+              </td>
+              <td>
+                <input style="display:inline-flex" type="checkbox" name="exclude-timestamp" value="Bike"> Exclude timestamp
+              </td>
+              <td>
+                <input style="display:inline-flex" type="checkbox" name="encrypt-file" value="Bike"> Encrypt files
+              </td>
+            </tr>
+            <tr>
+              <td colspan=4>
+                <input style="display:inline-flex" type="text" name="ts-format" value="YYYY/MM"> Timestamp format
+              </td>
+            </tr>
+            <tr>
+              <td colspan=4>
+                <input name="assetFile" type="file" multiple/>
+              </td>
+            </tr>
+            <tr>
+              <td colspan=4>
+                <input type="submit" value="Upload">
+              </td>
+            </tr>
+          </table>
         </section>
       </form>
     </main>
