@@ -1,7 +1,6 @@
 <%
 const pluralize = periodic.viewHelper.pluralize;
 const capitalize = periodic.viewHelper.capitalize;
-console.log({entitytype})
 %>
 <article>
   <main>
@@ -17,8 +16,8 @@ console.log({entitytype})
         <textarea name="genericdocjson"><%- JSON.stringify(data,null,2)%></textarea>
       </div>
       <%if(data && data.fileurl && data.assettype.search(/image/) >- 1){%>
-        <figure>
-          <image src="<%- data.fileurl %>"/>
+        <figure style="max-width:50%">
+          <image style="width:100%" src="<%- data.fileurl %>"/>
         </figure>
       <%}%>
       </section>

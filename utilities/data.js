@@ -13,8 +13,10 @@ function getDataCoreController() {
           create: periodic.core.files.uploadMiddlewareHandler({
             periodic,
           }),
+          remove: periodic.core.files.removeMiddlewareHandler({ periodic, }),
         }
         : false;
+      // console.log({dataName,override})
       const CoreController = new CoreControllerModule(periodic, {
         compatibility: false,
         skip_responder: true,
