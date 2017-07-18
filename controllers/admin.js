@@ -123,6 +123,19 @@ function getDBStats(req, res, next) {
     .catch(next);
 }
 
+function fileView(req, res) {
+  const viewtemplate = {
+    // themename,
+    viewname: 'files/index',
+    extname: 'periodicjs.ext.admin',
+    // fileext,
+  };
+  const viewdata = Object.assign({
+    passportUser: req.user,
+  }, req.controllerData);
+  periodic.core.controller.render(req, res, viewtemplate, viewdata);
+}
+
 module.exports = {
   adminResLocals,
   dashboardView,
@@ -131,4 +144,5 @@ module.exports = {
   appSettingsView,
   accountView,
   getDBStats,
+  fileView,
 };
