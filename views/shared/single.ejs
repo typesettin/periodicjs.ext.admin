@@ -17,7 +17,11 @@ const capitalize = periodic.viewHelper.capitalize;
       </div>
       <%if(data && data.fileurl && data.assettype.search(/image/) >- 1){%>
         <figure style="max-width:50%">
-          <image style="width:100%" src="<%- data.fileurl %>"/>
+          <% if(data.encrypted_client_side){%>
+            <image style="width:100%" src="<%-locals.adminExt.adminRoute%>/data/standard_assets/decrypt_asset/<%- data._id %>/<%- data.attributes.original_filename %>"/>
+          <%} else {%>
+            <image style="width:100%" src="<%- data.fileurl %>"/>
+          <%}%>
         </figure>
       <%}%>
       </section>

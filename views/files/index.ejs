@@ -5,10 +5,11 @@
       <form method="POST" action="<%- locals.adminExt.adminRoute %>/data/standard_assets?_csrf=<%- token %>" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<%- token %>"/>
         <section>
-          <h3>Upload a new file</h3>
+          <h3>Upload files</h3>
         </section>
         <section>
           <table>
+            <!--
             <tr>
               <td>
                 <input style="display:inline-flex" type="checkbox" name="existing-file-name" value="Bike"> Use existing file name
@@ -27,7 +28,28 @@
               <td colspan=4>
                 <input style="display:inline-flex" type="text" name="ts-format" value="YYYY/MM"> Timestamp format
               </td>
+            </tr> 
+            -->
+            <tr>
+              <td colspan=4>
+                <input name="assetFile" type="file" multiple/>
+              </td>
             </tr>
+            <tr>
+              <td colspan=4>
+                <input type="submit" value="Upload">
+              </td>
+            </tr>
+          </table>
+        </section>
+      </form>
+      <form method="POST" action="<%- locals.adminExt.adminRoute %>/data/standard_assets/encrypted_files?_csrf=<%- token %>" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<%- token %>"/>
+        <section>
+          <h3>Upload encrypted files</h3>
+        </section>
+        <section>
+          <table>
             <tr>
               <td colspan=4>
                 <input name="assetFile" type="file" multiple/>
