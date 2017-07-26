@@ -6,10 +6,10 @@ const adminSettings = utilities.getSettings();
 const admin_route_prefix = adminSettings.routing.admin_prefix;
 const adminRoute = periodic.utilities.routing.route_prefix(admin_route_prefix);
 
-
 function adminResLocals(req, res, next) {
   res.locals['adminExt'] = {
     adminRoute,
+    extensionMenu: utilities.extensionMenu,
   };
   res.locals.passportUser = req.user;
   next();

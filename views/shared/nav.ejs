@@ -43,6 +43,24 @@
     <summary>
       <a href="<%-locals.adminExt.adminRoute%>/data/extensions" title="Extensions">Extensions</a> 
     </summary>
+    <aside>
+      <% locals.adminExt.extensionMenu.forEach(extMenu=>{
+        const menuLabel = Object.keys(extMenu.menu)[0];
+        %>
+        <details>
+          <summary><%-menuLabel%></summary>
+          <div>
+            <ul>
+            <% extMenu.menu[menuLabel].forEach(menuLink=>{%>
+              <li><a href="<%- menuLink.link %>"><%- menuLink.title %></a></li>
+            <% })%>
+            
+            </ul>
+          </div>
+        </details>
+        <%
+      }) %>
+    </aside>
   </details>
   <details>
     <summary>
