@@ -43,7 +43,7 @@ const entityPage = {
       <tbody>
       <% if(hasItems){
         items[pluralize(entitytype)].documents.map(item=>{
-          const itemTitle = (item.identification && item.identification.guid) ? item.identification.guid : item.title || item.name;
+          const itemTitle = (item.identification && item.identification.guid) ? item.identification.guid : item.title || item.name || item.email;
           %>
           <tr>
             <td><a href="<%- path.join(request.baseurl,request.parsed.pathname,item._id.toString()) %>"><%- item._id %></a></td>
