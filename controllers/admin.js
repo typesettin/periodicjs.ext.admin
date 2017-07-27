@@ -44,30 +44,7 @@ function accountView(req, res) {
 
 function fixCodeMirrorSubmit(req, res, next) {
   try {
-    if (req.body.genericdocjson) {
-      // req.controllerData = Object.assign({}, req.controllerData);
-      // req.controllerData.skip_xss = true;
-      // req.controllerData.encryptFields = true;
-      req.redirectpath = req.headers.referer;
-      const jsonbody = JSON.parse(req.body.genericdocjson);
-      delete req.body.genericdocjson;
-      if (req.method === 'PUT') {
-        req.body.updatedoc = jsonbody; //Object.assign({}, req.body, jsonbody);
-      } else {
-        req.body = Object.assign({}, req.body, jsonbody); //Object.assign({}, req.body, jsonbody);
-      }
-      if (req.method === 'POST') {
-        req.redirectpath = req.headers.referer.replace('/new', '');
-      }
-      // if (!req.body.docid) {
-      //   req.body.docid = req.body._id;
-      // }
-      delete req.body._id;
-      delete req.body.__v;
-      // delete req.body.format;
-    } else if (req.method === 'DELETE') {
-      req.redirectpath = req.headers.referer;
-    }
+    req = utilities.data.fixGenericReqBody(req);
     next();
   } catch (e) {
     next(e);

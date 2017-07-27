@@ -7,15 +7,14 @@ const CoreControllerModule = require('periodicjs.core.controller');
 function getDataCoreController() {
   try {
     const dataCoreControllers = new Map();
-    for (let [ dataName, datum ] of periodic.datas) {
-      const override = (dataName === 'standard_asset')
-        ? {
+    for (let [dataName, datum, ] of periodic.datas) {
+      const override = (dataName === 'standard_asset') ? {
           create: periodic.core.files.uploadMiddlewareHandler({
             periodic,
           }),
           remove: periodic.core.files.removeMiddlewareHandler({ periodic, }),
-        }
-        : false;
+        } :
+        false;
       // console.log({dataName,override})
       const CoreController = new CoreControllerModule(periodic, {
         compatibility: false,
@@ -79,8 +78,37 @@ function getRecentData(options) {
   });
 }
 
+function fixGenericReqBody(req) {
+  if (req.body.genericdocjson) {
+    // req.controllerData = Object.assign({}, req.controllerData);
+    // req.controllerData.skip_xss = true;
+    // req.controllerData.encryptFields = true;
+    req.redirectpath = req.headers.referer;
+    const jsonbody = JSON.parse(req.body.genericdocjson);
+    delete req.body.genericdocjson;
+    if (req.method === 'PUT') {
+      req.body.updatedoc = jsonbody; //Object.assign({}, req.body, jsonbody);
+    } else {
+      req.body = Object.assign({}, req.body, jsonbody); //Object.assign({}, req.body, jsonbody);
+    }
+    if (req.method === 'POST') {
+      req.redirectpath = req.headers.referer.replace('/new', '');
+    }
+    // if (!req.body.docid) {
+    //   req.body.docid = req.body._id;
+    // }
+    delete req.body._id;
+    delete req.body.__v;
+    // delete req.body.format;
+  } else if (req.method === 'DELETE') {
+    req.redirectpath = req.headers.referer;
+  }
+  return req;
+}
+
 module.exports = {
   getDataCoreController,
   getDatasFromMap,
   getRecentData,
+  fixGenericReqBody,
 };
