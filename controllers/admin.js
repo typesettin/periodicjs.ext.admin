@@ -10,6 +10,7 @@ function adminResLocals(req, res, next) {
   res.locals['adminExt'] = {
     adminRoute,
     extensionMenu: utilities.extensionMenu,
+    models: utilities.getDataModels(),
   };
   res.locals.passportUser = req.user;
   next();
