@@ -5,8 +5,9 @@ const path = periodic.viewHelper.path;
 const configurationsArray = (Array.isArray(locals.configurations))
   ? locals.configurations
   : locals.configurations.configurations.documents;
-//  console.log(configurationsArray)
- // console.log(locals.configurations) 
+//  console.log({configurationsArray})
+//  console.log(locals.configurations) 
+//  console.log({locals}) 
  %>
   <article>
       <section>
@@ -32,7 +33,7 @@ const configurationsArray = (Array.isArray(locals.configurations))
                 <td><a href="<%- locals.adminExt.adminRoute %>/data/configurations/<%- item._id %>"><%- item.filepath %></a></td>
                 <td><%- item.environment %></td>
                 <td><%- item.container %></td>
-                <td><%- `${JSON.stringify(item.config).substr(0,15)}...` %></td>
+                <td><%- `${JSON.stringify(item.config||{}).substr(0,15)}...` %></td>
                 <td><%- item.createdat %></td>
                 <td><%- item.updatedat %></td>
                 <td>
