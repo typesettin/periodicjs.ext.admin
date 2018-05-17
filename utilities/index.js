@@ -1,8 +1,24 @@
 'use strict';
 const periodic = require('periodicjs');
+const logger = periodic.logger;
 const data = require('./data');
 const extArray = Array.from(periodic.extensions.values());
 const extensionMenu = extArray.map(getAdminMenuFromExtension).filter(filterAdminExtensionMenus);
+
+const defaultContainerMenu = [
+  {
+    name: 'Container Links',
+    menu: {
+      'N/A':
+        [
+          {
+            title: 'Add custom links',
+            link: '#',
+          },
+        ],
+    }
+  },
+];
 let dataModels = {};
 
 function getDataModelData() {
@@ -52,6 +68,7 @@ module.exports = {
   extArray,
   getAdminMenuFromExtension,
   filterAdminExtensionMenus,
+  defaultContainerMenu,
   extensionMenu,
   dataModels,
   getDataModelData,

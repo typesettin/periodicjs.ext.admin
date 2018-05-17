@@ -5,10 +5,15 @@ const Promisie = require('promisie');
 const adminSettings = utilities.getSettings();
 const admin_route_prefix = adminSettings.routing.admin_prefix;
 const adminRoute = periodic.utilities.routing.route_prefix(admin_route_prefix);
+const containerName = periodic.container.name;
 
 function adminResLocals(req, res, next) {
+  // console.log('utilities.extensionMenu', utilities.extensionMenu);
   res.locals['adminExt'] = {
     adminRoute,
+    containerMenu: (periodic.container[ containerName ].periodicjs_ext_admin && Array.isArray(periodic.container[ containerName ].periodicjs_ext_admin))
+      ? periodic.container[ containerName ].periodicjs_ext_admin
+      : utilities.defaultContainerMenu,
     extensionMenu: utilities.extensionMenu,
     models: utilities.getDataModels(),
   };

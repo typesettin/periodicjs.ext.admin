@@ -8,6 +8,28 @@
   </details>
   <details>
     <summary>
+      <a href="#container" title="Container">Container</a> 
+    </summary>
+    <aside style="padding-left:1rem;">
+      <% locals.adminExt.containerMenu.forEach(contMenu=>{
+        const menuLabel = Object.keys(contMenu.menu)[0];
+        %>
+        <details>
+          <summary><%-menuLabel%></summary>
+          <div>
+            <ul>
+            <% contMenu.menu[menuLabel].forEach(menuLink=>{%>
+              <li><a href="<%- menuLink.link %>"><%- menuLink.title %></a></li>
+            <% })%>
+            </ul>
+          </div>
+        </details>
+        <%
+      }) %>
+    </aside>
+  </details>
+  <details>
+    <summary>
       <a href="<%-locals.adminExt.adminRoute%>/dashboard" title="Dashboard">Dashboard</a> 
     </summary>
   </details>
@@ -19,7 +41,7 @@
     const pluralize = periodic.viewHelper.pluralize;
     const capitalize = periodic.viewHelper.capitalize;
     %>
-      <aside>
+      <aside style="padding-left:1rem;">
       <% Object.keys(periodic.core_data_list).forEach(db_name=>{
         %>
       <details>
@@ -43,7 +65,7 @@
     <summary>
       <a href="<%-locals.adminExt.adminRoute%>/data/extensions" title="Extensions">Extensions</a> 
     </summary>
-    <aside>
+    <aside style="padding-left:1rem;">
       <% locals.adminExt.extensionMenu.forEach(extMenu=>{
         const menuLabel = Object.keys(extMenu.menu)[0];
         %>
@@ -54,7 +76,6 @@
             <% extMenu.menu[menuLabel].forEach(menuLink=>{%>
               <li><a href="<%- menuLink.link %>"><%- menuLink.title %></a></li>
             <% })%>
-            
             </ul>
           </div>
         </details>
