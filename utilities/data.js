@@ -2,6 +2,7 @@
 const periodic = require('periodicjs');
 const path = require('path');
 const CoreControllerModule = require('periodicjs.core.controller');
+const vm = require('vm');
 // const periodicRoutingUtil = periodic.utilities.routing;
 
 function getDataCoreController() {
@@ -84,7 +85,12 @@ function fixGenericReqBody(req) {
     // req.controllerData.skip_xss = true;
     // req.controllerData.encryptFields = true;
     req.redirectpath = req.headers.referer;
-    const jsonbody = JSON.parse(req.body.genericdocjson);
+
+    let sandbox = {
+      reqBody: {},
+    };
+    vm.runInNewContext(`reqBody = ${req.body.genericdocjson}`, sandbox);
+    const jsonbody = JSON.parse(JSON.stringify(sandbox.reqBody));
     delete req.body.genericdocjson;
     if (req.method === 'PUT') {
       req.body.updatedoc = jsonbody; //Object.assign({}, req.body, jsonbody);
